@@ -73,32 +73,6 @@ class RiderLoginPage extends React.Component {
 												Sign Up
 											</Link>
 										</h4>
-										<div className={classes.socialLine}>
-											<Button
-												justIcon
-												color="transparent"
-												className={classes.iconButtons}
-												onClick={e => e.preventDefault()}
-											>
-												<i className="fab fa-twitter" />
-											</Button>
-											<Button
-												justIcon
-												color="transparent"
-												className={classes.iconButtons}
-												onClick={e => e.preventDefault()}
-											>
-												<i className="fab fa-facebook" />
-											</Button>
-											<Button
-												justIcon
-												color="transparent"
-												className={classes.iconButtons}
-												onClick={e => e.preventDefault()}
-											>
-												<i className="fab fa-google-plus-g" />
-											</Button>
-										</div>
 									</CardHeader>
 									<p
 										className={`${classes.description} ${classes.textCenter}`}

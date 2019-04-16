@@ -73,32 +73,6 @@ class RiderSingupPage extends React.Component {
                                         className={classes.cardHeader}
                                     >
                                         <h2 className={classes.cardTitle}>Rider Sign Up</h2>
-                                        <div className={classes.socialLine}>
-                                            <Button
-                                                justIcon
-                                                color="transparent"
-                                                className={classes.iconButtons}
-                                                onClick={e => e.preventDefault()}
-                                            >
-                                                <i className="fab fa-twitter" />
-                                            </Button>
-                                            <Button
-                                                justIcon
-                                                color="transparent"
-                                                className={classes.iconButtons}
-                                                onClick={e => e.preventDefault()}
-                                            >
-                                                <i className="fab fa-facebook" />
-                                            </Button>
-                                            <Button
-                                                justIcon
-                                                color="transparent"
-                                                className={classes.iconButtons}
-                                                onClick={e => e.preventDefault()}
-                                            >
-                                                <i className="fab fa-google-plus-g" />
-                                            </Button>
-                                        </div>
                                     </CardHeader>
                                     <p
                                         className={`${classes.description} ${classes.textCenter}`}
