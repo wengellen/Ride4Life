@@ -22,7 +22,7 @@ const headerStyle = theme => ({
     border: "0",
     borderRadius: "3px",
     padding: "0.625rem 0",
-    marginBottom: "20px",
+    marginBottom: "3rem",
     color: grayColor[15],
     width: "100%",
     backgroundColor: whiteColor,
@@ -36,7 +36,8 @@ const headerStyle = theme => ({
     alignItems: "center",
     flexFlow: "row nowrap",
     justifyContent: "flex-start",
-    position: "relative"
+    position: "relative",
+    // marginBottom:"3rem"
   },
   absolute: {
     position: "absolute",
@@ -47,11 +48,11 @@ const headerStyle = theme => ({
   },
   container: {
     ...container,
-    minHeight: "50px",
+    minHeight: "46px",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     display: "flex",
-    flexWrap: "nowrap"
+    flexWrap: "nowrap",
   },
   title: {
     "&,& a": {
@@ -67,6 +68,51 @@ const headerStyle = theme => ({
         color: "inherit",
         background: "transparent"
       }
+    }
+  },
+    logoContainer:{
+      width:"70px",
+      height:"70px",
+      "& img":{
+        maxWidth: "100%",
+      }
+    },
+  titleNoUnder:{
+    "&,& a": {
+      ...defaultFont,
+      minWidth: "unset",
+      lineHeight: "30px",
+      fontSize: "18px",
+      borderRadius: "3px",
+      textTransform: "none",
+      whiteSpace: "nowrap",
+      color: "inherit",
+      opacity: "0.9",
+      display: "inline-block",
+      verticalAlign: "middle",
+      textDecoration: "none",
+      transition: "all 0.5s ease",
+      height:"100%",
+      float:"right",
+      // marginLeft: "3rem",
+      fontWeight:"400",
+      "&:hover,&:focus": {
+        color: "inherit",
+        opacity: "1",
+        background: "transparent"
+      },
+      
+      "& svg":{
+        display: "inline-flex",
+        alignSelf: "center",
+        marginRight: "4px",
+        paddingTop:"2px",
+        width:"1.6rem",
+        height:"1.6rem",
+        // backgroundColor: "green",
+        color:"white"
+      }
+      
     }
   },
   appResponsive: {

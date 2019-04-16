@@ -26,11 +26,11 @@ import {Link} from "react-router-dom";
 class DriverSingupPage extends React.Component {
   state = {
     profile: {
-      username: '',
-      password: '',
-      phone:'',
-      location:'',
-       email: '',
+      username: 'eweng',
+      password: '0000',
+      phone:'6509522257',
+      location:'CA',
+       email: 'eweng@gmail.com',
     
     }
   };
@@ -42,19 +42,19 @@ class DriverSingupPage extends React.Component {
   
   handleChange = e => {
     this.setState({
-      credentials: {
-        ...this.state.credentials,
+        profile: {
+        ...this.state.profile,
         [e.target.name]: e.target.value
       }
     });
   };
   
-  login = e => {
-    console.log('login clicked')
+  signupDriver = e => {
+    console.log('signup_driver clicked')
     e.preventDefault();
-    this.props.login_rider(this.state.credentials).then(() => {
+    this.props.signup_driver(this.state.profile).then(() => {
       console.log('his.props.login(this.state.credentials).then')
-      this.props.history.push('/friends');
+      this.props.history.push('/driver-login');
     });
   };
   
@@ -66,7 +66,7 @@ class DriverSingupPage extends React.Component {
             <GridContainer justify="center">
               <GridItem xs={12} sm={12} md={4}>
                 <Card>
-                  <form className={classes.form} onSubmit={this.login}>
+                  <form className={classes.form} onSubmit={this.signupDriver}>
                     <CardHeader
                         color="info"
                         signup
@@ -113,6 +113,7 @@ class DriverSingupPage extends React.Component {
                           inputProps={{
                             placeholder: "Useraname",
                             type: "text",
+                            value:`${this.state.profile.username}`,
                             startAdornment: (
                                 <InputAdornment position="start">
                                   <Face className={classes.inputIconsColor} />
@@ -128,6 +129,7 @@ class DriverSingupPage extends React.Component {
                           inputProps={{
                             placeholder: "Password",
                             type: "password",
+                             value:`${this.state.profile.password}`,
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <Lock className={classes.inputIconsColor} />
@@ -141,6 +143,7 @@ class DriverSingupPage extends React.Component {
                             fullWidth: true
                           }}
                           inputProps={{
+                             value:`${this.state.profile.phone}`,
                             placeholder: "Cell phone",
                             type: "phone",
                             startAdornment: (
@@ -156,6 +159,7 @@ class DriverSingupPage extends React.Component {
                             fullWidth: true
                           }}
                           inputProps={{
+                              value:`${this.state.profile.location}`,
                             placeholder: "Location",
                             type: "option",
                             startAdornment: (
@@ -173,7 +177,9 @@ class DriverSingupPage extends React.Component {
                           inputProps={{
                             placeholder: "Email...",
                             type: "email",
-                            startAdornment: (
+                             value:`${this.state.profile.email}`,
+    
+                              startAdornment: (
                                 <InputAdornment position="start">
                                   <Email className={classes.inputIconsColor} />
                                 </InputAdornment>
@@ -183,7 +189,7 @@ class DriverSingupPage extends React.Component {
                     
                     </CardBody>
                     <div className={classes.textCenter}>
-                      <PinkButton simple color="primary" size="lg">
+                      <PinkButton type="submit" >
                         {this.props.loggingIn
                             ? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
                             : "Sign up"
@@ -195,26 +201,6 @@ class DriverSingupPage extends React.Component {
               </GridItem>
             </GridContainer>
           </div>
-          {/*<form onSubmit={this.login}>*/}
-          {/*<input*/}
-          {/*type="text"*/}
-          {/*name="username"*/}
-          {/*value={this.state.credentials.username}*/}
-          {/*onChange={this.handleChange}*/}
-          {/*/>*/}
-          {/*<input*/}
-          {/*type="password"*/}
-          {/*name="password"*/}
-          {/*value={this.state.credentials.password}*/}
-          {/*onChange={this.handleChange}*/}
-          {/*/>*/}
-          {/*<PinkButton>*/}
-          {/*{this.props.loggingIn*/}
-          {/*? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />*/}
-          {/*: "Log in"*/}
-          {/*}*/}
-          {/*</PinkButton>*/}
-          {/*</form>*/}
         </div>
     );
   }

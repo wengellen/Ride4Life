@@ -10,7 +10,7 @@ class DriverHomePage extends Component {
 				</header>
 				<div id="map"></div>
 				<div className="container">
-					<PinkButton>Request Ride</PinkButton>
+					<PinkButton>Finding Rides...</PinkButton>
 				</div>
 			</div>
 		);

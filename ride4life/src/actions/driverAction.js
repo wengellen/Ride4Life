@@ -1,5 +1,7 @@
 
 // DRIVER
+import axiosAuth from "../utils/axiosAuth";
+
 export const DRIVER_SIGNUP_STARTED = 'DRIVER_SIGNUP_STARTED'
 export const DRIVER_SIGNUP_SUCCESS = 'DRIVER_SIGNUP_SUCCESS'
 export const DRIVER_SIGNUP_FAILURE = 'DRIVER_SIGNUP_FAILURE'
@@ -13,25 +15,21 @@ export const DRIVER_LOGIN_FAILURE = 'DRIVER_LOGIN_FAILURE'
 export const signup_driver= (driver) => dispatch =>{
 	dispatch({type:DRIVER_SIGNUP_STARTED})
 	return (
-		new Promise((resolve, reject)=>{
-			setTimeout(()=>(
-				resolve(dispatch({type:DRIVER_SIGNUP_STARTED, payload:driver}))
-			), 3000)
+		axiosAuth().post('/register', {...driver, driver:true})
+		.then(res =>{
+			dispatch({type: DRIVER_SIGNUP_SUCCESS, payload: res.data})
 		})
-		.then(res => res)
-		.catch(err => err)
+		.catch(err => err.message)
 	)
 }
 
 export const login_driver= (driver) => dispatch =>{
 	dispatch({type:DRIVER_LOGIN_STARTED})
-	return (
-		new Promise((resolve, reject)=>{
-			setTimeout(()=>(
-				resolve(dispatch({type:DRIVER_SIGNUP_STARTED, payload:driver}))
-			), 3000)
+	return (axiosAuth().post('/login', {...driver, driver:true})
+		.then(res =>{
+			dispatch({type: DRIVER_LOGIN_SUCCESS, payload: res.data})
+			localStorage.setItem('token', res.data.token)
 		})
-		.then(res => res)
-		.catch(err => err)
+		.catch(err => err.message)
 	)
 }

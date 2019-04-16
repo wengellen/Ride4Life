@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 // @material-ui/icons
-
 // core components
 import cardStyle from "assets/jss/material-kit-pro-react/components/cardStyle.jsx";
 

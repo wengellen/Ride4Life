@@ -66,7 +66,7 @@ class DriverLoginPage extends React.Component {
 										className={classes.cardHeader}
 									>
 										<h2 className={classes.cardTitle}>Driver Login</h2>
-										<h4  className={classes.cardTitle}>No Account?
+										<h4  className={classes.cardSubtitle}>No Account?
 											<Link to="/driver-signup">
 												Sign Up
 											</Link>

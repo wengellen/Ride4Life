@@ -57,6 +57,11 @@ const javascriptStyles = theme => ({
     ...cardTitle,
     color: whiteColor + "  !important"
   },
+  cardSubtitle: {
+    ...cardTitle,
+    marginRight:"20px",
+    color: "red" + "  !important"
+  },
   socialLine: {
     marginTop: "1rem",
     textAlign: "center",

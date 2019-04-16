@@ -33,20 +33,20 @@ const initialState = {
 		},
 	],
 	
-	riderDetails:
-		{
-			"requestTime" : {date:"2016-10-31T12:12:37.321Z"},
-			"location" : {
-				"coordinates" : [
-					77.612257,
-					12.934729
-				],
-				"address" : "The Forum, 21 Hosur Road, Bengaluru South, Karnataka, India"
-			},
-			"citizenId" : "citizen1",
-			"status" : "engaged",
-			"copId" : "06"
-		}
+	// riders:
+	// 	[{
+	// 		"requestTime" : {date:"2016-10-31T12:12:37.321Z"},
+	// 		"location" : {
+	// 			"coordinates" : [
+	// 				77.612257,
+	// 				12.934729
+	// 			],
+	// 			"address" : "The Forum, 21 Hosur Road, Bengaluru South, Karnataka, India"
+	// 		},
+	// 		"citizenId" : "citizen1",
+	// 		"status" : "engaged",
+	// 		"copId" : "06"
+	// 	}]
 }
 
 export const driverReducer = (state = initialState, action)=>{
@@ -55,9 +55,29 @@ export const driverReducer = (state = initialState, action)=>{
 			return {...state,
 				driverSignupStarted:true
 			}
+		case DRIVER_SIGNUP_SUCCESS:
+			return {...state,
+				driverSignupStarted:false,
+			}
+		
+		case DRIVER_SIGNUP_FAILURE:
+			return {...state,
+				driverSignupStarted:false
+			}
+			
 		case DRIVER_LOGIN_STARTED:
 			return {...state,
-				driverLoginStarted:true
+				driverLoginStarted:true,
+			}
+		case DRIVER_LOGIN_SUCCESS:
+			return {...state,
+				driverLoginStarted:false,
+				driverDetails: action.payload.driverDetails
+				
+			}
+		case DRIVER_LOGIN_FAILURE:
+			return {...state,
+				driverLoginStarted:false
 			}
 		default:
 			return {...state}

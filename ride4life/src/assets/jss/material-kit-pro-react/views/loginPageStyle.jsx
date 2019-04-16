@@ -14,6 +14,13 @@ const signupPageStyle = theme => ({
     ...cardTitle,
     color: whiteColor + "  !important"
   },
+  cardSubtitle: {
+    "& a":{
+      marginLeft:"6px" + "  !important",
+      // textDecoration: "none",
+      color: "white"
+    }
+  },
   container: {
     ...container,
     zIndex: "4",
@@ -47,6 +54,10 @@ const signupPageStyle = theme => ({
   },
   form: {
     margin: "0"
+  },
+  cardHeader: {
+    width: "auto",
+    textAlign: "center"
   },
   cardHeader: {
     width: "auto",

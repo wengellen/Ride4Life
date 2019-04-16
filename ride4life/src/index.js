@@ -18,6 +18,7 @@ import RiderSignupPage from "./views/rider/RiderSignupPage";
 import List from "./views/driver/DriverSignupPage";
 import RiderHomePage from "./views/rider/RiderHomePage";
 import DriverHomePage from "./views/driver/DriverHomePage";
+import PrimarySearchAppBar from "./components/Navbars/SearchAppBar";
 
 const store = createStore(
 	rootReducer,
@@ -35,6 +36,7 @@ class App extends React.Component {
 		return (
 			<div className="App">
 				<Navbars/>
+				{/*<PrimarySearchAppBar/>*/}
 				<Switch>
 					<Route exact path="/" component={HomePage} />
 					<Route path="/rider-login" component={RiderLoginPage} />

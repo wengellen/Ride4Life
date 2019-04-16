@@ -67,8 +67,9 @@ class RiderLoginPage extends React.Component {
 										className={classes.cardHeader}
 									>
 										<h2 className={classes.cardTitle}>Rider Login</h2>
-										<h4 className={classes.cardTitle}>No Account?
-											<Link to="/rider-signup">
+										<h4 className={classes.cardSubtitle}>No Account?
+											<Link
+												to="/rider-signup">
 												Sign Up
 											</Link>
 										</h4>
@@ -125,6 +126,7 @@ class RiderLoginPage extends React.Component {
 												fullWidth: true
 											}}
 											inputProps={{
+												
 												placeholder: "Password",
 												type: "password",
 												startAdornment: (

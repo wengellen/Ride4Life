@@ -15,9 +15,12 @@ import Drawer from "@material-ui/core/Drawer";
 // @material-ui/icons
 import Menu from "@material-ui/icons/Menu";
 import Close from "@material-ui/icons/Close";
+import ChildCare from "@material-ui/icons/ChildCare";
+import TimeToLeave from "@material-ui/icons/TimeToLeave";
 // core components
-import headerStyle from "assets/jss/material-kit-pro-react/components/headerStyle.jsx";
+import headerStyle from "../../assets/jss/material-kit-pro-react/components/headerStyle.jsx";
 import {PrivateRoute} from "../PrivateRoute";
+import logo from "assets/img/safe_logo.png";
 
 
 class Header extends React.Component {
@@ -67,20 +70,30 @@ class Header extends React.Component {
 			[classes.appBar]: true,
 			[classes[color]]: color,
 			[classes.absolute]: absolute,
-			[classes.fixed]: fixed
+			[classes.fixed]: fixed,
+			
 		});
 		return (
 			<AppBar className={appBarClasses}>
 				<Toolbar className={classes.container}>
-					<Button className={classes.title}>
-						<Link to="/">{brand}</Link>
-					</Button>
-					<Button className={classes.title} >
-						<Link to="/rider-login">Rider Login</Link>
-					</Button>
-					<Button className={classes.title} >
-						<Link to="/driver-login">Driver Login</Link>
-					</Button>
+						<Link className={classes.titleNoUnder}
+								to="/">
+							<div className={classes.logoContainer}>
+								<img src={logo} />
+							</div>
+						</Link>
+						<IconButton className={classes.titleNoUnder}>
+							<ChildCare/>
+							<Link className={classes.titleNoUnder}
+								  display="none"
+								  to="/rider-login">Login</Link>
+						</IconButton>
+						<IconButton className={classes.titleNoUnder}>
+							<TimeToLeave/>
+							<Link className={classes.titleNoUnder}
+								  display={{ xs: 'none', sm: 'block' }}
+									to="/driver-login">Driver Login</Link>
+						</IconButton>
 					<Hidden smDown implementation="css" className={classes.hidden}>
 						<div className={classes.collapse}>{links}</div>
 					</Hidden>

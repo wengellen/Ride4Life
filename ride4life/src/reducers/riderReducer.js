@@ -32,7 +32,7 @@ const initialState = {
 		},
 	],
 	
-	riderDetails:
+	riderProfile:
 		{
 			"requestTime" : {date:"2016-10-31T12:12:37.321Z"},
 			"location" : {
@@ -69,7 +69,8 @@ export const riderReducer = (state = initialState, action)=>{
 			}
 		case RIDER_LOGIN_SUCCESS:
 			return {...state,
-				riderLoginStarted:false
+				riderLoginStarted:false,
+				riderProfile: action.payload
 			}
 		case RIDER_LOGIN_FAILURE:
 			return {...state,
