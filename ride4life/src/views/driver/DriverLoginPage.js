@@ -50,12 +50,15 @@ class DriverLoginPage extends React.Component {
 		   this.props.history.push('/driver-home');
 		});
 	};
+	styles = {
+		marginBottom:"3rem"
+	}
 	
 	render() {
 		const { classes } = this.props;
 		return (
 			<div>
-				<div className={classes.container}>
+				<div className={this.styles.marginBottom}>
 					<GridContainer justify="center">
 						<GridItem xs={12} sm={12} md={4}>
 							<Card>
