@@ -28,10 +28,9 @@ class RiderSingupPage extends React.Component {
         profile: {
             username: 'eweng',
             password: '0000',
-            phone:'650-952-2257',
-            location:'CA State',
-            email: 'eweng@gmail.com',
-            
+            phone:'6509522257',
+            // location:'CA State',
+            // email: 'eweng@gmail.com',
         }
     };
     
@@ -131,38 +130,38 @@ class RiderSingupPage extends React.Component {
                                                 )
                                             }}
                                         />
-                                        <CustomInput
-                                            id="location"
-                                            formControlProps={{
-                                                fullWidth: true
-                                            }}
-                                            inputProps={{
-                                                value:`${this.state.profile.location}`,
-                                                placeholder: "Location",
-                                                type: "option",
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <Place className={classes.inputIconsColor}/>
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
-                                        <CustomInput
-                                            id="email"
-                                            formControlProps={{
-                                                fullWidth: true
-                                            }}
-                                            inputProps={{
-                                                placeholder: "Email...",
-                                                type: "email",
-                                                value:`${this.state.profile.email}`,
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <Email className={classes.inputIconsColor} />
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
+                                        {/*<CustomInput*/}
+                                            {/*id="location"*/}
+                                            {/*formControlProps={{*/}
+                                                {/*fullWidth: true*/}
+                                            {/*}}*/}
+                                            {/*inputProps={{*/}
+                                                {/*value:`${this.state.profile.location}`,*/}
+                                                {/*placeholder: "Location",*/}
+                                                {/*type: "option",*/}
+                                                {/*startAdornment: (*/}
+                                                    {/*<InputAdornment position="start">*/}
+                                                        {/*<Place className={classes.inputIconsColor}/>*/}
+                                                    {/*</InputAdornment>*/}
+                                                {/*)*/}
+                                            {/*}}*/}
+                                        {/*/>*/}
+                                        {/*<CustomInput*/}
+                                            {/*id="email"*/}
+                                            {/*formControlProps={{*/}
+                                                {/*fullWidth: true*/}
+                                            {/*}}*/}
+                                            {/*inputProps={{*/}
+                                                {/*placeholder: "Email...",*/}
+                                                {/*type: "email",*/}
+                                                {/*value:`${this.state.profile.email}`,*/}
+                                                {/*startAdornment: (*/}
+                                                    {/*<InputAdornment position="start">*/}
+                                                        {/*<Email className={classes.inputIconsColor} />*/}
+                                                    {/*</InputAdornment>*/}
+                                                {/*)*/}
+                                            {/*}}*/}
+                                        {/*/>*/}
                                     
                                     </CardBody>
                                     <div className={classes.textCenter}>

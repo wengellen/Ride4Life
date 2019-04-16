@@ -9,6 +9,7 @@ import GridItem from "../../components/Grid/GridItem";
 import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
+import Phone from "@material-ui/icons/Phone";
 // import image from "assets/img/bg7.jpg";
 import Button from "../../components/CustomButtons/Button";
 import CustomInput from "../../components/CustomInput/CustomInput";
@@ -23,7 +24,7 @@ import {Link} from "react-router-dom";
 class DriverLoginPage extends React.Component {
 	state = {
 		credentials: {
-			username: 'ellen',
+			phone: '6509522257',
 			password: '0000'
 		}
 	};
@@ -81,16 +82,16 @@ class DriverLoginPage extends React.Component {
 									</p>
 									<CardBody signup>
 										<CustomInput
-											id="first"
+											id="phone"
 											formControlProps={{
 												fullWidth: true
 											}}
 											inputProps={{
-												placeholder: "Useraname",
+												placeholder: "Phone",
 												type: "text",
 												startAdornment: (
 													<InputAdornment position="start">
-														<Face className={classes.inputIconsColor} />
+														<Phone className={classes.inputIconsColor} />
 													</InputAdornment>
 												)
 											}}

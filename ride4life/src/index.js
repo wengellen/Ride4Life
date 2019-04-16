@@ -18,6 +18,7 @@ import RiderSignupPage from "./views/rider/RiderSignupPage";
 import List from "./views/driver/DriverSignupPage";
 import RiderHomePage from "./views/rider/RiderHomePage";
 import DriverHomePage from "./views/driver/DriverHomePage";
+import DriverProfilePage from "./views/driver/DriverProfilePage";
 import PrimarySearchAppBar from "./components/Navbars/SearchAppBar";
 
 const store = createStore(
@@ -45,7 +46,7 @@ class App extends React.Component {
 					<Route path="/driver-signup" component={DriverSignupPage} />
 					<Route path="/rider-home" component={RiderHomePage} />
 					<Route path="/driver-home" component={DriverHomePage} />
-					{/*<Route path="/friends" component={FriendListPage}/>*/}
+					<Route path="/drivers/:id" component={DriverProfilePage} />
 					{/*<PrivateRoute path="/friends" component={FriendListPage}/>*/}
 				</Switch>
 				{/*<Footer />*/}

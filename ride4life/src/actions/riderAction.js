@@ -9,19 +9,46 @@ export const RIDER_LOGIN_STARTED = 'RIDER_LOGIN_STARTED'
 export const RIDER_LOGIN_SUCCESS = 'RIDER_LOGIN_SUCCESS'
 export const RIDER_LOGIN_FAILURE = 'RIDER_LOGIN_FAILURE'
 
+export const FIND_DRIVERS_NEARBY_STARTED = 'FIND_DRIVERS_NEARBY_STARTED'
+export const FIND_DRIVERS_NEARBY_SUCCESS = 'FIND_DRIVERS_NEARBY_SUCCESS'
+export const FIND_DRIVERS_NEARBY_FAILURE = 'FIND_DRIVERS_NEARBY_FAILURE'
 
-// RIDER
+export const FIND_DRIVER_BY_ID_STARTED = 'FIND_DRIVER_BY_ID_STARTED'
+export const FIND_DRIVER_BY_ID_SUCCESS = 'FIND_DRIVER_BY_ID_SUCCESS'
+export const FIND_DRIVER_BY_ID_FAILURE = 'FIND_DRIVER_BY_ID_FAILURE'
+
+
+// Find drivers nearby
+export const findDriversNearby = (rider) => dispatch => {
+	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
+	return (
+		axiosAuth().post('/drivers-nearby', {...rider, driver:false})
+		.then(res =>{
+			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
+		})
+		.catch(err => err.message)
+	)
+}
+// Find drivers nearby
+export const getDriversById = (driverId) => dispatch => {
+	dispatch({type: FIND_DRIVER_BY_ID_STARTED})
+	return (
+		axiosAuth().get(`/drivers/${driverId}`)
+		.then(res =>{
+			dispatch({type: FIND_DRIVER_BY_ID_SUCCESS, payload: res.data})
+		})
+		.catch(err => err.message)
+	)
+	
+}
+
+
+
+
+
+// LOGIN / SIGN UP
 export const signup_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_SIGNUP_STARTED})
-	// return (
-	// 	new Promise((resolve, reject) => {
-	// 		setTimeout(() => (
-	// 			resolve(dispatch({type: RIDER_SIGNUP_SUCCESS, payload: rider}))
-	// 		), 3000)
-	// 	})
-	// 	.then(res => res)
-	// 	.catch(err => err)
-	// )
 	return (
 		axiosAuth().post('/register', {...rider, driver:false})
 		.then(res =>{
@@ -29,19 +56,11 @@ export const signup_rider = (rider) => dispatch => {
 		})
 		.catch(err => err.message)
 	)
+	
 }
 
 export const login_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_LOGIN_STARTED})
-	// return (
-	// 	new Promise((resolve, reject) => {
-	// 		setTimeout(() => (
-	// 			resolve(dispatch({type: RIDER_LOGIN_SUCCESS, payload: rider}))
-	// 		), 3000)
-	// 	})
-	// 	.then(res => res)
-	// 	.catch(err => err)
-	// )
 	return (
 		axiosAuth().post('/login', {...rider, driver:false})
 		.then(res =>{
@@ -51,3 +70,6 @@ export const login_rider = (rider) => dispatch => {
 		.catch(err => err.message)
 	)
 }
+
+
+

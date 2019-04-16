@@ -1,5 +1,5 @@
 import axios from 'axios'
-const BASE_URL = "http://localhost:4500|| ''"
+const BASE_URL = "https://ride-for-life.herokuapp.com/api"
 
 export default function (){
 	const token = localStorage.getItem('token')

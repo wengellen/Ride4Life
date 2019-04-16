@@ -1,30 +1,42 @@
 import React, { createRef, Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PinkButton from "../../components/Button/PinkButton";
+import {connect} from 'react-redux'
 import Map from './map/CustomMap'
-
-const styles = {
-	root: {
-		background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-		borderRadius: 3,
-		border: 0,
-		color: 'white',
-		height: 48,
-		padding: '0 30px',
-		boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-		width: '100%'
-	},
-};
+import {findDriversNearby, sendTripRequest} from "../../actions";
 
 class RiderHomePage extends Component {
-	setDestination = (e)=>{
+	state = {
+		location: {
+		
+		}
+	}
+	componentDidMount() {
+		this.props.findDriversNearby(this.state.location)
+	}
+	
+	loadDriverProfile = (driver)=>{
+		console.log('login clicked')
+		// this.props.(this.state.credentials).then(() => {
+		// 	console.log('his.props.login(this.state.credentials).then')
+	    this.props.history.push(`/drivers/${driver.id}`);
+		// });
+	}
+	
+	//
+	// findDriversNearby = (e)=>{
+	// 	e.preventDefault()
+	// 	this.props.findDriversNearby()
+	// }
+	
+	sendTripRequest = (e)=>{
 		e.preventDefault()
 		console.log('e',e)
+		this.props.sendTripRequest()
 	}
 
 	render() {
-		console.log('classes', classes)
-		const { classes} = this.props;
+		console.log('driversNearby', this.props)
 		return (
 			<div className="map-wrapper">
 				<div id="map-instructions">
@@ -39,18 +51,44 @@ class RiderHomePage extends Component {
 							type="text"
 							placeholder="End Location"/>
 						<PinkButton
-							className={classes.root.width}
 							type="submit"
-							onClick={this.setDestination}>Request Ride</PinkButton>
+							onClick={this.sendTripRequest}>Request Ride</PinkButton>
 					</form>
 				</div>
 				<div className="map-container">
 					<Map zoom={16} center={{ lat: 39.74739, lng: -105 }} />
 				</div>
+				<div className="drivers-container">
+					{this.props.driversNearby && this.props.driversNearby.map((driver, idx) => {
+						return <div className="driver-item-container" key={idx}
+									 onClick={e => this.loadDriverProfile(driver)}>
+									<div className="driver-img-container">
+										<img src="http://lorempixel.com/500/500"/>
+									</div>
+									<div className="driver-item-content">
+										<h2>{driver.displayName}</h2>
+										<h3>2 mi
+											<span>{`, ${driver.earnedRatings} stars` }</span>
+										</h3>
+									</div>
+								</div>
+					})}
+				</div>
 				
-			 </div>
+			</div>
 		);
 	}
 }
 
-export default withStyles(styles)(RiderHomePage);
+const mapStateToProps = ({riderReducer, tripReducer}) => (
+	{
+		findNearbyDriverStarted:riderReducer.findNearbyDriverStarted,
+		driversNearby: riderReducer.driversNearby
+	}
+)
+
+export default connect(
+	mapStateToProps,
+	{ findDriversNearby,
+	  sendTripRequest }
+)(withStyles()(RiderHomePage));
