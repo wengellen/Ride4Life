@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PinkButton from "../../components/Button/PinkButton";
 import {connect} from 'react-redux'
 import Map from './map/CustomMap'
-import {findDriversNearby, sendTripRequest} from "../../actions";
+import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
 
 class RiderHomePage extends Component {
 	state = {
@@ -12,15 +12,15 @@ class RiderHomePage extends Component {
 		}
 	}
 	componentDidMount() {
-		this.props.findDriversNearby(this.state.location)
+		// this.props.findDriversNearby(this.state.location)
 	}
 	
 	loadDriverProfile = (driver)=>{
 		console.log('login clicked')
-		// this.props.(this.state.credentials).then(() => {
-		// 	console.log('his.props.login(this.state.credentials).then')
-	    this.props.history.push(`/drivers/${driver.id}`);
-		// });
+		this.props.getDriversById(driver.id).then(() => {
+	    	console.log('his.props.login(this.state.credentials).then')
+	    	this.props.history.push(`/drivers/${driver.id}`);
+		});
 	}
 	
 	//
@@ -90,5 +90,6 @@ const mapStateToProps = ({riderReducer, tripReducer}) => (
 export default connect(
 	mapStateToProps,
 	{ findDriversNearby,
-	  sendTripRequest }
+	  sendTripRequest,
+	  getDriversById }
 )(withStyles()(RiderHomePage));

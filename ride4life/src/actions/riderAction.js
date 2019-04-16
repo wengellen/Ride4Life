@@ -39,7 +39,6 @@ export const getDriversById = (driverId) => dispatch => {
 		})
 		.catch(err => err.message)
 	)
-	
 }
 
 

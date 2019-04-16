@@ -18,9 +18,26 @@ const initialState = {
 	riderLoginStarted: false,
 	findNearbyDriverStarted: false,
 	requestDetails:{},
-	driversNearby:[
+	driverProfile:
 		{
-			"id" : "01",
+			"driver_id": 1,
+			"username": "greatDriver",
+			"reviews": [
+			{
+				"rider_id": 2,
+				"review": "great ride",
+				"rating": 5
+			},
+			{
+				"rider_id": 5,
+				"review": "way too bumpy, water broke on way to hospital",
+				"rating": 2
+			}]
+		},
+		
+		driversNearby:[
+		{
+			"id" : 1,
 			"displayName" : "Martin",
 			"phone" : "01",
 			"email" : "driver01@gmail.com",
@@ -37,7 +54,7 @@ const initialState = {
 			}
 		},
 		{
-			"id" : "02",
+			"id" : 2,
 			"displayName" : "Kingston",
 			"phone" : "02",
 			"email" : "driver01@gmail.com",
@@ -54,7 +71,7 @@ const initialState = {
 			}
 		},
 		{
-			"id" : "03",
+			"id" : 3,
 			"displayName" : "Kingston",
 			"phone" : "03",
 			"email" : "driver01@gmail.com",
@@ -71,7 +88,7 @@ const initialState = {
 			}
 		},
 		{
-			"id" : "04",
+			"id" : 4,
 			"displayName" : "Kingston",
 			"phone" : "04",
 			"email" : "driver01@gmail.com",
@@ -88,7 +105,7 @@ const initialState = {
 			}
 		},
 		{
-			"id" : "05",
+			"id" : 5,
 			"displayName" : "Kingston",
 			"phone" : "05",
 			"email" : "driver01@gmail.com",
@@ -105,7 +122,7 @@ const initialState = {
 			}
 		},
 		{
-			"id" : "06",
+			"id" : 6,
 			"displayName" : "Kingston",
 			"phone" : "06",
 			"email" : "driver01@gmail.com",
@@ -122,7 +139,7 @@ const initialState = {
 			}
 		},
 		{
-			"id" : "07",
+			"id" : 7,
 			"displayName" : "Kingston",
 			"phone" : "07",
 			"email" : "driver01@gmail.com",
