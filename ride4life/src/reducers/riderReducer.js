@@ -12,7 +12,6 @@ import {
 const initialState = {
 	riderSignupStarted: false,
 	riderLoginStarted: false,
-	
 	requestDetails:{},
 	driversNearby:[
 		{
@@ -55,9 +54,26 @@ export const riderReducer = (state = initialState, action)=>{
 			return {...state,
 				riderSignupStarted:true
 			}
+		case RIDER_SIGNUP_SUCCESS:
+			return {...state,
+				riderSignupStarted:false
+			}
+		case RIDER_SIGNUP_FAILURE:
+			return {...state,
+				riderSignupStarted:false
+			}
+			
 		case RIDER_LOGIN_STARTED:
 			return {...state,
 				riderLoginStarted:true
+			}
+		case RIDER_LOGIN_SUCCESS:
+			return {...state,
+				riderLoginStarted:false
+			}
+		case RIDER_LOGIN_FAILURE:
+			return {...state,
+				riderLoginStarted:false
 			}
 		default:
 			return {...state}

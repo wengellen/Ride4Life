@@ -6,6 +6,8 @@ export {
 	DRIVER_LOGIN_STARTED,
 	DRIVER_LOGIN_SUCCESS,
 	DRIVER_LOGIN_FAILURE,
+	signup_driver,
+	login_driver
 }from './driverAction'
 
 
@@ -16,6 +18,8 @@ export {
 	RIDER_LOGIN_STARTED,
 	RIDER_LOGIN_SUCCESS,
 	RIDER_LOGIN_FAILURE,
+	signup_rider,
+	login_rider
 }from './riderAction'
 
 

@@ -11,8 +11,26 @@ export const RIDER_LOGIN_FAILURE = 'RIDER_LOGIN_FAILURE'
 // RIDER
 export const signup_rider = (rider)  => dispatch =>{
 	dispatch({type:RIDER_SIGNUP_STARTED})
+	return (
+		new Promise((resolve, reject)=>{
+			setTimeout(()=>(
+				resolve(dispatch({type:RIDER_SIGNUP_SUCCESS, payload:rider}))
+			), 3000)
+		})
+		.then(res => res)
+		.catch(err => err)
+	)
 }
 
 export const login_rider= (rider)  => dispatch =>{
 	dispatch({type:RIDER_LOGIN_STARTED})
+	return (
+		new Promise((resolve, reject)=>{
+			setTimeout(()=>(
+				resolve(dispatch({type:RIDER_LOGIN_SUCCESS, payload:rider}))
+			), 3000)
+		})
+		.then(res => res)
+		.catch(err => err)
+	)
 }
