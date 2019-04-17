@@ -1,4 +1,4 @@
-import axiosAuth from "../utils/axiosAuth";
+import {API} from "../utils/axiosAuth";
 
 export const SEND_TRIP_REQUEST_STARTED = 'SEND_TRIP_REQUEST_STARTED'
 export const SEND_TRIP_REQUEST_SUCCESS = 'SEND_TRIP_REQUEST_SUCCESS'
@@ -15,7 +15,7 @@ export const SEND_TRIP_REQUEST_FAILURE = 'SEND_TRIP_REQUEST_FAILURE'
 export const sendTripRequest = (trip) => dispatch => {
 	dispatch({type: SEND_TRIP_REQUEST_STARTED})
 	return (
-		axiosAuth().post('/request-trip')
+		API.post('/api/request-trip')
 		.then(res =>{
 			dispatch({type: SEND_TRIP_REQUEST_SUCCESS, payload: res.data})
 		})

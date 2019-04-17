@@ -1,6 +1,7 @@
 
 // DRIVER
-import axiosAuth from "../utils/axiosAuth";
+import {API} from "../utils/axiosAuth";
+import axios from 'axios'
 
 export const DRIVER_SIGNUP_STARTED = 'DRIVER_SIGNUP_STARTED'
 export const DRIVER_SIGNUP_SUCCESS = 'DRIVER_SIGNUP_SUCCESS'
@@ -19,7 +20,7 @@ export const UPDATE_PROFILE_FAILURE = 'UPDATE_PROFILE_FAILURE'
 export const updateProfile = (user) => dispatch => {
 	dispatch({type: UPDATE_PROFILE_STARTED})
 	return (
-		axiosAuth().put(`/users/${user.id}`)
+		API.put(`/api/users/${user.id}`)
 		.then(res =>{
 			dispatch({type: UPDATE_PROFILE_SUCCESS, payload: res.data})
 		})
@@ -27,13 +28,12 @@ export const updateProfile = (user) => dispatch => {
 	)
 }
 
-
 // DRIVER
 export const signup_driver= (driver) => dispatch =>{
 	console.log('signup_driver',driver)
 	dispatch({type:DRIVER_SIGNUP_STARTED})
 	// return (
-		axiosAuth().post('/register', {...driver, driver:true})
+		return axios.post('https://ride-for-life.herokuapp.com/api/register', {...driver, driver:true})
 		.then(res =>{
 			dispatch({type: DRIVER_SIGNUP_SUCCESS, payload: res.data})
 		})
@@ -43,12 +43,12 @@ export const signup_driver= (driver) => dispatch =>{
 
 export const login_driver= (driver) => dispatch =>{
 	dispatch({type:DRIVER_LOGIN_STARTED})
-	return (axiosAuth().post('/login', {...driver, driver:true})
-		.then(res =>{
+	// return (API.post('/api/login', {...driver, driver:true})
+	return axios.post('https://ride-for-life.herokuapp.com/api/login', {...driver, driver:true})
+	   .then(res =>{
 			dispatch({type: DRIVER_LOGIN_SUCCESS, payload: res.data})
 			localStorage.setItem('token', res.data.token)
 		})
 		.catch(err => err.message)
-	)
 }
 

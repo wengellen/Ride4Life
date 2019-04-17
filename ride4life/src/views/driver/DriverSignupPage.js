@@ -37,24 +37,25 @@ class DriverSingupPage extends React.Component {
     window.scrollTo(0, 0);
     document.body.scrollTop = 0;
   }
-  
-  handleChange = e => {
-    this.setState({
-        profile: {
-        ...this.state.profile,
-        [e.target.name]: e.target.value
-      }
-    });
-  };
+    
+    handleChange = e => {
+        console.log('e',e)
+        this.setState({
+            profile: {
+                ...this.state.profile,
+                [e.currentTarget.name]: e.currentTarget.value
+            }
+        });
+    };
   
   signupDriver = e => {
     console.log('signup_driver clicked')
     e.preventDefault();
     this.props.signup_driver(this.state.profile)
-    .then(() => {
-      console.log('his.props.login(this.state.credentials).then')
-      this.props.history.push('/driver-login');
-    });
+    // .then(() => {
+    //   console.log('his.props.login(this.state.credentials).then')
+    //   this.props.history.push('/driver-login');
+    // });
   };
   
   render() {
@@ -81,14 +82,15 @@ class DriverSingupPage extends React.Component {
                     <CardBody signup>
                       <CustomInput
                           id="first"
-                          onChange={this.handleChange}
-                          value= {this.state.profile.username}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
                             placeholder: "Useraname",
                             type: "text",
+                              onChange:this.handleChange,
+                              value:this.state.profile.username,
+                              name:'username',
                             startAdornment: (
                                 <InputAdornment position="start">
                                   <Face className={classes.inputIconsColor} />
@@ -98,14 +100,15 @@ class DriverSingupPage extends React.Component {
                       />
                       <CustomInput
                           id="password"
-                          onChange={this.handleChange}
-                          value= {this.state.profile.password}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
                             placeholder: "Password",
                             type: "password",
+                              onChange:this.handleChange,
+                              value:this.state.profile.password,
+                              name:'password',
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <Lock className={classes.inputIconsColor} />
@@ -114,16 +117,17 @@ class DriverSingupPage extends React.Component {
                           }}
                       />
                       <CustomInput
-                          id="cellphone"
-                          onChange={this.handleChange}
-                          value= {this.state.profile.phone}
+                          id="phone"
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
                             placeholder: "Cell phone",
                             type: "phone",
-                            startAdornment: (
+                              onChange:this.handleChange,
+                              value:this.state.profile.phone,
+                              name:'phone',
+                              startAdornment: (
                                 <InputAdornment position="start">
                                     <Phone className={classes.inputIconsColor} />
                                 </InputAdornment>
@@ -132,14 +136,15 @@ class DriverSingupPage extends React.Component {
                       />
                       <CustomInput
                           id="location"
-                          onChange={this.handleChange}
-                          value= {this.state.profile.location}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
                             placeholder: "Location",
                             type: "option",
+                              onChange:this.handleChange,
+                              value:this.state.profile.location,
+                              name:'location',
                             startAdornment: (
                                 <InputAdornment position="start">
                                   <Place className={classes.inputIconsColor}/>
@@ -149,14 +154,15 @@ class DriverSingupPage extends React.Component {
                       />
                       <CustomInput
                           id="email"
-                          onChange={this.handleChange}
-                          value= {this.state.profile.email}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
                             placeholder: "Email...",
                             type: "email",
+                              onChange:this.handleChange,
+                              value:this.state.profile.email,
+                              name:'email',
                               startAdornment: (
                                 <InputAdornment position="start">
                                   <Email className={classes.inputIconsColor} />

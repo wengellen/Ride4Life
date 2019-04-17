@@ -12,8 +12,8 @@ import {
 	FIND_DRIVER_BY_ID_STARTED,
 	FIND_DRIVER_BY_ID_SUCCESS,
 	FIND_DRIVER_BY_ID_FAILURE,
-s
-}from '../actions'
+	s, LOGOUT_USER
+} from '../actions'
 
 
 const initialState = {
@@ -56,16 +56,16 @@ const initialState = {
 			}]
 		},
 		
-		driversNearby:[
-		{
-			driver: 1,
-			driver_id: 1,
-			email: "rider1@rfl.com",
-			location: "1234, 12345",
-			password: "$2a$10$JhuN1iHpKfiV/mRSiyAJG.m1ZlOaUMtvvoZ4R7iUzTP5cljhx/edG",
-			phone: "4159228525",
-			username: "DriverProfile1",
-		},
+		driversNearby:[],
+		// {
+		// 	driver: 1,
+		// 	driver_id: 1,
+		// 	email: "rider1@rfl.com",
+		// 	location: "1234, 12345",
+		// 	password: "$2a$10$JhuN1iHpKfiV/mRSiyAJG.m1ZlOaUMtvvoZ4R7iUzTP5cljhx/edG",
+		// 	phone: "4159228525",
+		// 	username: "DriverProfile1",
+		// },
 		// {
 		// 	"id" : 7,
 		// 	"displayName" : "Kingston",
@@ -83,22 +83,29 @@ const initialState = {
 		// 		]
 		// 	}
 		// },
-	],
 	
-	riderProfile:
-		{
-			"requestTime" : {date:"2016-10-31T12:12:37.321Z"},
-			"location" : {
-				"coordinates" : [
-					77.612257,
-					12.934729
-				],
-				"address" : "The Forum, 21 Hosur Road, Bengaluru South, Karnataka, India"
-			},
-			"citizenId" : "citizen1",
-			"status" : "engaged",
-			"copId" : "06"
-		}
+	loggedInUser:null
+		// {
+		// 	"requestTime" : {date:"2016-10-31T12:12:37.321Z"},
+		// 	"location" : {
+		// 		"coordinates" : [
+		// 			77.612257,
+		// 			12.934729
+		// 		],
+		// 		"address" : "The Forum, 21 Hosur Road, Bengaluru South, Karnataka, India"
+		// 	},
+		// 	"citizenId" : "citizen1",
+		// 	"status" : "engaged",
+		// 	"copId" : "06"
+		// }
+		// {
+		// 	"message": "Welcome greatRider!",
+		// 	"username":"rider1",
+		// 	"driver":false,
+		// 	"phone": 4125967234,
+		// 	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdyZWF0UmlkZXIiLCJwaG9uZSI6IjMyMSIsImRyaXZlciI6MCwiaWF0IjoxNTU1NDI3NDU2LCJleHAiOjE1NTU1MTM4NTZ9.LPMSHq757G9JNoJPU_0Ifq1u3uJvipHqDVTHKYej6uY"
+		// }
+	
 }
 
 export const riderReducer = (state = initialState, action)=>{
@@ -124,7 +131,7 @@ export const riderReducer = (state = initialState, action)=>{
 		case RIDER_LOGIN_SUCCESS:
 			return {...state,
 				riderLoginStarted:false,
-				riderProfile: action.payload
+				loggedInUser: action.payload
 			}
 		case RIDER_LOGIN_FAILURE:
 			return {...state,
@@ -137,7 +144,7 @@ export const riderReducer = (state = initialState, action)=>{
 		case FIND_DRIVERS_NEARBY_SUCCESS:
 			return {...state,
 				findNearbyDriverStarted:false,
-				driversNearby: action.payload || state.driversNearby
+				driversNearby: action.payload
 			}
 		case FIND_DRIVERS_NEARBY_FAILURE:
 			return {...state,
@@ -152,12 +159,18 @@ export const riderReducer = (state = initialState, action)=>{
 		case FIND_DRIVER_BY_ID_SUCCESS:
 			return {...state,
 				findDriverByIdStarted:false,
-				currentDriver: action.payload || state.currentDriver
+				currentDriver: action.payload
 			}
 		case FIND_DRIVER_BY_ID_FAILURE:
 			return {...state,
 				findDriverByIdStarted:false
 			}
+			
+		case LOGOUT_USER:
+			return {...state,
+				currentDriver: null
+			}
+		
 		default:
 			return {...state}
 	}

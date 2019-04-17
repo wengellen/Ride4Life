@@ -19,15 +19,14 @@ import ChildCare from "@material-ui/icons/ChildCare";
 import TimeToLeave from "@material-ui/icons/TimeToLeave";
 // core components
 import headerStyle from "../../assets/jss/material-kit-pro-react/components/headerStyle.jsx";
-import {PrivateRoute} from "../PrivateRoute";
 import logo from "assets/img/safe_logo.png";
-
+import {logoutUser} from "../../actions";
 
 class Header extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			mobileOpen: false
+			mobileOpen: false,
 		};
 		this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
 		this.headerColorChange = this.headerColorChange.bind(this);
@@ -40,6 +39,12 @@ class Header extends React.Component {
 			window.addEventListener("scroll", this.headerColorChange);
 		}
 	}
+	
+	logout(){
+		this.props.logoutUser()
+		this.props.history.push('/rider-logout');
+	}
+	
 	headerColorChange() {
 		const { classes, color, changeColorOnScroll } = this.props;
 		const windowsScrollTop = window.pageYOffset;
@@ -65,7 +70,7 @@ class Header extends React.Component {
 		}
 	}
 	render() {
-		const { classes, color, links, brand, fixed, absolute } = this.props;
+		const { classes, color, links, brand, fixed, absolute, loggedInUser } = this.props;
 		const appBarClasses = classNames({
 			[classes.appBar]: true,
 			[classes[color]]: color,
@@ -82,18 +87,34 @@ class Header extends React.Component {
 								<img src={logo} />
 							</div>
 						</Link>
-						<IconButton className={classes.titleNoUnder}>
-							<ChildCare/>
-							<Link className={classes.titleNoUnder}
-								  display="none"
-								  to="/rider-login">Login</Link>
-						</IconButton>
-						<IconButton className={classes.titleNoUnder}>
-							<TimeToLeave/>
-							<Link className={classes.titleNoUnder}
-								  display={{ xs: 'none', sm: 'block' }}
-									to="/driver-login">Driver Login</Link>
-						</IconButton>
+					{loggedInUser
+					  ? <div>
+							{ loggedInUser.driver
+								?	<IconButton className={classes.titleNoUnder} onClick={this.logout}>
+										<TimeToLeave/>
+							        </IconButton>
+								:   <IconButton className={classes.titleNoUnder} onClick={this.logout}>
+										<ChildCare/>
+									</IconButton>
+							}
+						</div>
+					  : <div>
+							<IconButton className={classes.titleNoUnder}>
+								<ChildCare/>
+								<Link className={classes.titleNoUnder}
+									  display="none"
+									  to="/rider-login">Login</Link>
+							</IconButton>
+							<IconButton className={classes.titleNoUnder}>
+								<TimeToLeave/>
+								<Link className={classes.titleNoUnder}
+									  display={{ xs: 'none', sm: 'block' }}
+									  to="/driver-login">Driver Login</Link>
+							</IconButton>
+						</div>
+						
+					}
+					
 					<Hidden smDown implementation="css" className={classes.hidden}>
 						<div className={classes.collapse}>{links}</div>
 					</Hidden>
@@ -176,5 +197,16 @@ Header.propTypes = {
 	})
 };
 
-export default connect(null, {})(withStyles(headerStyle)(Header));
+const mapStateToProps = ({riderReducer}) => (
+	{
+		loggedInUser:riderReducer.loggedInUser
+	}
+)
+
+export default connect(
+	mapStateToProps,
+	{logoutUser }
+)(withStyles(headerStyle)(Header));
+
+
 

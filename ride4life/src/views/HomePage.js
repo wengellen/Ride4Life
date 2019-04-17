@@ -3,9 +3,12 @@ import './App.css';
 import PinkButton from "../components/Button/PinkButton";
 import Button from "../components/CustomButtons/Button.js";
 import SectionCarousel from "../components/Carousel/SectionCarousel";
+import {connect} from "react-redux";
+import {login_driver} from "../actions";
+import withStyles from "@material-ui/core/styles/withStyles";
 class HomePage extends Component {
     componentDidMount() {
-    
+        // logoutUser()
     }
     
     render() {
@@ -26,4 +29,14 @@ class HomePage extends Component {
   }
 }
 
-export default HomePage;
+export default HomePage
+// const mapStateToProps = ({riderReducer}) => (
+//     {
+//         driverSignupStarted:riderReducer.loggedInUser
+//     }
+// )
+//
+// export default connect(
+//     mapStateToProps,
+//     {  }
+// )( HomePage);

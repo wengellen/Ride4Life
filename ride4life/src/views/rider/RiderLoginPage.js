@@ -88,7 +88,10 @@ class RiderLoginPage extends React.Component {
 											}}
 											inputProps={{
 												placeholder: "Phone",
-												type: "text",
+												type: "phone",
+												onChange:this.handleChange,
+												value:this.state.credentials.phone,
+												name:'phone',
 												startAdornment: (
 													<InputAdornment position="start">
 														<Phone className={classes.inputIconsColor} />
@@ -102,7 +105,9 @@ class RiderLoginPage extends React.Component {
 												fullWidth: true
 											}}
 											inputProps={{
-												
+												onChange:this.handleChange,
+												value:this.state.credentials.password,
+												name:'password',
 												placeholder: "Password",
 												type: "password",
 												startAdornment: (

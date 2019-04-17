@@ -44,14 +44,15 @@ class RiderSingupPage extends React.Component {
         this.setState({
             profile: {
                 ...this.state.profile,
-                [e.target.name]: e.target.value
+                [e.currentTarget.name]: e.currentTarget.value
             }
         });
     };
     
     signup = e => {
         console.log('signup clicked')
-        e.preventDefault();
+        e.preventDefault()
+        console.log('this.state.profile',this.state.profile);
         this.props.signup_rider(this.state.profile).then(() => {
             console.log('his.props.login(this.state.profile).then')
             this.props.history.push('/rider-login');
@@ -81,14 +82,16 @@ class RiderSingupPage extends React.Component {
                                     <CardBody signup>
                                         <CustomInput
                                             id="first"
-                                            onChange={this.handleChange}
-                                            value= {this.state.profile.username}
+                                          
                                             formControlProps={{
                                                 fullWidth: true,
                                                 
                                             }}
                                             inputProps={{
+                                                onChange:this.handleChange,
+                                                value:this.state.profile.username,
                                                 placeholder: "Useraname",
+                                                name:'username',
                                                 type: "text",
                                                 startAdornment: (
                                                     <InputAdornment position="start">
@@ -99,15 +102,16 @@ class RiderSingupPage extends React.Component {
                                         />
                                         <CustomInput
                                             id="password"
-                                            value={this.state.profile.password}
+                                          
                                             formControlProps={{
                                                 fullWidth: true
-                                                
                                             }}
                                             inputProps={{
                                                 placeholder: "Password",
                                                 type: "password",
-                                            
+                                                onChange:this.handleChange,
+                                                name:'password',
+                                                value:this.state.profile.password,
                                                 startAdornment: (
                                                     <InputAdornment position="start">
                                                         <Lock className={classes.inputIconsColor} />
@@ -117,13 +121,15 @@ class RiderSingupPage extends React.Component {
                                         />
                                         <CustomInput
                                             id="cellphone"
-                                            value={this.state.profile.phone}
                                             formControlProps={{
                                                 fullWidth: true
                                             }}
                                             inputProps={{
                                                 placeholder: "Cell phone",
                                                 type: "phone",
+                                                onChange:this.handleChange,
+                                                value:this.state.profile.phone,
+                                                name:'phone',
                                                 startAdornment: (
                                                     <InputAdornment position="start">
                                                         <Phone className={classes.inputIconsColor} />

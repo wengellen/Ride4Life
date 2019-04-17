@@ -38,7 +38,7 @@ class DriverLoginPage extends React.Component {
 		this.setState({
 			credentials: {
 				...this.state.credentials,
-				[e.target.name]: e.target.value
+				[e.currentTarget.name]: e.currentTarget.value
 			}
 		});
 	};
@@ -83,14 +83,17 @@ class DriverLoginPage extends React.Component {
 									<CardBody signup>
 										<CustomInput
 											id="phone"
-											onChange={this.handleChange}
-											value= {this.state.credentials.phone}
 											formControlProps={{
 												fullWidth: true
 											}}
 											inputProps={{
 												placeholder: "Phone",
-												type: "text",
+												type: "tel",
+												onChange:this.handleChange,
+												value:this.state.credentials.phone,
+												name:'Phone',
+												pattern:"[0-9]{3}[0-9]{3}[0-9]{4}",
+												required:true,
 												startAdornment: (
 													<InputAdornment position="start">
 														<Phone className={classes.inputIconsColor} />
@@ -100,14 +103,18 @@ class DriverLoginPage extends React.Component {
 										/>
 										<CustomInput
 											id="pass"
-											onChange={this.handleChange}
-											value= {this.state.credentials.password}
 											formControlProps={{
 												fullWidth: true
 											}}
 											inputProps={{
 												placeholder: "Password",
 												type: "password",
+												onChange:this.handleChange,
+												value:this.state.credentials.password,
+												name:'password',
+												minLength:"8",
+												required:true,
+												
 												startAdornment: (
 													<InputAdornment position="start">
 														<Lock className={classes.inputIconsColor}/>

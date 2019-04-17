@@ -47,6 +47,7 @@ class App extends React.Component {
 					<Route path="/rider-home" component={RiderHomePage} />
 					<Route path="/driver-home" component={DriverHomePage} />
 					<Route path="/drivers/:id" component={DriverProfilePage} />
+					<Route path="/user-logout" component={HomePage} />
 					{/*<PrivateRoute path="/friends" component={FriendListPage}/>*/}
 				</Switch>
 				{/*<Footer />*/}

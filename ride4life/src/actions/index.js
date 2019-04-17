@@ -25,6 +25,8 @@ export {
 	FIND_DRIVER_BY_ID_STARTED,
 	FIND_DRIVER_BY_ID_SUCCESS,
 	FIND_DRIVER_BY_ID_FAILURE,
+	LOGOUT_USER,
+	logoutUser,
 	getDriversById,
 	findDriversNearby,
 	signup_rider,
