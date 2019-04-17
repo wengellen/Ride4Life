@@ -28,7 +28,7 @@ class DriverSingupPage extends React.Component {
       password: '0000',
       phone:'6509522257',
       location:'CA',
-       // email: 'eweng@gmail.com',
+       email: 'eweng@gmail.com',
     
     }
   };
@@ -51,10 +51,10 @@ class DriverSingupPage extends React.Component {
     console.log('signup_driver clicked')
     e.preventDefault();
     this.props.signup_driver(this.state.profile)
-    // .then(() => {
-    //   console.log('his.props.login(this.state.credentials).then')
-    //   this.props.history.push('/driver-login');
-    // });
+    .then(() => {
+      console.log('his.props.login(this.state.credentials).then')
+      this.props.history.push('/driver-login');
+    });
   };
   
   render() {
@@ -147,23 +147,23 @@ class DriverSingupPage extends React.Component {
                             )
                           }}
                       />
-                      {/*<CustomInput*/}
-                          {/*id="email"*/}
-                          {/*onChange={this.handleChange}*/}
-                          {/*value= {this.state.profile.email}*/}
-                          {/*formControlProps={{*/}
-                            {/*fullWidth: true*/}
-                          {/*}}*/}
-                          {/*inputProps={{*/}
-                            {/*placeholder: "Email...",*/}
-                            {/*type: "email",*/}
-                              {/*startAdornment: (*/}
-                                {/*<InputAdornment position="start">*/}
-                                  {/*<Email className={classes.inputIconsColor} />*/}
-                                {/*</InputAdornment>*/}
-                            {/*)*/}
-                          {/*}}*/}
-                      {/*/>*/}
+                      <CustomInput
+                          id="email"
+                          onChange={this.handleChange}
+                          value= {this.state.profile.email}
+                          formControlProps={{
+                            fullWidth: true
+                          }}
+                          inputProps={{
+                            placeholder: "Email...",
+                            type: "email",
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <Email className={classes.inputIconsColor} />
+                                </InputAdornment>
+                            )
+                          }}
+                      />
                     
                     </CardBody>
                     <div className={classes.textCenter}>

@@ -65,7 +65,7 @@ class DriverProfilePage extends Component {
 						<p>PRICE</p>
 					</div>
 					<div>
-						<h2>{currentDriver.reviews.length}</h2>
+						<h2>{currentDriver.reviews && currentDriver.reviews.length}</h2>
 						<p>REVIEWS</p>
 					</div>
 				</div>
