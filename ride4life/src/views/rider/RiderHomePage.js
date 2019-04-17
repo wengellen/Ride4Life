@@ -12,14 +12,14 @@ class RiderHomePage extends Component {
 		}
 	}
 	componentDidMount() {
-		// this.props.findDriversNearby(this.state.location)
+		this.props.findDriversNearby(this.state.location)
 	}
 	
 	loadDriverProfile = (driver)=>{
 		console.log('login clicked')
-		this.props.getDriversById(driver.id).then(() => {
+		this.props.getDriversById(driver.driver_id).then(() => {
 	    	console.log('his.props.login(this.state.credentials).then')
-	    	this.props.history.push(`/drivers/${driver.id}`);
+	    	this.props.history.push(`/drivers/${driver.driver_id}`);
 		});
 	}
 	
@@ -66,7 +66,7 @@ class RiderHomePage extends Component {
 										<img src="http://lorempixel.com/500/500"/>
 									</div>
 									<div className="driver-item-content">
-										<h2>{driver.displayName}</h2>
+										<h2>{driver.username}</h2>
 										<h3>2 mi
 											<span>{`, ${driver.earnedRatings} stars` }</span>
 										</h3>
@@ -92,4 +92,4 @@ export default connect(
 	{ findDriversNearby,
 	  sendTripRequest,
 	  getDriversById }
-)(withStyles()(RiderHomePage));
+)(RiderHomePage);

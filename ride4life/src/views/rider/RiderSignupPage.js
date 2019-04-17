@@ -26,9 +26,9 @@ import {Link} from "react-router-dom";
 class RiderSingupPage extends React.Component {
     state = {
         profile: {
-            username: 'eweng',
-            password: '0000',
-            phone:'6509522257',
+            username: '',
+            password: '',
+            phone:'',
             // location:'CA State',
             // email: 'eweng@gmail.com',
         }
@@ -40,6 +40,7 @@ class RiderSingupPage extends React.Component {
     }
     
     handleChange = e => {
+        console.log('e',e)
         this.setState({
             profile: {
                 ...this.state.profile,
@@ -80,13 +81,15 @@ class RiderSingupPage extends React.Component {
                                     <CardBody signup>
                                         <CustomInput
                                             id="first"
+                                            onChange={this.handleChange}
+                                            value= {this.state.profile.username}
                                             formControlProps={{
-                                                fullWidth: true
+                                                fullWidth: true,
+                                                
                                             }}
                                             inputProps={{
                                                 placeholder: "Useraname",
                                                 type: "text",
-                                                value:`${this.state.profile.username}`,
                                                 startAdornment: (
                                                     <InputAdornment position="start">
                                                         <Face className={classes.inputIconsColor} />
@@ -96,13 +99,15 @@ class RiderSingupPage extends React.Component {
                                         />
                                         <CustomInput
                                             id="password"
+                                            value={this.state.profile.password}
                                             formControlProps={{
                                                 fullWidth: true
+                                                
                                             }}
                                             inputProps={{
                                                 placeholder: "Password",
                                                 type: "password",
-                                                value:`${this.state.profile.password}`,
+                                            
                                                 startAdornment: (
                                                     <InputAdornment position="start">
                                                         <Lock className={classes.inputIconsColor} />
@@ -112,11 +117,11 @@ class RiderSingupPage extends React.Component {
                                         />
                                         <CustomInput
                                             id="cellphone"
+                                            value={this.state.profile.phone}
                                             formControlProps={{
                                                 fullWidth: true
                                             }}
                                             inputProps={{
-                                                value:`${this.state.profile.phone}`,
                                                 placeholder: "Cell phone",
                                                 type: "phone",
                                                 startAdornment: (

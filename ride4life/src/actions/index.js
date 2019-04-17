@@ -6,6 +6,7 @@ export {
 	DRIVER_LOGIN_STARTED,
 	DRIVER_LOGIN_SUCCESS,
 	DRIVER_LOGIN_FAILURE,
+	updateProfile,
 	signup_driver,
 	login_driver
 }from './driverAction'
@@ -30,12 +31,9 @@ export {
 	login_rider
 }from './riderAction'
 
-
 export {
 	SEND_TRIP_REQUEST_STARTED,
 	SEND_TRIP_REQUEST_SUCCESS,
 	SEND_TRIP_REQUEST_FAILURE,
 	sendTripRequest
 }from './tripAction'
-
-

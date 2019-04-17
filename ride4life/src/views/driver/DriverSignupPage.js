@@ -10,11 +10,9 @@ import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 // import image from "assets/img/bg7.jpg";
-import Button from "../../components/CustomButtons/Button";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CardBody from "../../components/Card/CardBody";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import Icon from "@material-ui/core/Icon";
 import Email from "@material-ui/icons/Email";
 import Lock from "@material-ui/icons/Lock";
 import Phone from "@material-ui/icons/Phone";
@@ -30,7 +28,7 @@ class DriverSingupPage extends React.Component {
       password: '0000',
       phone:'6509522257',
       location:'CA',
-       email: 'eweng@gmail.com',
+       // email: 'eweng@gmail.com',
     
     }
   };
@@ -52,10 +50,11 @@ class DriverSingupPage extends React.Component {
   signupDriver = e => {
     console.log('signup_driver clicked')
     e.preventDefault();
-    this.props.signup_driver(this.state.profile).then(() => {
-      console.log('his.props.login(this.state.credentials).then')
-      this.props.history.push('/driver-login');
-    });
+    this.props.signup_driver(this.state.profile)
+    // .then(() => {
+    //   console.log('his.props.login(this.state.credentials).then')
+    //   this.props.history.push('/driver-login');
+    // });
   };
   
   render() {
@@ -82,13 +81,14 @@ class DriverSingupPage extends React.Component {
                     <CardBody signup>
                       <CustomInput
                           id="first"
+                          onChange={this.handleChange}
+                          value= {this.state.profile.username}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
                             placeholder: "Useraname",
                             type: "text",
-                            value:`${this.state.profile.username}`,
                             startAdornment: (
                                 <InputAdornment position="start">
                                   <Face className={classes.inputIconsColor} />
@@ -98,13 +98,14 @@ class DriverSingupPage extends React.Component {
                       />
                       <CustomInput
                           id="password"
+                          onChange={this.handleChange}
+                          value= {this.state.profile.password}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
                             placeholder: "Password",
                             type: "password",
-                             value:`${this.state.profile.password}`,
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <Lock className={classes.inputIconsColor} />
@@ -114,11 +115,12 @@ class DriverSingupPage extends React.Component {
                       />
                       <CustomInput
                           id="cellphone"
+                          onChange={this.handleChange}
+                          value= {this.state.profile.phone}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
-                             value:`${this.state.profile.phone}`,
                             placeholder: "Cell phone",
                             type: "phone",
                             startAdornment: (
@@ -130,11 +132,12 @@ class DriverSingupPage extends React.Component {
                       />
                       <CustomInput
                           id="location"
+                          onChange={this.handleChange}
+                          value= {this.state.profile.location}
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
-                              value:`${this.state.profile.location}`,
                             placeholder: "Location",
                             type: "option",
                             startAdornment: (
@@ -144,23 +147,23 @@ class DriverSingupPage extends React.Component {
                             )
                           }}
                       />
-                      <CustomInput
-                          id="email"
-                          formControlProps={{
-                            fullWidth: true
-                          }}
-                          inputProps={{
-                            placeholder: "Email...",
-                            type: "email",
-                             value:`${this.state.profile.email}`,
-    
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <Email className={classes.inputIconsColor} />
-                                </InputAdornment>
-                            )
-                          }}
-                      />
+                      {/*<CustomInput*/}
+                          {/*id="email"*/}
+                          {/*onChange={this.handleChange}*/}
+                          {/*value= {this.state.profile.email}*/}
+                          {/*formControlProps={{*/}
+                            {/*fullWidth: true*/}
+                          {/*}}*/}
+                          {/*inputProps={{*/}
+                            {/*placeholder: "Email...",*/}
+                            {/*type: "email",*/}
+                              {/*startAdornment: (*/}
+                                {/*<InputAdornment position="start">*/}
+                                  {/*<Email className={classes.inputIconsColor} />*/}
+                                {/*</InputAdornment>*/}
+                            {/*)*/}
+                          {/*}}*/}
+                      {/*/>*/}
                     
                     </CardBody>
                     <div className={classes.textCenter}>

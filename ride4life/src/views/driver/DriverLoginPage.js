@@ -83,6 +83,8 @@ class DriverLoginPage extends React.Component {
 									<CardBody signup>
 										<CustomInput
 											id="phone"
+											onChange={this.handleChange}
+											value= {this.state.credentials.phone}
 											formControlProps={{
 												fullWidth: true
 											}}
@@ -98,6 +100,8 @@ class DriverLoginPage extends React.Component {
 										/>
 										<CustomInput
 											id="pass"
+											onChange={this.handleChange}
+											value= {this.state.credentials.password}
 											formControlProps={{
 												fullWidth: true
 											}}

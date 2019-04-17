@@ -19,10 +19,10 @@ export const FIND_DRIVER_BY_ID_FAILURE = 'FIND_DRIVER_BY_ID_FAILURE'
 
 
 // Find drivers nearby
-export const findDriversNearby = (rider) => dispatch => {
+export const findDriversNearby = (location) => dispatch => {
 	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
 	return (
-		axiosAuth().post('/drivers-nearby', {...rider, driver:false})
+		axiosAuth().get('/drivers')
 		.then(res =>{
 			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
 		})
@@ -40,8 +40,6 @@ export const getDriversById = (driverId) => dispatch => {
 		.catch(err => err.message)
 	)
 }
-
-
 
 
 
