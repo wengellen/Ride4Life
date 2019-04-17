@@ -26,7 +26,7 @@ export const findDriversNearby = (location) => dispatch => {
 	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
 	return (
 		API.get('/api/drivers')
-		.then(res =>{
+	.then(res =>{
 			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
 		})
 		.catch(err => err.message)

@@ -157,9 +157,10 @@ export const riderReducer = (state = initialState, action)=>{
 				findDriverByIdStarted:true
 			}
 		case FIND_DRIVER_BY_ID_SUCCESS:
+			console.log('currentDriver', action.payload)
 			return {...state,
 				findDriverByIdStarted:false,
-				currentDriver: action.payload
+				currentDriver: {...action.payload}
 			}
 		case FIND_DRIVER_BY_ID_FAILURE:
 			return {...state,
