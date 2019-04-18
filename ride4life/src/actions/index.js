@@ -25,17 +25,14 @@ export {
 	FIND_DRIVER_BY_ID_STARTED,
 	FIND_DRIVER_BY_ID_SUCCESS,
 	FIND_DRIVER_BY_ID_FAILURE,
+	SEND_TRIP_REQUEST_STARTED,
+	SEND_TRIP_REQUEST_SUCCESS,
+	SEND_TRIP_REQUEST_FAILURE,
 	LOGOUT_USER,
 	logoutUser,
 	getDriversById,
 	findDriversNearby,
 	signup_rider,
-	login_rider
-}from './riderAction'
-
-export {
-	SEND_TRIP_REQUEST_STARTED,
-	SEND_TRIP_REQUEST_SUCCESS,
-	SEND_TRIP_REQUEST_FAILURE,
+	login_rider,
 	sendTripRequest
-}from './tripAction'
+}from './riderAction'

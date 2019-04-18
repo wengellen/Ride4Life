@@ -1,6 +1,5 @@
 // RIDER
 import {API} from "../utils/axiosAuth";
-import axios from "axios";
 
 export const RIDER_SIGNUP_STARTED = 'RIDER_SIGNUP_STARTED'
 export const RIDER_SIGNUP_SUCCESS = 'RIDER_SIGNUP_SUCCESS'
@@ -19,6 +18,30 @@ export const FIND_DRIVERS_NEARBY_FAILURE = 'FIND_DRIVERS_NEARBY_FAILURE'
 export const FIND_DRIVER_BY_ID_STARTED = 'FIND_DRIVER_BY_ID_STARTED'
 export const FIND_DRIVER_BY_ID_SUCCESS = 'FIND_DRIVER_BY_ID_SUCCESS'
 export const FIND_DRIVER_BY_ID_FAILURE = 'FIND_DRIVER_BY_ID_FAILURE'
+
+export const SEND_TRIP_REQUEST_STARTED = 'SEND_TRIP_REQUEST_STARTED'
+export const SEND_TRIP_REQUEST_SUCCESS = 'SEND_TRIP_REQUEST_SUCCESS'
+export const SEND_TRIP_REQUEST_FAILURE = 'SEND_TRIP_REQUEST_FAILURE'
+
+
+// SEND_RIDE_REQUEST
+// Should return a list of drivers nearby
+export const sendTripRequest = (trip) => dispatch => {
+	dispatch({type: SEND_TRIP_REQUEST_STARTED})
+	return (
+		new Promise((resolve, reject) => {
+			resolve('Trip request sent')
+		})
+		.then(res =>{
+			console.log('sendTripRequest',res)
+			dispatch({type: SEND_TRIP_REQUEST_SUCCESS, payload: res})
+		})
+		.catch(err =>{
+			dispatch({type: FIND_DRIVER_BY_ID_FAILURE, payload: err.message})
+		})
+	)
+}
+
 
 
 // Find drivers nearby
@@ -69,6 +92,8 @@ export const login_rider = (rider) => dispatch => {
 		API.post('/api/login', {...rider, driver:false})
 		.then(res =>{
 			localStorage.setItem('token', res.data.token)
+			localStorage.setItem('loggedInUser', {...res.data})
+			
 			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
 		})
 		.catch(err =>{
@@ -79,13 +104,9 @@ export const login_rider = (rider) => dispatch => {
 }
 export const logoutUser = () => dispatch => {
 	localStorage.removeItem('token')
+	localStorage.removeItem('loggedInUser')
 	dispatch({type: LOGOUT_USER})
 }
-// export const logoutUser= () => (
-// 	{
-// 		type: LOGOUT_USER
-// 	}
-// )
 
 
 

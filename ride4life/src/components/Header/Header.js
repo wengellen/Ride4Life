@@ -25,20 +25,13 @@ import {logoutUser} from "../../actions";
 class Header extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			mobileOpen: false,
-		};
 		this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
 		this.headerColorChange = this.headerColorChange.bind(this);
 	}
-	//
-	componentWillMount() {
-		if(!this.props.loggedInUser){
-			this.props.history.push('/');
-		}
-	}
+    state = {
+		mobileOpen: false,
+	};
 
-	
 	handleDrawerToggle() {
 		this.setState({ mobileOpen: !this.state.mobileOpen });
 	}
@@ -50,7 +43,6 @@ class Header extends React.Component {
 	
 	logout(){
 		this.props.logoutUser()
-		// this.props.history.push('/');
 	}
 	
 	headerColorChange() {
@@ -88,7 +80,6 @@ class Header extends React.Component {
 			
 		});
 		return (
-
 			<AppBar className={appBarClasses}>
 				<Toolbar className={classes.container}>
 						<Link className={classes.titleNoUnder}
@@ -98,7 +89,7 @@ class Header extends React.Component {
 							</div>
 						</Link>
 					{this.props.loggedInUser
-					  ? <div>
+					  ? <div className="login-container">
 							{ this.props.loggedInUser && this.props.loggedInUser.driver
 								?	<IconButton className={classes.titleNoUnder} onClick={this.logout}>
 										<TimeToLeave/>
@@ -110,7 +101,7 @@ class Header extends React.Component {
 									</IconButton>
 							}
 						</div>
-					  : <div>
+					  : <div className="login-container">
 							<IconButton className={classes.titleNoUnder}>
 								<ChildCare/>
 								<Link className={classes.titleNoUnder}
@@ -210,7 +201,7 @@ Header.propTypes = {
 };
 
 const mapStateToProps = ({riderReducer}) => {
-	console.log('riderReducer.loggedInUser',riderReducer.loggedInUser)
+	console.log('riderReducer.loggedInUser',riderReducer)
 	return {
 		loggedInUser:riderReducer.loggedInUser
 	}

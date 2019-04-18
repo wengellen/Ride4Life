@@ -15,7 +15,7 @@ sendTripRequest,
 updateProfile
 } from '../../actions';
 
-class DriverProfilePage extends Component {
+class RiderTripRequestPage extends Component {
 	state = {
 		isEditing: false,
 		activeId: null,
@@ -55,6 +55,7 @@ class DriverProfilePage extends Component {
 		   return (
 			   <div className="driver-profile-container">
 				   <Edit className="edit-btn-container" onClick={this.editProfile}/>
+				   {/*</Link>*/}
 				   <header>
 					   <div className="driver-profile-img-container ">
 						   <img src="http://lorempixel.com/500/500" className="round"/>
@@ -137,7 +138,6 @@ class DriverProfilePage extends Component {
 }
 
 const mapStateToProps = ({riderReducer}) => {
-	
    console.log('riderReducer.currentDriver', riderReducer.currentDriver)
 	return {
 		findDriverByIdStarted: riderReducer.findDriverByIdStarted,
@@ -149,4 +149,4 @@ const mapStateToProps = ({riderReducer}) => {
 export default connect(
 	mapStateToProps,
 	{updateProfile }
-)(DriverProfilePage);
+)(RiderTripRequestPage);

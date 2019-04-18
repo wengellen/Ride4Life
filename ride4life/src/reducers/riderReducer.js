@@ -12,7 +12,10 @@ import {
 	FIND_DRIVER_BY_ID_STARTED,
 	FIND_DRIVER_BY_ID_SUCCESS,
 	FIND_DRIVER_BY_ID_FAILURE,
-	s, LOGOUT_USER
+	LOGOUT_USER,
+	SEND_TRIP_REQUEST_STARTED,
+	SEND_TRIP_REQUEST_SUCCESS,
+	SEND_TRIP_REQUEST_FAILURE
 } from '../actions'
 
 
@@ -21,6 +24,7 @@ const initialState = {
 	riderLoginStarted: false,
 	findNearbyDriverStarted: false,
 	findDriverByIdStarted: false,
+	sendTripRequestStarted:false,
 	currentDriver:
 		{
 			"driver_id": 1,
@@ -38,23 +42,39 @@ const initialState = {
 				}
 			]
 		},
-	requestDetails:{},
-	driverProfile:
-		{
-			"driver_id": 1,
-			"username": "greatDriver",
-			"reviews": [
+	requestDetails:{
+		riderDetails:
 			{
-				"rider_id": 2,
-				"review": "great ride",
-				"rating": 5
+				"requestTime" : {date:"2016-10-31T12:12:37.321Z"},
+				"location" : {
+					"coordinates" : [
+						77.612257,
+						12.934729
+					],
+					"address" : "The Forum, 21 Hosur Road, Bengaluru South, Karnataka, India"
+				},
+				"citizenId" : "citizen1",
+				"status" : "engaged",
+				"copId" : "06"
 			},
-			{
-				"rider_id": 5,
-				"review": "way too bumpy, water broke on way to hospital",
-				"rating": 2
-			}]
-		},
+		status:'pending'
+	},
+	// driverProfile:
+	// 	{
+	// 		"driver_id": 1,
+	// 		"username": "greatDriver",
+	// 		"reviews": [
+	// 		{
+	// 			"rider_id": 2,
+	// 			"review": "great ride",
+	// 			"rating": 5
+	// 		},
+	// 		{
+	// 			"rider_id": 5,
+	// 			"review": "way too bumpy, water broke on way to hospital",
+	// 			"rating": 2
+	// 		}]
+	// 	},
 		
 		driversNearby:[],
 		// {
@@ -173,7 +193,19 @@ export const riderReducer = (state = initialState, action)=>{
 			return {...state,
 				loggedInUser: null
 			}
-		
+			
+		case SEND_TRIP_REQUEST_STARTED:
+			return {...state,
+				sendTripRequestStarted:true
+			}
+		case SEND_TRIP_REQUEST_SUCCESS:
+			return {...state,
+				sendTripRequestStarted:false
+			}
+		case SEND_TRIP_REQUEST_FAILURE:
+			return {...state,
+				sendTripRequestStarted:false
+			}
 		default:
 			return {...state}
 	}
