@@ -129,6 +129,8 @@ export const riderReducer = (state = initialState, action)=>{
 				riderLoginStarted:true
 			}
 		case RIDER_LOGIN_SUCCESS:
+			console.log('RIDER_LOGIN_SUCCESS')
+			console.log('action.payload,',action.payload)
 			return {...state,
 				riderLoginStarted:false,
 				loggedInUser: action.payload
@@ -169,7 +171,7 @@ export const riderReducer = (state = initialState, action)=>{
 			
 		case LOGOUT_USER:
 			return {...state,
-				currentDriver: null
+				loggedInUser: null
 			}
 		
 		default:

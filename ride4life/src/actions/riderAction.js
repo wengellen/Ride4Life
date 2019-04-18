@@ -26,10 +26,12 @@ export const findDriversNearby = (location) => dispatch => {
 	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
 	return (
 		API.get('/api/drivers')
-	.then(res =>{
+  	    .then(res =>{
 			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
 		})
-		.catch(err => err.message)
+		.catch(err =>{
+			dispatch({type: FIND_DRIVER_BY_ID_FAILURE, payload: err.message})
+		})
 	)
 }
 // Find drivers nearby
@@ -40,10 +42,11 @@ export const getDriversById = (driverId) => dispatch => {
 		.then(res =>{
 			dispatch({type: FIND_DRIVER_BY_ID_SUCCESS, payload: res.data})
 		})
-		.catch(err => err.message)
+		.catch(err =>{
+			dispatch({type: FIND_DRIVER_BY_ID_FAILURE, payload: err.message})
+		})
 	)
 }
-
 
 
 // LOGIN / SIGN UP
@@ -54,25 +57,28 @@ export const signup_rider = (rider) => dispatch => {
 		.then(res =>{
 			dispatch({type: RIDER_SIGNUP_SUCCESS, payload: res.data})
 		})
-		.catch(err => err.message)
+		.catch(err =>{
+			dispatch({type: RIDER_SIGNUP_FAILURE, payload: err.message})
+		})
 	)
-	
 }
 
 export const login_rider = (rider) => dispatch => {
-	
 	dispatch({type: RIDER_LOGIN_STARTED})
 	return (
 		API.post('/api/login', {...rider, driver:false})
 		.then(res =>{
-			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
-			
 			localStorage.setItem('token', res.data.token)
+			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
 		})
-		.catch(err => err.message)
+		.catch(err =>{
+			console.log('err', err)
+			dispatch({type: RIDER_LOGIN_FAILURE, payload: err.message})
+		})
 	)
 }
 export const logoutUser = () => dispatch => {
+	localStorage.removeItem('token')
 	dispatch({type: LOGOUT_USER})
 }
 // export const logoutUser= () => (

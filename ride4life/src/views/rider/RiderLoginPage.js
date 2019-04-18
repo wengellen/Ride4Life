@@ -48,11 +48,12 @@ class RiderLoginPage extends React.Component {
 	login = e => {
 		console.log('login clicked')
 		e.preventDefault();
-		this.props.login_rider(this.state.credentials).then(() => {
-			console.log('his.props.login(this.state.credentials).then')
-		   this.props.history.push('/rider-home');
-		});
-	};
+		this.props.login_rider(this.state.credentials)
+		.then(res => {
+			console.log('login_rider', res)
+		// console.log('his.props.login(this.state.credentials).then',res)
+	  	    this.props.history.push('/rider-home')
+		})}
 	
 	render() {
 		const { classes } = this.props;
@@ -138,7 +139,7 @@ class RiderLoginPage extends React.Component {
 }
 const mapStateToProps = ({riderReducer}) => (
 	{
-		riderSignupStarted:riderReducer.riderSignupStarted
+		riderLoginStarted:riderReducer.riderLoginStarted
 	}
 )
 

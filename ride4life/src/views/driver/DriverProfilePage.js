@@ -46,10 +46,12 @@ class DriverProfilePage extends Component {
 	
 	render() {
 		console.log('this.props.findDriverByIdStarted',this.props.findDriverByIdStarted)
-		console.log('this.props.currentDriver',this.props.currentDriver)
 	   if(this.props.findDriverByIdStarted){
 		   return (<Loader/>)
 	   }else{
+		   console.log('this.props.currentDriver',this.props.currentDriver)
+		   console.log('this.props.currentDriver.review',this.props.currentDriver.review)
+		
 		   return (
 			   <div className="driver-profile-container">
 				   <Edit className="edit-btn-container" onClick={this.editProfile}/>
@@ -71,7 +73,7 @@ class DriverProfilePage extends Component {
 						   <p>PRICE</p>
 					   </div>
 					   <div>
-						   <h2>{this.props.currentDriver.reviews && this.props.currentDriver.reviews.length}</h2>
+						   <h2>{this.props.currentDriver.review && this.props.currentDriver.review.length}</h2>
 						   <p>REVIEWS</p>
 					   </div>
 				   </div>
@@ -98,7 +100,7 @@ class DriverProfilePage extends Component {
 							   {this.state.profileBody}
 						   </p>
 					   }
-					   { this.props.currentDriver.reviews && this.props.currentDriver.reviews.map((item, idx) => (
+					   { this.props.currentDriver.review && this.props.currentDriver.review.map((item, idx) => (
 						   <div className="review-container" key={idx}>
 							   <h2>Rider {idx + 1}</h2>
 							   <div className="star-container">
@@ -121,7 +123,6 @@ class DriverProfilePage extends Component {
 						   </Link>
 					   </div>
 				   </main>
-				   })}
 				
 				   <div className="cars-container">
 					   <h3>MY AMBULANCE</h3>

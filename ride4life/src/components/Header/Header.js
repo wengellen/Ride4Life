@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link , withRouter} from "react-router-dom";
 import classNames from "classnames";
 import {connect} from 'react-redux'
 // nodejs library to set properties for components
@@ -31,6 +31,14 @@ class Header extends React.Component {
 		this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
 		this.headerColorChange = this.headerColorChange.bind(this);
 	}
+	//
+	componentWillMount() {
+		if(!this.props.loggedInUser){
+			this.props.history.push('/');
+		}
+	}
+
+	
 	handleDrawerToggle() {
 		this.setState({ mobileOpen: !this.state.mobileOpen });
 	}
@@ -42,7 +50,7 @@ class Header extends React.Component {
 	
 	logout(){
 		this.props.logoutUser()
-		this.props.history.push('/rider-logout');
+		// this.props.history.push('/');
 	}
 	
 	headerColorChange() {
@@ -70,7 +78,8 @@ class Header extends React.Component {
 		}
 	}
 	render() {
-		const { classes, color, links, brand, fixed, absolute, loggedInUser } = this.props;
+		console.log('this.props',this.props)
+		const { classes, color, links, brand, fixed, absolute } = this.props;
 		const appBarClasses = classNames({
 			[classes.appBar]: true,
 			[classes[color]]: color,
@@ -79,6 +88,7 @@ class Header extends React.Component {
 			
 		});
 		return (
+
 			<AppBar className={appBarClasses}>
 				<Toolbar className={classes.container}>
 						<Link className={classes.titleNoUnder}
@@ -87,14 +97,16 @@ class Header extends React.Component {
 								<img src={logo} />
 							</div>
 						</Link>
-					{loggedInUser
+					{this.props.loggedInUser
 					  ? <div>
-							{ loggedInUser.driver
+							{ this.props.loggedInUser && this.props.loggedInUser.driver
 								?	<IconButton className={classes.titleNoUnder} onClick={this.logout}>
 										<TimeToLeave/>
+										Logout
 							        </IconButton>
 								:   <IconButton className={classes.titleNoUnder} onClick={this.logout}>
 										<ChildCare/>
+										Logout
 									</IconButton>
 							}
 						</div>
@@ -197,16 +209,18 @@ Header.propTypes = {
 	})
 };
 
-const mapStateToProps = ({riderReducer}) => (
-	{
+const mapStateToProps = ({riderReducer}) => {
+	console.log('riderReducer.loggedInUser',riderReducer.loggedInUser)
+	return {
 		loggedInUser:riderReducer.loggedInUser
 	}
-)
+}
+
 
 export default connect(
 	mapStateToProps,
 	{logoutUser }
-)(withStyles(headerStyle)(Header));
+)(withStyles(headerStyle)(withRouter(Header)));
 
 
 
