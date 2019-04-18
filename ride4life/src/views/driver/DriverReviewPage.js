@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import PinkButton from "../../components/Button/PinkButton";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import Chat from "@material-ui/icons/Chat";
-import Share from "@material-ui/icons/Share";
 import Edit from "@material-ui/icons/Edit";
 import Loader from 'react-loader-spinner'
 import  Rating  from 'material-ui-rating'
@@ -16,13 +13,11 @@ import {
 class DriverReviewPage extends Component {
 	state = {
 		isEditing: true,
-		activeId: null,
-		isDirty: true,
 		driver:null,
 		review:{
 			details:'',
 			rating:0
-		}
+		},
 	}
 	
 	editProfile = ()=>{
@@ -42,16 +37,32 @@ class DriverReviewPage extends Component {
 	
 	rateDriver = (value)=>{
 		console.log('Rated with value ',value)
+		this.setState({
+			...this.state,
+			review:{
+				...this.state.review,
+				rating: value
+			}
+		})
 	}
+	
+	componentWillUnmount() {
+		// this.props = {}
+	}
+	
 	
 	submitDriverReview = (e) => {
 		e.preventDefault()
-		this.props.submitDriverReview(this.state.review)
+		console.log('submitDriverReview ',this.state.review)
+		this.props.submitDriverReview(this.state.review,this.props.currentDriver.driver_id)
+		.then(msg=>{
+			this.props.history.push('/rider-home')
+		})
 	}
 	
 	render() {
-		console.log('this.props.findDriverByIdStarted',this.props.findDriverByIdStarted)
-	   if(this.props.findDriverByIdStarted){
+		console.log('this.props.findDriverByIdStarted',this.props.submitDriverReviewStarted)
+	   if(this.props.submitDriverReviewStarted){
 		   return (<Loader/>)
 	   }else{
 		   console.log('this.props.currentDriver',this.props.currentDriver)
@@ -86,6 +97,7 @@ class DriverReviewPage extends Component {
 							   />
 						   </div>
 					   <PinkButton onClick={this.submitDriverReview}>Submit Rating</PinkButton>
+					   <h2>{this.props.submitDriverReviewSuccessMessage}</h2>
 				   </main>
 			   </div>
 		   );
@@ -99,7 +111,7 @@ const mapStateToProps = ({riderReducer}) => {
 	return {
 		submitDriverReviewStarted: riderReducer.submitDriverReviewStarted,
 		currentDriver:riderReducer.currentDriver,
-	    // driversNearby: riderReducer.driversNearby,
+		submitDriverReviewSuccessMessage:riderReducer.submitDriverReviewSuccessMessage
 	}
 }
 

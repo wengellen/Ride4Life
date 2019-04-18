@@ -31,32 +31,42 @@ export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
 // SEND_RIDE_REQUEST
 // Should return a list of drivers nearby
 export const sendTripRequest = (trip) => dispatch => {
-	dispatch({type: SUBMIT_REVIEW_STARTED})
+	dispatch({type: SEND_TRIP_REQUEST_STARTED})
 	return (
 		new Promise((resolve, reject) => {
 			resolve('Trip request sent')
 		})
 		.then(res =>{
 			console.log('sendTripRequest',res)
-			dispatch({type: SUBMIT_REVIEW_SUCCESS, payload: res})
+			dispatch({type: SEND_TRIP_REQUEST_SUCCESS, payload: res})
 		})
 		.catch(err =>{
-			dispatch({type: SUBMIT_REVIEW_FAILURE, payload: err.message})
+			dispatch({type: SEND_TRIP_REQUEST_FAILURE, payload: err.message})
 		})
 	)
 }
 
 
 // Find drivers nearby
-export const submitDriverReview = (review) => dispatch => {
+export const submitDriverReview = (review, driver_id) => dispatch => {
 	dispatch({type: SUBMIT_REVIEW_STARTED})
+	const currentUser = JSON.parse(localStorage.getItem('loggedInUser'))
+	console.log("currentUser",currentUser)
+	const requestPayload = {
+				driver_id,
+				user_id: currentUser.rider_id,
+				review:review.details,
+				rating:review.rating
+			}
+	console.log("requestPayload",requestPayload)
+	
 	return (
-		API.get('/api/drivers')
+		API.post('/api/drivers/reviews', requestPayload)
 		.then(res =>{
-			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
+			dispatch({type: SUBMIT_REVIEW_SUCCESS, payload: res.data})
 		})
 		.catch(err =>{
-			dispatch({type: FIND_DRIVER_BY_ID_FAILURE, payload: err.message})
+			dispatch({type: SUBMIT_REVIEW_FAILURE, payload: err.message})
 		})
 	)
 }
@@ -110,7 +120,7 @@ export const login_rider = (rider) => dispatch => {
 		API.post('/api/login', {...rider, driver:false})
 		.then(res =>{
 			localStorage.setItem('token', res.data.token)
-			localStorage.setItem('loggedInUser', {...res.data})
+			localStorage.setItem('loggedInUser', JSON.stringify({...res.data}))
 			
 			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
 		})

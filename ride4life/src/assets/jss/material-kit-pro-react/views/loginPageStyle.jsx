@@ -17,13 +17,14 @@ const signupPageStyle = theme => ({
   cardSubtitle: {
     "& a":{
       marginLeft:"6px" + "  !important",
-      // textDecoration: "none",
       color: "white"
     }
   },
   container: {
     ...container,
     zIndex: "4",
+    marginTop: "2rem",
+    
     [theme.breakpoints.down("sm")]: {
       paddingBottom: "100px"
     }

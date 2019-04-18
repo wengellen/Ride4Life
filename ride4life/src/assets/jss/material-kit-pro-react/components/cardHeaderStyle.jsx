@@ -17,7 +17,8 @@ const cardHeaderStyle = {
     marginRight: "15px",
     marginTop: "-30px",
     border: "0",
-    marginBottom: "0"
+    marginBottom: "0",
+    // backgroundColor:"#4C6A2D"
   },
   cardHeaderPlain: {
     marginLeft: "0px",

@@ -42,7 +42,7 @@ class App extends React.Component {
 				<Header />
 				{/*<PrimarySearchAppBar/>*/}
 				<Switch>
-					<Route exact path="/" component={HomePage} />
+					<Route exact path="/" component={RiderLoginPage} />
 					<Route path="/rider-login" component={RiderLoginPage} />
 					<Route path="/rider-signup" component={RiderSignupPage} />
 					<Route path="/driver-login" component={DriverLoginPage} />
@@ -50,7 +50,7 @@ class App extends React.Component {
 					<Route path="/rider-home" component={RiderHomePage} />
 					<Route path="/driver-home" component={DriverHomePage} />
 					<Route path="/drivers/:id" component={DriverProfilePage} />
-					<Route path="/user-logout" component={HomePage} />
+					{/*<Route path="/user-logout" component={HomePage} />*/}
 					<Route path="/driver/review" component={DriverReviewPage} />
 					{/*<PrivateRoute path="/account" component={FriendListPage}/>*/}
 				</Switch>

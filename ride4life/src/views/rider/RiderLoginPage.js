@@ -51,7 +51,6 @@ class RiderLoginPage extends React.Component {
 		this.props.login_rider(this.state.credentials)
 		.then(res => {
 			console.log('login_rider', res)
-		// console.log('his.props.login(this.state.credentials).then',res)
 	  	    this.props.history.push('/rider-home')
 		})}
 	

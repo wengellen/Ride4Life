@@ -34,7 +34,7 @@ const headerStyle = theme => ({
     transition: "all 150ms ease 0s",
     alignItems: "center",
     flexFlow: "row nowrap",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     position: "relative",
     // marginBottom:"3rem"
   },
@@ -46,12 +46,13 @@ const headerStyle = theme => ({
     position: "fixed"
   },
   container: {
-    ...container,
+    // ...container,
     minHeight: "46px",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     display: "flex",
     flexWrap: "nowrap",
+    
   },
   title: {
     "&,& a": {
@@ -72,6 +73,7 @@ const headerStyle = theme => ({
     logoContainer:{
       width:"70px",
       height:"70px",
+      marginLeft: "20px",
       "& img":{
         maxWidth: "100%",
       }
@@ -82,7 +84,7 @@ const headerStyle = theme => ({
       minWidth: "unset",
       lineHeight: "30px",
       fontSize: "18px",
-      borderRadius: "3px",
+      // borderRadius: "3px",
       textTransform: "none",
       whiteSpace: "nowrap",
       color: "inherit",
@@ -92,9 +94,11 @@ const headerStyle = theme => ({
       textDecoration: "none",
       transition: "all 0.5s ease",
       height:"100%",
-      float:"right",
-      // marginLeft: "3rem",
       fontWeight:"400",
+      // background:"linear-gradient(45deg, #66bb6a, #4C6A2D)",
+      borderRadius:"14px",
+      paddingRight: "20px",
+      // color:"white",
       "&:hover,&:focus": {
         color: "inherit",
         opacity: "1",

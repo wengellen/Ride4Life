@@ -51,15 +51,15 @@ class DriverLoginPage extends React.Component {
 		   this.props.history.push('/driver-home');
 		});
 	};
-	styles = {
-		marginBottom:"3rem"
-	}
-	
+	// styles = {
+	// 	marginBottom:"3rem"
+	// }
+	//
 	render() {
 		const { classes } = this.props;
 		return (
 			<div>
-				<div className={this.styles.marginBottom}>
+				<div className={classes.container}>
 					<GridContainer justify="center">
 						<GridItem xs={12} sm={12} md={4}>
 							<Card>
@@ -70,8 +70,9 @@ class DriverLoginPage extends React.Component {
 										className={classes.cardHeader}
 									>
 										<h2 className={classes.cardTitle}>Driver Login</h2>
-										<h4  className={classes.cardSubtitle}>No Account?
-											<Link to="/driver-signup">
+										<h4 className={classes.cardSubtitle}>No Account?
+											<Link
+												to="/driver-signup">
 												Sign Up
 											</Link>
 										</h4>
@@ -82,18 +83,16 @@ class DriverLoginPage extends React.Component {
 									</p>
 									<CardBody signup>
 										<CustomInput
-											id="phone"
+											id="first"
 											formControlProps={{
 												fullWidth: true
 											}}
 											inputProps={{
 												placeholder: "Phone",
-												type: "tel",
+												type: "phone",
 												onChange:this.handleChange,
 												value:this.state.credentials.phone,
-												name:'Phone',
-												pattern:"[0-9]{3}[0-9]{3}[0-9]{4}",
-												required:true,
+												name:'phone',
 												startAdornment: (
 													<InputAdornment position="start">
 														<Phone className={classes.inputIconsColor} />
@@ -107,14 +106,11 @@ class DriverLoginPage extends React.Component {
 												fullWidth: true
 											}}
 											inputProps={{
-												placeholder: "Password",
-												type: "password",
 												onChange:this.handleChange,
 												value:this.state.credentials.password,
 												name:'password',
-												minLength:"8",
-												required:true,
-												
+												placeholder: "Password",
+												type: "password",
 												startAdornment: (
 													<InputAdornment position="start">
 														<Lock className={classes.inputIconsColor}/>
@@ -125,10 +121,10 @@ class DriverLoginPage extends React.Component {
 									
 									</CardBody>
 									<div className={classes.textCenter}>
-										<PinkButton type="submit" color="primary" >
+										<PinkButton type="submit" color="primary"  >
 											{this.props.loggingIn
-											? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
-											: "Log in"
+												? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
+												: "Log in"
 											}
 										</PinkButton>
 									</div>
@@ -137,8 +133,88 @@ class DriverLoginPage extends React.Component {
 						</GridItem>
 					</GridContainer>
 				</div>
-				
 			</div>
+			// <div>
+			// 	<div className={this.styles.marginBottom}>
+			// 		<GridContainer justify="center">
+			// 			<GridItem xs={12} sm={12} md={4}>
+			// 				<Card>
+			// 					<form className={classes.form} onSubmit={this.login}>
+			// 						<CardHeader
+			// 							color="info"
+			// 							signup
+			// 							className={classes.cardHeader}
+			// 						>
+			// 							<h2 className={classes.cardTitle}>Driver Login</h2>
+			// 							<h4  className={classes.cardSubtitle}>No Account?
+			// 								<Link to="/driver-signup">
+			// 									Sign Up
+			// 								</Link>
+			// 							</h4>
+			// 						</CardHeader>
+			// 						<p
+			// 							className={`${classes.description} ${classes.textCenter}`}
+			// 						>
+			// 						</p>
+			// 						<CardBody signup>
+			// 							<CustomInput
+			// 								id="phone"
+			// 								formControlProps={{
+			// 									fullWidth: true
+			// 								}}
+			// 								inputProps={{
+			// 									placeholder: "Phone",
+			// 									type: "tel",
+			// 									onChange:this.handleChange,
+			// 									value:this.state.credentials.phone,
+			// 									name:'Phone',
+			// 									pattern:"[0-9]{3}[0-9]{3}[0-9]{4}",
+			// 									required:true,
+			// 									startAdornment: (
+			// 										<InputAdornment position="start">
+			// 											<Phone className={classes.inputIconsColor} />
+			// 										</InputAdornment>
+			// 									)
+			// 								}}
+			// 							/>
+			// 							<CustomInput
+			// 								id="pass"
+			// 								formControlProps={{
+			// 									fullWidth: true
+			// 								}}
+			// 								inputProps={{
+			// 									placeholder: "Password",
+			// 									type: "password",
+			// 									onChange:this.handleChange,
+			// 									value:this.state.credentials.password,
+			// 									name:'password',
+			// 									minLength:"8",
+			// 									required:true,
+			//
+			// 									startAdornment: (
+			// 										<InputAdornment position="start">
+			// 											<Lock className={classes.inputIconsColor}/>
+			// 										</InputAdornment>
+			// 									)
+			// 								}}
+			// 							/>
+			//
+			// 						</CardBody>
+			// 						<div className={classes.textCenter}>
+			// 							<PinkButton type="submit" color="primary" >
+			// 								{this.props.loggingIn
+			// 								? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
+			// 								: "Log in"
+			// 								}
+			// 							</PinkButton>
+			// 						</div>
+			// 					</form>
+			// 				</Card>
+			// 			</GridItem>
+			// 		</GridContainer>
+			// 	</div>
+			//
+			// </div>
 		);
 	}
 }

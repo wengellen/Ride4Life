@@ -37,7 +37,26 @@
     width: 100%;
 }
 
+
+/**
+ NavBar
+ */
+
+ .login-container{
+    display:flex;
+    width: 100%;
+    /*width: 40%;*/
+ }
+
 /* At the top level of your code */
+@media screen and (max-width: 1023px) {
+    .map-wrapper{
+
+    }
+}
+
+
+    /* At the top level of your code */
 @media screen and (max-width: 500px) {
     .map-wrapper{
         width: 100%;
@@ -70,7 +89,7 @@
     }
     .map-instructions-location{
         padding-top: 4px;
-        border-bottom: 1px solid rgba(69, 91, 99, 0.15);
+        /*border-bottom: 1px solid rgba(69, 91, 99, 0.15);*/
     }
 
     #map-instructions *{
@@ -107,6 +126,9 @@
         display:block;
         bottom:300px;
         transform: translateY(-200px);
+    }
+    .login-container{
+        display:none;
     }
 }
 
@@ -485,3 +507,11 @@ Review Container
 /**
 Stars
  */
+
+ /**
+    Appbar
+  */
+  .icon-navbar{
+    display:flex;
+    justify-content: space-between;
+  }

@@ -31,8 +31,10 @@ function CardHeader({ ...props }) {
     [classes.cardHeaderContact]: contact,
     [classes.cardHeaderSignup]: signup,
     [classes.noShadow]: noShadow,
-    [className]: className !== undefined
-  });
+    [className]: className !== undefined,
+  
+  
+});
   return (
     <div className={cardHeaderClasses} {...rest}>
       {children}
@@ -49,13 +51,14 @@ CardHeader.propTypes = {
     "danger",
     "info",
     "primary",
-    "rose"
+    "rose",
+    "rideForLifeGreen"
   ]),
   plain: PropTypes.bool,
   image: PropTypes.bool,
   contact: PropTypes.bool,
   signup: PropTypes.bool,
-  noShadow: PropTypes.bool
+  noShadow: PropTypes.bool,
 };
 
 export default withStyles(cardHeaderStyle)(CardHeader);

@@ -29,8 +29,6 @@ class RiderSingupPage extends React.Component {
             username: '',
             password: '',
             phone:'',
-            // location:'CA State',
-            // email: 'eweng@gmail.com',
         }
     };
     
@@ -62,7 +60,6 @@ class RiderSingupPage extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div>
                 <div className={classes.container}>
                     <GridContainer justify="center">
                         <GridItem xs={12} sm={12} md={4}>
@@ -141,38 +138,6 @@ class RiderSingupPage extends React.Component {
                                                 )
                                             }}
                                         />
-                                        {/*<CustomInput*/}
-                                            {/*id="location"*/}
-                                            {/*formControlProps={{*/}
-                                                {/*fullWidth: true*/}
-                                            {/*}}*/}
-                                            {/*inputProps={{*/}
-                                                {/*value:`${this.state.profile.location}`,*/}
-                                                {/*placeholder: "Location",*/}
-                                                {/*type: "option",*/}
-                                                {/*startAdornment: (*/}
-                                                    {/*<InputAdornment position="start">*/}
-                                                        {/*<Place className={classes.inputIconsColor}/>*/}
-                                                    {/*</InputAdornment>*/}
-                                                {/*)*/}
-                                            {/*}}*/}
-                                        {/*/>*/}
-                                        {/*<CustomInput*/}
-                                            {/*id="email"*/}
-                                            {/*formControlProps={{*/}
-                                                {/*fullWidth: true*/}
-                                            {/*}}*/}
-                                            {/*inputProps={{*/}
-                                                {/*placeholder: "Email...",*/}
-                                                {/*type: "email",*/}
-                                                {/*value:`${this.state.profile.email}`,*/}
-                                                {/*startAdornment: (*/}
-                                                    {/*<InputAdornment position="start">*/}
-                                                        {/*<Email className={classes.inputIconsColor} />*/}
-                                                    {/*</InputAdornment>*/}
-                                                {/*)*/}
-                                            {/*}}*/}
-                                        {/*/>*/}
                                     
                                     </CardBody>
                                     <div className={classes.textCenter}>
@@ -188,27 +153,6 @@ class RiderSingupPage extends React.Component {
                         </GridItem>
                     </GridContainer>
                 </div>
-                {/*<form onSubmit={this.login}>*/}
-                {/*<input*/}
-                {/*type="text"*/}
-                {/*name="username"*/}
-                {/*value={this.state.credentials.username}*/}
-                {/*onChange={this.handleChange}*/}
-                {/*/>*/}
-                {/*<input*/}
-                {/*type="password"*/}
-                {/*name="password"*/}
-                {/*value={this.state.credentials.password}*/}
-                {/*onChange={this.handleChange}*/}
-                {/*/>*/}
-                {/*<PinkButton>*/}
-                {/*{this.props.loggingIn*/}
-                {/*? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />*/}
-                {/*: "Log in"*/}
-                {/*}*/}
-                {/*</PinkButton>*/}
-                {/*</form>*/}
-            </div>
         );
     }
 }

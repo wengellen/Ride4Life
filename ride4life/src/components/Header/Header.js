@@ -12,6 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
+import Face from "@material-ui/icons/Face";
 // @material-ui/icons
 import Menu from "@material-ui/icons/Menu";
 import Close from "@material-ui/icons/Close";
@@ -77,82 +78,82 @@ class Header extends React.Component {
 			[classes[color]]: color,
 			[classes.absolute]: absolute,
 			[classes.fixed]: fixed,
-			
+
 		});
 		return (
-			<AppBar className={appBarClasses}>
-				<Toolbar className={classes.container}>
-						<Link className={classes.titleNoUnder}
+			<div className={`${appBarClasses}`}>
+						<Link className={`classes.titleNoUnder`}
 								to="/">
 							<div className={classes.logoContainer}>
 								<img src={logo} />
 							</div>
 						</Link>
-					{this.props.loggedInUser
-					  ? <div className="login-container">
-							{ this.props.loggedInUser && this.props.loggedInUser.driver
-								?	<IconButton className={classes.titleNoUnder} onClick={this.logout}>
-										<TimeToLeave/>
-										Logout
-							        </IconButton>
-								:   <IconButton className={classes.titleNoUnder} onClick={this.logout}>
-										<ChildCare/>
-										Logout
-									</IconButton>
-							}
-						</div>
-					  : <div className="login-container">
-							<IconButton className={classes.titleNoUnder}>
-								<ChildCare/>
-								<Link className={classes.titleNoUnder}
-									  display="none"
-									  to="/rider-login">Login</Link>
-							</IconButton>
-							<IconButton className={classes.titleNoUnder}>
-								<TimeToLeave/>
-								<Link className={classes.titleNoUnder}
-									  display={{ xs: 'none', sm: 'block' }}
-									  to="/driver-login">Driver Login</Link>
-							</IconButton>
-						</div>
+						<div className="icon-navbar">
+						{this.props.loggedInUser
+						  ? <div className="login-container">
+								{ this.props.loggedInUser && this.props.loggedInUser.driver
+									?	<IconButton className={`classes.titleNoUnder `} onClick={this.logout}>
+											<Face/>
+											Logout
+										</IconButton>
+									:   <IconButton className={classes.titleNoUnder} onClick={this.logout}>
+											<Face/>
+											Logout
+										</IconButton>
+								}
+							</div>
+						  : <div className="login-container">
+								<IconButton className={classes.titleNoUnder}>
+									<ChildCare/>
+									<Link className={classes.titleNoUnder}
+										  display="none"
+										  to="/rider-login">Login</Link>
+								</IconButton>
+								<IconButton className={classes.titleNoUnder}>
+									<TimeToLeave/>
+									<Link className={classes.titleNoUnder}
+										  display={{ xs: 'none', sm: 'block' }}
+										  to="/driver-login">Driver Login</Link>
+								</IconButton>
+							</div>
+							
+						}
 						
-					}
-					
-					<Hidden smDown implementation="css" className={classes.hidden}>
-						<div className={classes.collapse}>{links}</div>
-					</Hidden>
-					<Hidden mdUp>
-						<IconButton
-							color="inherit"
-							aria-label="open drawer"
-							onClick={this.handleDrawerToggle}
-						>
-							<Menu />
-						</IconButton>
-					</Hidden>
-				</Toolbar>
-				<Hidden mdUp implementation="css">
-					<Drawer
-						variant="temporary"
-						anchor={"right"}
-						open={this.state.mobileOpen}
-						classes={{
-							paper: classes.drawerPaper
-						}}
-						onClose={this.handleDrawerToggle}
-					>
-						<IconButton
-							color="inherit"
-							aria-label="open drawer"
-							onClick={this.handleDrawerToggle}
-							className={classes.closeButtonDrawer}
-						>
-							<Close />
-						</IconButton>
-						<div className={classes.appResponsive}>{links}</div>
-					</Drawer>
-				</Hidden>
-			</AppBar>
+						<Hidden smDown implementation="css" className={classes.hidden}>
+							<div className={classes.collapse}>{links}</div>
+						</Hidden>
+						<Hidden mdUp>
+							<IconButton
+								color="inherit"
+								aria-label="open drawer"
+								onClick={this.handleDrawerToggle}
+							>
+								<Menu />
+							</IconButton>
+						</Hidden>
+						<Hidden mdUp implementation="css">
+							<Drawer
+								variant="temporary"
+								anchor={"right"}
+								open={this.state.mobileOpen}
+								classes={{
+									paper: classes.drawerPaper
+								}}
+								onClose={this.handleDrawerToggle}
+							>
+								<IconButton
+									color="inherit"
+									aria-label="open drawer"
+									onClick={this.handleDrawerToggle}
+									className={classes.closeButtonDrawer}
+								>
+									<Close />
+								</IconButton>
+								<div className={classes.appResponsive}>{links}</div>
+							</Drawer>
+						</Hidden>
+					</div>
+			</div>
 		);
 	}
 }

@@ -58,9 +58,6 @@ class RiderHomePage extends Component {
 			})
 	}
 	
-
-	
-	
 	
 	render() {
 		console.log('inst', this.inst)
@@ -68,13 +65,10 @@ class RiderHomePage extends Component {
 		return (
 			<div className="map-wrapper ">
 				<div id="map-instructions"
-					 // className={`${this.state.showEstimate ? "slideup": ""}`}
 					 name="instruction" ref={instruction => this.inst = instruction}>
 					<form>
-						 {/*<h1>Where are you going</h1>*/}
 						 <div className="map-instructions-location">
-							 <p3>Pickup Location</p3>
-							 {/*<h2>Your Address</h2>*/}
+							 <h3>Pickup Location</h3>
 							 <input
 								 name="input-start-location"
 								 type="text"
@@ -133,7 +127,8 @@ class RiderHomePage extends Component {
 const mapStateToProps = ({riderReducer, tripReducer}) => (
 	{
 		findNearbyDriverStarted:riderReducer.findNearbyDriverStarted,
-		driversNearby: riderReducer.driversNearby
+		driversNearby: riderReducer.driversNearby,
+		submitDriverReviewSuccessMessage:riderReducer.submitDriverReviewSuccessMessage
 	}
 )
 

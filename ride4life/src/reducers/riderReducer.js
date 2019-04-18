@@ -29,6 +29,7 @@ const initialState = {
 	findDriverByIdStarted: false,
 	sendTripRequestStarted:false,
 	submitDriverReviewStarted:false,
+	submitDriverReviewSuccessMessage:'',
 	currentDriver:
 		{
 			"driver_id": 1,
@@ -153,8 +154,10 @@ export const riderReducer = (state = initialState, action)=>{
 				riderLoginStarted:true
 			}
 		case RIDER_LOGIN_SUCCESS:
-			console.log('RIDER_LOGIN_SUCCESS')
-			console.log('action.payload,',action.payload)
+			// console.log('RIDER_LOGIN_SUCCESS')
+			// console.log('action.payload,',action.payload)
+			// localStorage.setItem("loggedInUser", JSON.stringify(action.payload))
+			// console.log(JSON.parse(localStorage.getItem("loggedInUser")))
 			return {...state,
 				riderLoginStarted:false,
 				loggedInUser: action.payload
@@ -215,8 +218,10 @@ export const riderReducer = (state = initialState, action)=>{
 				submitDriverReviewStarted:true
 			}
 		case SUBMIT_REVIEW_SUCCESS:
+			console.log('action.payload.message',action.payload.message)
 			return {...state,
-				submitDriverReviewStarted:false
+				submitDriverReviewStarted:false,
+				submitDriverReviewSuccessMessage:action.payload.message
 			}
 		case SUBMIT_REVIEW_FAILURE:
 			return {...state,
