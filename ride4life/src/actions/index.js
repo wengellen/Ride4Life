@@ -28,11 +28,16 @@ export {
 	SEND_TRIP_REQUEST_STARTED,
 	SEND_TRIP_REQUEST_SUCCESS,
 	SEND_TRIP_REQUEST_FAILURE,
+
+	SUBMIT_REVIEW_STARTED,
+	SUBMIT_REVIEW_SUCCESS,
+	SUBMIT_REVIEW_FAILURE,
 	LOGOUT_USER,
 	logoutUser,
 	getDriversById,
 	findDriversNearby,
 	signup_rider,
 	login_rider,
-	sendTripRequest
+	sendTripRequest,
+	submitDriverReview
 }from './riderAction'

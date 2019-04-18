@@ -23,33 +23,36 @@ export const SEND_TRIP_REQUEST_STARTED = 'SEND_TRIP_REQUEST_STARTED'
 export const SEND_TRIP_REQUEST_SUCCESS = 'SEND_TRIP_REQUEST_SUCCESS'
 export const SEND_TRIP_REQUEST_FAILURE = 'SEND_TRIP_REQUEST_FAILURE'
 
+export const SUBMIT_REVIEW_STARTED = 'SUBMIT_REVIEW_STARTED'
+export const SUBMIT_REVIEW_SUCCESS = 'SUBMIT_REVIEW_SUCCESS'
+export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
+
 
 // SEND_RIDE_REQUEST
 // Should return a list of drivers nearby
 export const sendTripRequest = (trip) => dispatch => {
-	dispatch({type: SEND_TRIP_REQUEST_STARTED})
+	dispatch({type: SUBMIT_REVIEW_STARTED})
 	return (
 		new Promise((resolve, reject) => {
 			resolve('Trip request sent')
 		})
 		.then(res =>{
 			console.log('sendTripRequest',res)
-			dispatch({type: SEND_TRIP_REQUEST_SUCCESS, payload: res})
+			dispatch({type: SUBMIT_REVIEW_SUCCESS, payload: res})
 		})
 		.catch(err =>{
-			dispatch({type: FIND_DRIVER_BY_ID_FAILURE, payload: err.message})
+			dispatch({type: SUBMIT_REVIEW_FAILURE, payload: err.message})
 		})
 	)
 }
 
 
-
 // Find drivers nearby
-export const findDriversNearby = (location) => dispatch => {
-	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
+export const submitDriverReview = (review) => dispatch => {
+	dispatch({type: SUBMIT_REVIEW_STARTED})
 	return (
 		API.get('/api/drivers')
-  	    .then(res =>{
+		.then(res =>{
 			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
 		})
 		.catch(err =>{
@@ -57,6 +60,21 @@ export const findDriversNearby = (location) => dispatch => {
 		})
 	)
 }
+
+// Find drivers nearby
+export const findDriversNearby = (location) => dispatch => {
+	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
+	return (
+		API.get('/api/drivers')
+		.then(res =>{
+			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
+		})
+		.catch(err =>{
+			dispatch({type: FIND_DRIVER_BY_ID_FAILURE, payload: err.message})
+		})
+	)
+}
+
 // Find drivers nearby
 export const getDriversById = (driverId) => dispatch => {
 	dispatch({type: FIND_DRIVER_BY_ID_STARTED})

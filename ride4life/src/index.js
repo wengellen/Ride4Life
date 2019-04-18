@@ -15,7 +15,7 @@ import DriverLoginPage from "./views/driver/DriverLoginPage";
 import DriverSignupPage from "./views/driver/DriverSignupPage";
 import RiderLoginPage from "./views/rider/RiderLoginPage";
 import RiderSignupPage from "./views/rider/RiderSignupPage";
-import RiderTripRequestPage from "./views/rider/RiderTripRequestPage";
+import DriverReviewPage from "./views/driver/DriverReviewPage";
 import List from "./views/driver/DriverSignupPage";
 import RiderHomePage from "./views/rider/RiderHomePage";
 import DriverHomePage from "./views/driver/DriverHomePage";
@@ -51,7 +51,7 @@ class App extends React.Component {
 					<Route path="/driver-home" component={DriverHomePage} />
 					<Route path="/drivers/:id" component={DriverProfilePage} />
 					<Route path="/user-logout" component={HomePage} />
-					<Route path="/trip/request" component={RiderTripRequestPage} />
+					<Route path="/driver/review" component={DriverReviewPage} />
 					{/*<PrivateRoute path="/account" component={FriendListPage}/>*/}
 				</Switch>
 			</div>

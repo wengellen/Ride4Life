@@ -4,7 +4,6 @@ import PinkButton from "../../components/Button/PinkButton";
 import {connect} from 'react-redux'
 import Map from './map/CustomMap'
 import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
-import Edit from "./RiderTripRequestPage";
 import {Link} from "react-router-dom";
 
 class RiderHomePage extends Component {
@@ -37,20 +36,32 @@ class RiderHomePage extends Component {
 	// 	this.props.findDriversNearby()
 	// }
 	
+	
+	getEstimatedFare = (e)=>{
+		e.preventDefault()
+		// this.props.sendTripRequest(this.state.location)
+		// .then(res => {
+			// e.target.toggle('show')
+			this.setState({showEstimate: !this.state.showEstimate})
+		// })
+	}
+	
+	
 	sendTripRequest = (e)=>{
 		e.preventDefault()
 		e.persist();
 		console.log('e',this.inst)
-		
 		this.props.sendTripRequest(this.state.location)
 			.then(res => {
-				// this.props.history.push('/trip/request')
-				// e.target.toggle('show')
+				this.props.history.push('/driver/review')
 				this.setState({showEstimate: !this.state.showEstimate})
 			})
 	}
 	
 
+	
+	
+	
 	render() {
 		console.log('inst', this.inst)
 		console.log('driversNearby', this.props)
@@ -81,7 +92,7 @@ class RiderHomePage extends Component {
 						<PinkButton
 							className="pink-btn"
 							type="submit"
-							onClick={this.sendTripRequest}>Request Ride</PinkButton>
+							onClick={this.getEstimatedFare}>Request Ride</PinkButton>
 					</form>
 				</div>
 				<div className="map-container">
@@ -94,7 +105,7 @@ class RiderHomePage extends Component {
 							<h1>Fare Estimate</h1>
 						
 						</div>
-					<button className="brown-btn">Send Requst</button>
+					<button className="brown-btn" onClick={this.sendTripRequest}>Send Requst</button>
 				</main>
 				
 				<div className="drivers-container">

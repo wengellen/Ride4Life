@@ -15,7 +15,10 @@ import {
 	LOGOUT_USER,
 	SEND_TRIP_REQUEST_STARTED,
 	SEND_TRIP_REQUEST_SUCCESS,
-	SEND_TRIP_REQUEST_FAILURE
+	SEND_TRIP_REQUEST_FAILURE,
+	SUBMIT_REVIEW_STARTED,
+	SUBMIT_REVIEW_SUCCESS,
+	SUBMIT_REVIEW_FAILURE,
 } from '../actions'
 
 
@@ -25,6 +28,7 @@ const initialState = {
 	findNearbyDriverStarted: false,
 	findDriverByIdStarted: false,
 	sendTripRequestStarted:false,
+	submitDriverReviewStarted:false,
 	currentDriver:
 		{
 			"driver_id": 1,
@@ -205,6 +209,18 @@ export const riderReducer = (state = initialState, action)=>{
 		case SEND_TRIP_REQUEST_FAILURE:
 			return {...state,
 				sendTripRequestStarted:false
+			}
+		case SUBMIT_REVIEW_STARTED:
+			return {...state,
+				submitDriverReviewStarted:true
+			}
+		case SUBMIT_REVIEW_SUCCESS:
+			return {...state,
+				submitDriverReviewStarted:false
+			}
+		case SUBMIT_REVIEW_FAILURE:
+			return {...state,
+				submitDriverReviewStarted:false
 			}
 		default:
 			return {...state}
