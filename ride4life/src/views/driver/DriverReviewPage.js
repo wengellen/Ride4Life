@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import PinkButton from "../../components/Button/PinkButton";
-import Edit from "@material-ui/icons/Edit";
+// import Edit from "@material-ui/icons/Edit";
 import Loader from 'react-loader-spinner'
 import  Rating  from 'material-ui-rating'
 
@@ -67,7 +67,7 @@ class DriverReviewPage extends Component {
 	   }else{
 		   return (
 			   <div className="driver-review-container">
-				   <Edit className="edit-btn-container" onClick={this.editProfile}/>
+				   {/*<Edit className="edit-btn-container" onClick={this.editProfile}/>*/}
 				 
 				   <main className="driver-profile-main review">
 						   <div className="driver-profile-img-container ">

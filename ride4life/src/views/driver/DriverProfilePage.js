@@ -73,7 +73,7 @@ class DriverProfilePage extends Component {
 					   </div>
 					   <PinkButton className="brown-btn" onClick={this.sendTripRequest}>Confirm Ride Request</PinkButton>
 				   </main>
-				   <Edit className="edit-btn-container" onClick={this.editProfile}/>
+				   {/*<Edit className="edit-btn-container" onClick={this.editProfile}/>*/}
 				   <header>
 					   <div className="driver-profile-img-container ">
 						   <img src="http://lorempixel.com/500/500" className="round"/>

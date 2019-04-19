@@ -44,7 +44,7 @@ class RiderTripPage extends Component {
 				enRoute:true
 			})
 		}
-		window.setTimeout( this.endTrip, 5000)
+		window.setTimeout( this.endTrip, 8000)
 	}
 	
 	
