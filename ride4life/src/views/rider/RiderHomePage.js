@@ -2,7 +2,7 @@ import React, { createRef, Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PinkButton from "../../components/Button/PinkButton";
 import {connect} from 'react-redux'
-import Map from './map/CustomMap'
+import Map from '../map/CustomMap'
 import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
 
 class RiderHomePage extends Component {
