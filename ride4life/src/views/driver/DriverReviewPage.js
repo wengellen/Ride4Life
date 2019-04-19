@@ -21,7 +21,7 @@ class DriverReviewPage extends Component {
 	}
 	
 	editProfile = ()=>{
-		console.log('isEditing')
+		// console.log('isEditing')
 		this.setState({isEditing: !this.state.isEditing})
 	}
 	
@@ -36,7 +36,7 @@ class DriverReviewPage extends Component {
 	}
 	
 	rateDriver = (value)=>{
-		console.log('Rated with value ',value)
+		// console.log('Rated with value ',value)
 		this.setState({
 			...this.state,
 			review:{
@@ -53,7 +53,7 @@ class DriverReviewPage extends Component {
 	
 	submitDriverReview = (e) => {
 		e.preventDefault()
-		console.log('submitDriverReview ',this.state.review)
+		// console.log('submitDriverReview ',this.state.review)
 		this.props.submitDriverReview(this.state.review,this.props.currentDriver.driver_id)
 		.then(msg=>{
 			this.props.history.push('/rider-home')
@@ -61,17 +61,13 @@ class DriverReviewPage extends Component {
 	}
 	
 	render() {
-		console.log('this.props.findDriverByIdStarted',this.props.submitDriverReviewStarted)
+		// console.log('this.props.findDriverByIdStarted',this.props.submitDriverReviewStarted)
 	   if(this.props.submitDriverReviewStarted){
 		   return (<Loader/>)
 	   }else{
-		   console.log('this.props.currentDriver',this.props.currentDriver)
-		   console.log('this.props.currentDriver.review',this.props.currentDriver.review)
-		
 		   return (
 			   <div className="driver-review-container">
 				   <Edit className="edit-btn-container" onClick={this.editProfile}/>
-				   {/*</Link>*/}
 				 
 				   <main className="driver-profile-main review">
 						   <div className="driver-profile-img-container ">
@@ -107,7 +103,6 @@ class DriverReviewPage extends Component {
 }
 
 const mapStateToProps = ({riderReducer}) => {
-   console.log('riderReducer.currentDriver', riderReducer.currentDriver)
 	return {
 		submitDriverReviewStarted: riderReducer.submitDriverReviewStarted,
 		currentDriver:riderReducer.currentDriver,

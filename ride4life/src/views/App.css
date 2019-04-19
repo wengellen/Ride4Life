@@ -109,7 +109,7 @@
     .trip-estimate-container{
         color:white;
         background-color: #353A50;
-        width: 100%;
+        width: 90%;
         text-align: center;
         padding: 2rem;
         border-radius: 16px;
@@ -124,7 +124,8 @@
 
     .trip-estimate-container.slideup{
         display:block;
-        bottom:300px;
+        bottom:200px;
+        width: 90%;
         transform: translateY(-200px);
     }
     .login-container{
@@ -199,7 +200,9 @@
   background-image: linear-gradient(to right, rgba(255,255,255,1), #F7F7FA);
   line-height:1rem;
   padding:1rem;
+  margin: 0 auto;
 }
+
 
 .driver-profile-img-container img.round{
   width: 128px;
@@ -449,6 +452,7 @@ Review Container
     font-size: 1.1rem;
     font-weight: bold;
     color: white;
+    margin-bottom: 1rem;
 }
 .trip-estimate-content p{
     font-size: 0.9rem;
@@ -515,3 +519,5 @@ Stars
     display:flex;
     justify-content: space-between;
   }
+
+

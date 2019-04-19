@@ -24,11 +24,11 @@ import {Link} from "react-router-dom";
 class DriverSingupPage extends React.Component {
   state = {
     profile: {
-      username: 'eweng',
-      password: '0000',
-      phone:'6509522257',
-      location:'CA',
-       email: 'eweng@gmail.com',
+      username: '',
+      password: '',
+      phone:'',
+      location:'',
+       email: '',
     
     }
   };
@@ -39,7 +39,6 @@ class DriverSingupPage extends React.Component {
   }
     
     handleChange = e => {
-        console.log('e',e)
         this.setState({
             profile: {
                 ...this.state.profile,
@@ -49,13 +48,8 @@ class DriverSingupPage extends React.Component {
     };
   
   signupDriver = e => {
-    console.log('signup_driver clicked')
     e.preventDefault();
     this.props.signup_driver(this.state.profile)
-    // .then(() => {
-    //   console.log('his.props.login(this.state.credentials).then')
-    //   this.props.history.push('/driver-login');
-    // });
   };
   
   render() {
@@ -73,7 +67,12 @@ class DriverSingupPage extends React.Component {
                         className={classes.cardHeader}
                     >
                       <h2 className={classes.cardTitle}>Driver Sign Up</h2>
-                   
+                        <h4 className={classes.cardSubtitle}> Already Sign Up?
+                            <Link
+                                to="/driver-login">
+                                Login
+                            </Link>
+                        </h4>
                     </CardHeader>
                     <p
                         className={`${classes.description} ${classes.textCenter}`}

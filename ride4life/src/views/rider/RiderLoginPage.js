@@ -46,11 +46,9 @@ class RiderLoginPage extends React.Component {
 	};
 	
 	login = e => {
-		console.log('login clicked')
 		e.preventDefault();
 		this.props.login_rider(this.state.credentials)
 		.then(res => {
-			console.log('login_rider', res)
 	  	    this.props.history.push('/rider-home')
 		})}
 	
