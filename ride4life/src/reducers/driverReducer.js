@@ -12,7 +12,7 @@ import {
 const initialState = {
 	driverSignupStarted: false,
 	driverLoginStarted: false,
-	
+	serverMessage:'',
 	requestDetails:{},
 	driverDetails:[
 		{
@@ -53,31 +53,36 @@ export const driverReducer = (state = initialState, action)=>{
 	switch(action.type){
 		case DRIVER_SIGNUP_STARTED:
 			return {...state,
-				driverSignupStarted:true
+				driverSignupStarted:true,
+				serverMessage: 'Creating Driver Account...'
 			}
 		case DRIVER_SIGNUP_SUCCESS:
 			return {...state,
 				driverSignupStarted:false,
+				serverMessage: 'Creating Driver Account Success'
 			}
 		
 		case DRIVER_SIGNUP_FAILURE:
 			return {...state,
-				driverSignupStarted:false
+				driverSignupStarted:false,
+				serverMessage:action.payload,
 			}
 			
 		case DRIVER_LOGIN_STARTED:
 			return {...state,
 				driverLoginStarted:true,
+				serverMessage: 'Logging in...'
 			}
 		case DRIVER_LOGIN_SUCCESS:
 			return {...state,
 				driverLoginStarted:false,
-				driverDetails: action.payload.driverDetails
-				
+				serverMessage: 'Login Success'
 			}
 		case DRIVER_LOGIN_FAILURE:
+		
 			return {...state,
-				driverLoginStarted:false
+				driverLoginStarted:false,
+				serverMessage:action.payload
 			}
 		default:
 			return {...state}

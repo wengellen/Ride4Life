@@ -43,12 +43,12 @@ export const riderReducer = (state = initialState, action)=>{
 		case RIDER_SIGNUP_STARTED:
 			return {...state,
 				riderSignupStarted:true,
-				serverMessage: 'Creating User...'
+				serverMessage: 'Creating User Account...'
 			}
 		case RIDER_SIGNUP_SUCCESS:
 			return {...state,
 				riderSignupStarted:false,
-				serverMessage: 'Creating User Success'
+				serverMessage: 'Creating User Account Success'
 			}
 		case RIDER_SIGNUP_FAILURE:
 			console.log('RIDER_SIGNUP_FAILURE', action.payload)
@@ -59,16 +59,21 @@ export const riderReducer = (state = initialState, action)=>{
 			
 		case RIDER_LOGIN_STARTED:
 			return {...state,
-				riderLoginStarted:true
+				riderLoginStarted:true,
+				serverMessage: 'Logging in...'
 			}
 		case RIDER_LOGIN_SUCCESS:
 			return {...state,
 				riderLoginStarted:false,
-				loggedInUser: action.payload
+				loggedInUser: action.payload,
+				serverMessage: 'Login Success'
 			}
 		case RIDER_LOGIN_FAILURE:
+			console.log('this.state',action.payload)
+			
 			return {...state,
-				riderLoginStarted:false
+				riderLoginStarted:false,
+				serverMessage:action.payload
 			}
 		case FIND_DRIVERS_NEARBY_STARTED:
 			return {...state,

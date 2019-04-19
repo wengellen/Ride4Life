@@ -29,8 +29,8 @@ class DriverSingupPage extends React.Component {
       phone:'',
       location:'',
        email: '',
-    
-    }
+    },
+      isEditing: false
   };
   
   componentDidMount() {
@@ -40,6 +40,7 @@ class DriverSingupPage extends React.Component {
     
     handleChange = e => {
         this.setState({
+            isEditing:true,
             profile: {
                 ...this.state.profile,
                 [e.currentTarget.name]: e.currentTarget.value
@@ -49,13 +50,21 @@ class DriverSingupPage extends React.Component {
   
   signupDriver = e => {
     e.preventDefault();
+      this.setState({
+          isEditing:false,
+      })
     this.props.signup_driver(this.state.profile)
+    .then((res) => {
+        console.log('res', res)
+        if(!res.data){
+            this.props.history.push('/driver-login');
+        }
+    });
   };
   
   render() {
     const { classes } = this.props;
     return (
-        <div>
           <div className={classes.container}>
             <GridContainer justify="center">
               <GridItem xs={12} sm={12} md={4}>
@@ -183,14 +192,20 @@ class DriverSingupPage extends React.Component {
                 </Card>
               </GridItem>
             </GridContainer>
+              <div>
+                  <h2 className={`${classes.description} ${classes.textCenter}`}>
+                      {!this.state.isEditing && this.props.serverMessage}
+                  </h2>
+    
+              </div>
           </div>
-        </div>
     );
   }
 }
 const mapStateToProps = ({driverReducer}) => (
     {
-        driverSignupStarted:driverReducer.driverSignupStarted
+        driverSignupStarted:driverReducer.driverSignupStarted,
+        serverMessage:driverReducer.serverMessage
     }
 )
 

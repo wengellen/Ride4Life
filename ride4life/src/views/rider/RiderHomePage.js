@@ -38,18 +38,11 @@ class RiderHomePage extends Component {
 				endLocation : tripRequest.endLocation,
 			}
 			
-			// localStorage.setItem('tripRequest',   JSON.stringify(tripRequest))
 			this.props.findDriversNearby(trip)
 			.then(res => {
 				this.setState({showDriver: !this.state.showDriver})
 			})
 		}
-		// 	this.setState({
-		// 		startLocation:tripRequest.startLocation,
-		// 		endLocation:tripRequest.endLocation,
-		// 		enRoute:true
-		// 	})
-		// }
 	}
 	
 	handleChange = e => {

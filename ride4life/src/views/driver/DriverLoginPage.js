@@ -26,7 +26,8 @@ class DriverLoginPage extends React.Component {
 		credentials: {
 			phone: '',
 			password: ''
-		}
+		},
+		isEditing: false
 	};
 	
 	componentDidMount() {
@@ -36,6 +37,7 @@ class DriverLoginPage extends React.Component {
 	
 	handleChange = e => {
 		this.setState({
+			isEditing:true,
 			credentials: {
 				...this.state.credentials,
 				[e.currentTarget.name]: e.currentTarget.value
@@ -46,14 +48,20 @@ class DriverLoginPage extends React.Component {
 	login = e => {
 		// console.log('login clicked')
 		e.preventDefault();
-		this.props.login_driver(this.state.credentials).then(() => {
-		   this.props.history.push('/driver-home');
+		this.setState({
+			isEditing:false,
+		})
+		this.props.login_driver(this.state.credentials)
+		.then((res) => {
+			console.log('res', res)
+			if(!res.data){
+				this.props.history.push('/driver-home');
+			}
 		});
 	};
 	render() {
 		const { classes } = this.props;
 		return (
-			<div>
 				<div className={classes.container}>
 					<GridContainer justify="center">
 						<GridItem xs={12} sm={12} md={4}>
@@ -127,14 +135,19 @@ class DriverLoginPage extends React.Component {
 							</Card>
 						</GridItem>
 					</GridContainer>
+					<div>
+						<h2 className={`${classes.description} ${classes.textCenter}`}>
+							{!this.state.isEditing && this.props.serverMessage}
+						</h2>
+					</div>
 				</div>
-			</div>
 		);
 	}
 }
 const mapStateToProps = ({driverReducer}) => (
 	{
-		driverSignupStarted:driverReducer.driverSignupStarted
+		driverSignupStarted:driverReducer.driverSignupStarted,
+		serverMessage:driverReducer.serverMessage
 	}
 )
 

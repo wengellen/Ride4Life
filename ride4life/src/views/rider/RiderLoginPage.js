@@ -26,9 +26,10 @@ import {Link} from "react-router-dom";
 class RiderLoginPage extends React.Component {
 	state = {
 		credentials: {
-			phone: '6509522257',
-			password: '0000'
-		}
+			phone: '',
+			password: ''
+		},
+		isEditing: false
 	};
 	
 	componentDidMount() {
@@ -38,6 +39,7 @@ class RiderLoginPage extends React.Component {
 	
 	handleChange = e => {
 		this.setState({
+			isEditing:true,
 			credentials: {
 				...this.state.credentials,
 				[e.target.name]: e.target.value
@@ -47,15 +49,22 @@ class RiderLoginPage extends React.Component {
 	
 	login = e => {
 		e.preventDefault();
+		this.setState({
+			isEditing:false,
+		})
 		this.props.login_rider(this.state.credentials)
 		.then(res => {
-	  	    this.props.history.push('/rider-home')
+			console.log('res', res)
+			if(!res.data){
+				
+				this.props.history.push('/rider-home');
+			}
 		})}
 	
 	render() {
+		// console.log('this.props', this.props)
 		const { classes } = this.props;
 		return (
-			<div>
 				<div className={classes.container}>
 					<GridContainer justify="center">
 						<GridItem xs={12} sm={12} md={4}>
@@ -129,14 +138,20 @@ class RiderLoginPage extends React.Component {
 							</Card>
 						</GridItem>
 					</GridContainer>
+					<div>
+						<h2 className={`${classes.description} ${classes.textCenter}`}>
+							{!this.state.isEditing && this.props.serverMessage}
+						</h2>
+					</div>
 				</div>
-			</div>
 		);
 	}
 }
 const mapStateToProps = ({riderReducer}) => (
 	{
-		riderLoginStarted:riderReducer.riderLoginStarted
+		riderLoginStarted:riderReducer.riderLoginStarted,
+		serverMessage:riderReducer.serverMessage
+		
 	}
 )
 

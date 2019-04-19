@@ -109,17 +109,17 @@ export const getDriversById = (driverId) => dispatch => {
 export const signup_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_SIGNUP_STARTED})
 	// dispatch({type: RIDER_SIGNUP_SUCCESS, payload: res.data})
-	console.log('signup_rider')
   	return (
 		API.post('/api/register', {...rider, driver:false})
 		.then(res =>{
 			dispatch({type: RIDER_SIGNUP_SUCCESS, payload: res.data})
+			return res.data
 		})
 		.catch(error => {
 			console.log(error.response)
 			console.log( error.response.data.error)
-			
 			dispatch({type: RIDER_SIGNUP_FAILURE, payload: error.response.data.error})
+			return error.response
 		})
 	)
 }
@@ -131,12 +131,15 @@ export const login_rider = (rider) => dispatch => {
 		.then(res =>{
 			localStorage.setItem('token', res.data.token)
 			localStorage.setItem('loggedInUser', JSON.stringify({...res.data}))
-			
 			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
+			return res.data
 		})
 		.catch(err =>{
-			// console.log('err', err)
-			dispatch({type: RIDER_LOGIN_FAILURE, payload: err.message})
+			console.log('err', err.response.error)
+			if (err.response.status === 401) {
+				dispatch({type: RIDER_LOGIN_FAILURE, payload: err.response.data.message})
+			}
+			return err.response
 		})
 	)
 }

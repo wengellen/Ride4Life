@@ -53,8 +53,13 @@ class RiderSingupPage extends React.Component {
           this.setState({
             isEditing:false,
         })
-        this.props.signup_rider(this.state.profile).then(() => {
-            this.props.history.push('/rider-login');
+        this.props.signup_rider(this.state.profile)
+        .then((res) => {
+            console.log('res', res)
+            if(!res.data){
+                this.props.history.push('/rider-login');
+    
+            }
         });
     };
     
@@ -153,9 +158,9 @@ class RiderSingupPage extends React.Component {
                         </GridItem>
                     </GridContainer>
                     <div>
-                        <h1 className={`${classes.description} ${classes.textCenter}`}>
+                        <h2 className={`${classes.description} ${classes.textCenter}`}>
                            {!this.state.isEditing && this.props.serverMessage}
-                        </h1>
+                        </h2>
     
                     </div>
                 </div>
