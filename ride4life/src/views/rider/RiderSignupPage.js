@@ -29,7 +29,8 @@ class RiderSingupPage extends React.Component {
             username: '',
             password: '',
             phone:'',
-        }
+        },
+        isEditing: false
     };
     
     componentDidMount() {
@@ -38,8 +39,8 @@ class RiderSingupPage extends React.Component {
     }
     
     handleChange = e => {
-        console.log('e',e)
         this.setState({
+            isEditing:true,
             profile: {
                 ...this.state.profile,
                 [e.currentTarget.name]: e.currentTarget.value
@@ -48,11 +49,11 @@ class RiderSingupPage extends React.Component {
     };
     
     signup = e => {
-        console.log('signup clicked')
         e.preventDefault()
-        console.log('this.state.profile',this.state.profile);
+          this.setState({
+            isEditing:false,
+        })
         this.props.signup_rider(this.state.profile).then(() => {
-            console.log('his.props.login(this.state.profile).then')
             this.props.history.push('/rider-login');
         });
     };
@@ -71,11 +72,14 @@ class RiderSingupPage extends React.Component {
                                         className={classes.cardHeader}
                                     >
                                         <h2 className={classes.cardTitle}>Rider Sign Up</h2>
+                                        <h4 className={classes.cardSubtitle}> Already Sign Up?
+                                            <Link
+                                                to="/rider-login">
+                                                Login
+                                            </Link>
+                                        </h4>
                                     </CardHeader>
-                                    <p
-                                        className={`${classes.description} ${classes.textCenter}`}
-                                    >
-                                    </p>
+                                  
                                     <CardBody signup>
                                         <CustomInput
                                             id="first"
@@ -130,10 +134,6 @@ class RiderSingupPage extends React.Component {
                                                 startAdornment: (
                                                     <InputAdornment position="start">
                                                         <Phone className={classes.inputIconsColor} />
-                                                        
-                                                        {/*<Icon className={classes.inputIconsColor}>*/}
-                                                        {/*lockutline*/}
-                                                        {/*</Icon>*/}
                                                     </InputAdornment>
                                                 )
                                             }}
@@ -152,15 +152,23 @@ class RiderSingupPage extends React.Component {
                             </Card>
                         </GridItem>
                     </GridContainer>
+                    <div>
+                        <h1 className={`${classes.description} ${classes.textCenter}`}>
+                           {!this.state.isEditing && this.props.serverMessage}
+                        </h1>
+    
+                    </div>
                 </div>
         );
     }
 }
-const mapStateToProps = ({riderReducer}) => (
-    {
-        riderSignupStarted:riderReducer.riderSignupStarted
+const mapStateToProps = ({riderReducer}) => {
+    return  {
+        riderSignupStarted:riderReducer.riderSignupStarted,
+        serverMessage:riderReducer.serverMessage
     }
-)
+}
+
 
 export default connect(
     mapStateToProps,

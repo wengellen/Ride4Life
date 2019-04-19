@@ -42,6 +42,7 @@ class DriverProfilePage extends Component {
 	
 	sendTripRequest = (e)=>{
 		e.preventDefault()
+		const user =  JSON.parse(localStorage.getItem('loggedInUser'))
 		const tripRequest =  JSON.parse(localStorage.getItem('tripRequest'))
 		const trip = {
 				trip_id:1,
@@ -54,7 +55,7 @@ class DriverProfilePage extends Component {
 		
 		this.props.sendTripRequest(trip)
 			.then(res => {
-				this.props.history.push(`/rider-home`);
+				this.props.history.push(`/rider/${user.rider_id}/trip`);
 			})
 	}
 	

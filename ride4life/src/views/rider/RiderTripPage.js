@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import Map from './map/CustomMap'
 import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
 
-class RiderHomePage extends Component {
+class RiderTripPage extends Component {
 	constructor(){
 		super()
 		this.inst = ''
@@ -30,27 +30,23 @@ class RiderHomePage extends Component {
 		enRoute: false
 	}
 	
+	endTrip = ()=>{
+		console.log("end trip")
+		this.props.history.push('/driver/review')
+	}
+	
 	componentDidMount() {
 		const tripRequest = JSON.parse(localStorage.getItem('tripRequest'))
-		if(tripRequest && tripRequest.startLocation){
-			const trip = {
-				startLocation : tripRequest.startLocation,
-				endLocation : tripRequest.endLocation,
-			}
-			
-			// localStorage.setItem('tripRequest',   JSON.stringify(tripRequest))
-			this.props.findDriversNearby(trip)
-			.then(res => {
-				this.setState({showDriver: !this.state.showDriver})
+		if(tripRequest && tripRequest.endLocation){
+			this.setState({
+				startLocation:tripRequest.startLocation,
+				endLocation:tripRequest.endLocation,
+				enRoute:true
 			})
 		}
-		// 	this.setState({
-		// 		startLocation:tripRequest.startLocation,
-		// 		endLocation:tripRequest.endLocation,
-		// 		enRoute:true
-		// 	})
-		// }
+		window.setTimeout( this.endTrip, 5000)
 	}
+	
 	
 	handleChange = e => {
 		// console.log('e',e)
@@ -73,7 +69,7 @@ class RiderHomePage extends Component {
 		const tripRequest = {
 			startLocation : this.state.startLocation,
 			endLocation : this.state.endLocation,
-		}
+	}
 	
 	   localStorage.setItem('tripRequest',   JSON.stringify(tripRequest))
 		this.props.findDriversNearby(tripRequest)
@@ -84,6 +80,7 @@ class RiderHomePage extends Component {
 	
 	cancelTrip = ()=>{
 		console.log('cancelling trips')
+		this.props.history.push('/rider-home')
 	}
 	
 	
@@ -92,54 +89,33 @@ class RiderHomePage extends Component {
 			<div className="map-wrapper ">
 				<div id="map-instructions"
 					 name="instruction" ref={instruction => this.inst = instruction}>
-					<form>
-						 <div className="map-instructions-location">
-							 <h3>Pickup Location</h3>
-							 <input
-								 type="text"
-								 placeholder="Your Address"
-								 name="startLocation"
-								 onChange={this.handleChange}
-								 value={this.state.startLocation && this.state.startLocation.address}/>
-						 </div>
-						<div className="map-instructions-location">
-							<h3>Destination Location</h3>
-							<input
-								type="text"
-								name="endLocation"
-								onChange={this.handleChange}
-								value={this.state.endLocation && this.state.endLocation.address}
-								placeholder="Hospital Name"/>
-						</div>
-						{ this.state.enRoute
-							?   <button className="brown-btn" onClick={this.cancelTrip}>Cancel Route</button>
-							: 	<PinkButton
-								className={`pink-btn ${this.state.enRoute ? "brown-btn" : ""}`}
-							type="submit"
-								onClick={this.findDriversNearby}>Request Ride</PinkButton>
-						}
-					
+						<form>
+							 <div className="map-instructions-location">
+								 <h1 > Your driver is coming in 5 minutes</h1>
+								
+								 <h3>Pickup Location</h3>
+								 <input
+									 type="text"
+									 placeholder="Your Address"
+									 name="startLocation"
+									 onChange={this.handleChange}
+									 value={this.state.startLocation && this.state.startLocation.address}/>
+							 </div>
+							<div className="map-instructions-location">
+								<h3>Destination Location</h3>
+								<input
+									type="text"
+									name="endLocation"
+									onChange={this.handleChange}
+									value={this.state.endLocation && this.state.endLocation.address}
+									placeholder="Hospital Name"/>
+							</div>
+						 	<button className="brown-btn" onClick={this.cancelTrip}>Cancel Route</button>
+						 	{/*<button className="brown-btn" onClick={this.endTrip}>End Trip</button>*/}
 					</form>
 				</div>
 				<div className="map-container">
 					<Map zoom={16} center={{ lat: 39.74739, lng: -105 }} />
-				</div>
-				
-				<div className="drivers-container">
-					{this.props.driversNearby && this.props.driversNearby.map((driver, idx) => {
-						return <div className="driver-item-container" key={idx}
-									 onClick={e => this.loadDriverProfile(driver)}>
-									<div className="driver-img-container">
-										<img src="http://lorempixel.com/500/500"/>
-									</div>
-									<div className="driver-item-content">
-										<h2>{driver.username}</h2>
-										<h3>2 mi
-											<span>{`, ${driver.earnedRatings} stars` }</span>
-										</h3>
-									</div>
-								</div>
-					})}
 				</div>
 				
 			</div>
@@ -160,4 +136,4 @@ export default connect(
 	{ findDriversNearby,
 	  sendTripRequest,
 	  getDriversById }
-)(RiderHomePage);
+)(RiderTripPage);

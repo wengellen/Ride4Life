@@ -20,12 +20,10 @@
   position: absolute;
   margin: 20px 50px ;
   width: 25%;
-  /*height: 300px;*/
   min-width:300px;
   text-align: left;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9);
-  /*overflow-y: scroll;*/
   font-family: sans-serif;
   font-size: 0.8em;
   line-height: 2em;
@@ -33,10 +31,18 @@
   overflow:hidden;
 }
 
+#map-instructions form > button{
+    margin-top: 1rem;
+}
+
 .pink-btn{
     width: 100%;
 }
 
+.map-instructions-location h1{
+    margin-bottom: 1rem;
+    line-height:1.6rem;
+}
 
 /**
  NavBar
@@ -49,98 +55,35 @@
  }
 
 /* At the top level of your code */
-@media screen and (max-width: 1023px) {
-    .map-wrapper{
+/*@media screen and (max-width: 1023px) {*/
+    /*.map-wrapper{*/
 
-    }
-}
+    /*}*/
+/*}*/
 
-
-    /* At the top level of your code */
-@media screen and (max-width: 500px) {
-    .map-wrapper{
-        width: 100%;
-        display:flex;
-        flex-direction: column;
-    }
-
-    .map-container{
-        z-index: 1;
-        width: 100%;
-        margin-top: -20px;
-    }
-
-    #map-instructions {
-        display:flex;
-        z-index: 2;
-        width: 100%;
-        position: relative;
-        border-radius: 16px;
-        color:#959DAD;
-        font-size: 0.8rem;
-        margin:0 auto 20px auto;
-        box-shadow: 0 2px 16px 0 rgba(0,0,0,0.18) ;
-        opacity: 0.9;
-    }
-
-    #map-instructions form{
-        text-align:left;
-        margin: 0 10px;
-    }
-    .map-instructions-location{
-        padding-top: 4px;
-        /*border-bottom: 1px solid rgba(69, 91, 99, 0.15);*/
-    }
-
-    #map-instructions *{
-        width: 100%;
-        margin-bottom: 0;
-        outline:none;
-    }
-    #map-instructions input{
-        font-size: 1rem;
-        font-weight: bold;
-        color: #454F63;
-        margin-bottom:4px;
-    }
-    .pink-btn{
-        margin-top: 1rem;
-    }
-    .trip-estimate-container{
-        color:white;
-        background-color: #353A50;
-        width: 90%;
-        text-align: center;
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 2px 20px 0 rgba(0,0,0,0.18) ;
-        display:none;
-        position: absolute;
-        z-index:100;
-        transition: all 1s cubic-bezier(0, 1, 0.5, 1);
-        /*bottom:0;*/
-        transform: translateY(0);
-    }
-
-    .trip-estimate-container.slideup{
-        display:block;
-        bottom:200px;
-        width: 90%;
-        transform: translateY(-200px);
-    }
-    .login-container{
-        display:none;
-    }
+#map-instructions *{
+    width: 100%;
+    margin-bottom: 0.5rem;
 }
 
 #map-instructions input{
-  width:100%;
-  height: 40px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #454F63;
+    width:100%;
+    height: 40px;
+    padding: 6px;
+    outline:none;
+
 }
 
 #map-instructions h1{
   color: #444;
   font-size: 1.2rem;
+}
+
+#map-instructions h3{
+  font-size: 0.8rem;
 }
 
 /*
@@ -476,6 +419,7 @@ Review Container
      display:flex;
      flex-direction: column;
      align-items: center;
+     width: 90%;
  }
 
 .driver-profile-main.review > h1{
@@ -491,26 +435,21 @@ Review Container
 .form-review textarea{
     border-radius: 16px;
     color: white;
-    padding: 20px;
+    padding: 40px;
     font-size: 1.2rem;
 }
 
 .leave-review{
     border-top: 1px solid #555;
     padding-top: 20px;
-    /*background-color: #454F63;*/
     border-radius: 16px;
     margin-bottom: 2rem;
     line-height:1.6rem;
 }
+
 .leave-review p{
     text-align: center;
 }
-
-
-/**
-Stars
- */
 
  /**
     Appbar
@@ -521,3 +460,81 @@ Stars
   }
 
 
+
+
+/* At the top level of your code */
+@media screen and (max-width: 500px) {
+    .map-wrapper{
+        width: 100%;
+        display:flex;
+        flex-direction: column;
+    }
+
+    .map-container{
+        z-index: 1;
+        width: 100%;
+        margin-top: -20px;
+    }
+
+    #map-instructions {
+        display:flex;
+        z-index: 2;
+        width: 100%;
+        position: relative;
+        border-radius: 16px;
+        color:#959DAD;
+        font-size: 0.8rem;
+        margin:0 auto 20px auto;
+        box-shadow: 0 2px 16px 0 rgba(0,0,0,0.18) ;
+        opacity: 0.9;
+    }
+
+    #map-instructions form{
+        text-align:left;
+        margin: 0 10px;
+    }
+    .map-instructions-location{
+        padding-top: 4px;
+        /*border-bottom: 1px solid rgba(69, 91, 99, 0.15);*/
+    }
+
+    #map-instructions *{
+        width: 100%;
+        margin-bottom: 0;
+        outline:none;
+    }
+    #map-instructions input{
+        font-size: 1rem;
+        font-weight: bold;
+        color: #454F63;
+        margin-bottom:4px;
+    }
+    .pink-btn{
+        margin-top: 1rem;
+    }
+    .trip-estimate-container{
+        color:white;
+        background-color: #353A50;
+        width: 90%;
+        text-align: center;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 2px 20px 0 rgba(0,0,0,0.18) ;
+        display:none;
+        position: absolute;
+        z-index:100;
+        transition: all 1s cubic-bezier(0, 1, 0.5, 1);
+        /*bottom:0;*/
+        transform: translateY(0);
+    }
+
+    .trip-estimate-container.slideup{
+        display:block;
+        bottom:200px;
+        width: 90%;
+        transform: translateY(-200px);
+    }
+    .login-container{
+        display:none;
+    }
+}

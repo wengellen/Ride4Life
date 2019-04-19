@@ -34,10 +34,13 @@ export const sendTripRequest = (trip) => dispatch => {
 	dispatch({type: SEND_TRIP_REQUEST_STARTED})
 	return (
 		new Promise((resolve, reject) => {
-			resolve('Trip request sent')
+			setTimeout( ()=>{
+				resolve(trip)
+			} , 2000)
+			
 		})
 		.then(res =>{
-			console.log('sendTripRequest',res)
+			// console.log('sendTripRequest',res)
 			dispatch({type: SEND_TRIP_REQUEST_SUCCESS, payload: res})
 		})
 		.catch(err =>{
@@ -51,14 +54,14 @@ export const sendTripRequest = (trip) => dispatch => {
 export const submitDriverReview = (review, driver_id) => dispatch => {
 	dispatch({type: SUBMIT_REVIEW_STARTED})
 	const currentUser = JSON.parse(localStorage.getItem('loggedInUser'))
-	console.log("currentUser",currentUser)
+	// console.log("currentUser",currentUser)
 	const requestPayload = {
 				driver_id,
 				user_id: currentUser.rider_id,
 				review:review.details,
 				rating:review.rating
 			}
-	console.log("requestPayload",requestPayload)
+	// console.log("requestPayload",requestPayload)
 	
 	return (
 		API.post('/api/drivers/reviews', requestPayload)
@@ -73,6 +76,7 @@ export const submitDriverReview = (review, driver_id) => dispatch => {
 
 // Find drivers nearby
 export const findDriversNearby = (location) => dispatch => {
+	// console.log('findDriversNearby location',location)
 	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
 	return (
 		API.get('/api/drivers')
@@ -80,7 +84,8 @@ export const findDriversNearby = (location) => dispatch => {
 			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
 		})
 		.catch(err =>{
-			dispatch({type: FIND_DRIVER_BY_ID_FAILURE, payload: err.message})
+			
+			dispatch({type: FIND_DRIVERS_NEARBY_FAILURE, payload: err.message})
 		})
 	)
 }
@@ -103,13 +108,18 @@ export const getDriversById = (driverId) => dispatch => {
 // LOGIN / SIGN UP
 export const signup_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_SIGNUP_STARTED})
+	// dispatch({type: RIDER_SIGNUP_SUCCESS, payload: res.data})
+	console.log('signup_rider')
   	return (
 		API.post('/api/register', {...rider, driver:false})
 		.then(res =>{
 			dispatch({type: RIDER_SIGNUP_SUCCESS, payload: res.data})
 		})
-		.catch(err =>{
-			dispatch({type: RIDER_SIGNUP_FAILURE, payload: err.message})
+		.catch(error => {
+			console.log(error.response)
+			console.log( error.response.data.error)
+			
+			dispatch({type: RIDER_SIGNUP_FAILURE, payload: error.response.data.error})
 		})
 	)
 }
@@ -125,7 +135,7 @@ export const login_rider = (rider) => dispatch => {
 			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
 		})
 		.catch(err =>{
-			console.log('err', err)
+			// console.log('err', err)
 			dispatch({type: RIDER_LOGIN_FAILURE, payload: err.message})
 		})
 	)

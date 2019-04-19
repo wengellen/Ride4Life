@@ -22,6 +22,7 @@ import DriverHomePage from "./views/driver/DriverHomePage";
 import DriverProfilePage from "./views/driver/DriverProfilePage";
 import PrimarySearchAppBar from "./components/Navbars/SearchAppBar";
 import Header from "./components/Header/Header";
+import RiderTripPage from "./views/rider/RiderTripPage";
 
 const store = createStore(
 	rootReducer,
@@ -38,9 +39,7 @@ class App extends React.Component {
 		// }
 		return (
 			<div className="App">
-				{/*<Navbars/>*/}
 				<Header />
-				{/*<PrimarySearchAppBar/>*/}
 				<Switch>
 					<Route exact path="/" component={RiderLoginPage} />
 					<Route path="/rider-login" component={RiderLoginPage} />
@@ -48,11 +47,10 @@ class App extends React.Component {
 					<Route path="/driver-login" component={DriverLoginPage} />
 					<Route path="/driver-signup" component={DriverSignupPage} />
 					<Route path="/rider-home" component={RiderHomePage} />
+					<Route path="/rider/:id/trip" component={RiderTripPage} />
 					<Route path="/driver-home" component={DriverHomePage} />
 					<Route path="/drivers/:id" component={DriverProfilePage} />
-					{/*<Route path="/user-logout" component={HomePage} />*/}
 					<Route path="/driver/review" component={DriverReviewPage} />
-					{/*<PrivateRoute path="/account" component={FriendListPage}/>*/}
 				</Switch>
 			</div>
 		);
