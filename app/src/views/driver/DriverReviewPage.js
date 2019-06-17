@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import PinkButton from "../../components/Button/PinkButton";
+import Rating from "../../components/Ratings/Rating";
 // import Edit from "@material-ui/icons/Edit";
 import Loader from 'react-loader-spinner'
-import  Rating  from 'material-ui-rating'
+// import  Rating  from 'material-ui-rating'
 
 import {
 	submitDriverReview
@@ -86,11 +87,12 @@ class DriverReviewPage extends Component {
 						   </form>
 						   <div className="leave-review">
 							   <h1>Rate your Trip </h1>
-							   <Rating
-								   value={3}
-								   max={5}
-								   onChange={e=> this.rateDriver(e)}
-							   />
+							   <Rating stars={5}/>
+							   {/*<Rating*/}
+								{/*   value={3}*/}
+								{/*   max={5}*/}
+								{/*   onChange={e=> this.rateDriver(e)}*/}
+							   {/*/>*/}
 						   </div>
 					   <PinkButton onClick={this.submitDriverReview}>Submit Rating</PinkButton>
 					   <h2>{this.props.submitDriverReviewSuccessMessage}</h2>

@@ -359,6 +359,13 @@ Review Container
    font-size: 1rem;
 }
 
+.Star {
+    font-size: 2em;
+    color: #cfd8dc;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
 /**
     Trip Estimate
  */

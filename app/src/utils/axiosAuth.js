@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const dev = false
+const dev = true
 const BASE_URL = dev ? "http://localhost:4500/api" : "https://ride-for-life.herokuapp.com"
 
 // export default function (){
