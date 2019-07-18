@@ -9,9 +9,7 @@ import GridItem from "../../components/Grid/GridItem";
 import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Phone from "@material-ui/icons/Phone";
-
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
-// import image from "assets/img/bg7.jpg";
 import Button from  "../../components/CustomButtons/Button";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CardBody from "../../components/Card/CardBody";
@@ -29,13 +27,11 @@ class RiderLoginPage extends React.Component {
 			phone: '',
 			password: ''
 		},
-		isEditing: false
+		isEditing: false,
+		user:null
 	};
+	unsubscribeFromAuth = null;
 	
-	componentDidMount() {
-		window.scrollTo(0, 0);
-		document.body.scrollTop = 0;
-	}
 	
 	handleChange = e => {
 		this.setState({
@@ -126,6 +122,8 @@ class RiderLoginPage extends React.Component {
 										/>
 									
 									</CardBody>
+									{/*<button onClick={signInWithGoogle}>Sign In With Google</button>*/}
+									
 									<div className={classes.textCenter}>
 										<PinkButton type="submit" color="primary"  >
 											{this.props.loggingIn

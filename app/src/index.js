@@ -33,10 +33,18 @@ const store = createStore(
 )
 
 class App extends React.Component {
+	state = {
+		user:null
+	};
+	
+	componentDidMount() {
+	}
+	
+	componentWillUnmount =()=> {
+		this.unsubscribeFromAuth()
+	}
+	
 	render() {
-		// if(!this.state.items){
-		// 	return <Loader>Loading Data</Loader>
-		// }
 		return (
 			<div className="App">
 				<Header />
