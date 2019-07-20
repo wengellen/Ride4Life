@@ -7,6 +7,7 @@
     "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "cross-env": "^5.2.0",
     "firebase": "^5.7.0",
     "firebase-admin": "^6.4.0",
     "firebase-tools": "^6.1.2",
@@ -33,10 +34,12 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "serve": "^11.1.0",
     "styled-components": "^4.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "start": "cross-env serve --no-clipboard build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

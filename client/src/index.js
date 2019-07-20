@@ -18,6 +18,7 @@ import DriverHomePage from "./views/driver/DriverHomePage";
 import DriverProfilePage from "./views/driver/DriverProfilePage";
 import Header from "./components/Header/Header";
 import RiderTripPage from "./views/rider/RiderTripPage";
+import "./App.css"
 
 const store = createStore(
 	rootReducer,

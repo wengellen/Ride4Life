@@ -18,8 +18,10 @@ import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions"
 import MapGL, { Marker, Popup, FlyToInterpolator } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import "./RiderHomePage.css"
+
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
-console.log('MAPBOX_TOKEN',MAPBOX_TOKEN)
+
 
 class RiderHomePage extends Component {
 	constructor(){
@@ -285,7 +287,7 @@ class RiderHomePage extends Component {
 	render() {
 		return (
 			<div className="map-wrapper ">
-				<div id="map-instructions"
+				<div className="map-instructions"
 					 name="instruction" ref={instruction => this.inst = instruction}>
 					<form>
 						 <div className="map-instructions-location">
@@ -313,11 +315,10 @@ class RiderHomePage extends Component {
 							type="submit"
 								onClick={this.findDriversNearby}>Request Ride</PinkButton>
 						}
-					
 					</form>
 				</div>
 				<div className="map-container">
-					<Map zoom={16} center={{ lat: 39.74739, lng: -105 }} />
+					{/*<Map zoom={16} center={{ lat: 39.74739, lng: -105 }} />*/}
 					<MapWindow>
 						<MapGL
 							ref={this.mapRef}
@@ -371,26 +372,24 @@ class RiderHomePage extends Component {
 							{this.renderPopup()}
 						</MapGL>
 					</MapWindow>
-					);
+					{/*);*/}
 				</div>
-				
-				<div className="drivers-container">
+				<div className="drivers-nearby-container">
 					{this.props.driversNearby && this.props.driversNearby.map((driver, idx) => {
 						return <div className="driver-item-container" key={idx}
-									 onClick={e => this.loadDriverProfile(driver)}>
-									<div className="driver-img-container">
-										<img src="http://lorempixel.com/500/500" alt={"driver"}/>
-									</div>
-									<div className="driver-item-content">
-										<h2>{driver.username}</h2>
-										<h3>2 mi
-											<span>{`, ${driver.earnedRatings} stars` }</span>
-										</h3>
-									</div>
-								</div>
+									onClick={e => this.loadDriverProfile(driver)}>
+							<div className="driver-img-container">
+								<img src="http://lorempixel.com/500/500" alt={"driver"}/>
+							</div>
+							<div className="driver-item-content">
+								<h2>{driver.username}</h2>
+								<h3>2 mi
+									<span>{`, ${driver.earnedRatings} stars` }</span>
+								</h3>
+							</div>
+						</div>
 					})}
 				</div>
-				
 			</div>
 		);
 	}

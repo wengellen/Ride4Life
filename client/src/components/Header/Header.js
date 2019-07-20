@@ -16,8 +16,8 @@ import Close from "@material-ui/icons/Close";
 import ChildCare from "@material-ui/icons/ChildCare";
 import TimeToLeave from "@material-ui/icons/TimeToLeave";
 // core components
-import headerStyle from "../../assets/jss/material-kit-pro-react/components/headerStyle.jsx";
-import logo from "../../assets/img/safe_logo.png";
+import headerStyle from "assets/jss/material-kit-pro-react/components/headerStyle.jsx";
+import logo from "assets/img/safe_logo.png";
 import {logoutUser} from "../../actions";
 
 class Header extends React.Component {
