@@ -6,7 +6,7 @@ import {
   whiteColor,
   grayColor,
   hexToRgb
-} from "assets/jss/material-kit-pro-react.jsx";
+} from "../../material-kit-pro-react.jsx";
 
 const signupPageStyle = theme => ({
   description,
@@ -16,7 +16,7 @@ const signupPageStyle = theme => ({
   },
   cardSubtitle: {
     "& a":{
-      marginLeft:"6px" + "  !important",
+      marginLeft:`6px !important`,
       color: "white"
     }
   },
@@ -55,10 +55,6 @@ const signupPageStyle = theme => ({
   },
   form: {
     margin: "0"
-  },
-  cardHeader: {
-    width: "auto",
-    textAlign: "center"
   },
   cardHeader: {
     width: "auto",

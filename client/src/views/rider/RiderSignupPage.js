@@ -8,20 +8,14 @@ import Card from "../../components/Card/Card";
 import GridItem from "../../components/Grid/GridItem";
 import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
-import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
-// import image from "assets/img/bg7.jpg";
-import Button from "../../components/CustomButtons/Button";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CardBody from "../../components/Card/CardBody";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import Icon from "@material-ui/core/Icon";
-import Email from "@material-ui/icons/Email";
 import Lock from "@material-ui/icons/Lock";
 import Phone from "@material-ui/icons/Phone";
 import Face from "@material-ui/icons/Face";
-import Place from "@material-ui/icons/Place";
-
 import {Link} from "react-router-dom";
+import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 
 class RiderSingupPage extends React.Component {
     state = {

@@ -1,5 +1,4 @@
 import {
-  container,
   defaultFont,
   primaryColor,
   infoColor,
@@ -14,7 +13,7 @@ import {
   whiteColor,
   grayColor,
   hexToRgb
-} from "assets/jss/material-kit-pro-react.jsx";
+} from "../../material-kit-pro-react.jsx";
 
 const headerStyle = theme => ({
   appBar: {

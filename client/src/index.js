@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import HomePage from './views/HomePage';
 import {Provider} from 'react-redux'
 import {BrowserRouter as Router, Switch, Route, withRouter} from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
@@ -9,18 +8,14 @@ import {createStore, applyMiddleware} from 'redux'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import rootReducer from './reducers'
-import Navbars from "./components/Navbars/Navbars";
-import Footer from "./components/Footer/Footer";
 import DriverLoginPage from "./views/driver/DriverLoginPage";
 import DriverSignupPage from "./views/driver/DriverSignupPage";
 import RiderLoginPage from "./views/rider/RiderLoginPage";
 import RiderSignupPage from "./views/rider/RiderSignupPage";
 import DriverReviewPage from "./views/driver/DriverReviewPage";
-import List from "./views/driver/DriverSignupPage";
 import RiderHomePage from "./views/rider/RiderHomePage";
 import DriverHomePage from "./views/driver/DriverHomePage";
 import DriverProfilePage from "./views/driver/DriverProfilePage";
-import PrimarySearchAppBar from "./components/Navbars/SearchAppBar";
 import Header from "./components/Header/Header";
 import RiderTripPage from "./views/rider/RiderTripPage";
 

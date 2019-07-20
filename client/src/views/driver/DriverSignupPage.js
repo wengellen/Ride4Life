@@ -8,7 +8,7 @@ import Card from "../../components/Card/Card";
 import GridItem from "../../components/Grid/GridItem";
 import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
-import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
+import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 // import image from "assets/img/bg7.jpg";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CardBody from "../../components/Card/CardBody";

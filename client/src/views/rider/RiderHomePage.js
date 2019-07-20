@@ -1,22 +1,16 @@
-import React, { createRef, Component } from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import {
 	MapWindow,
 	ShowMarker,
 	CloseX,
 	PopupInfo,
-	LogoImg,
-	PinKey,
-	KeyBox,
-	ToggleKnob,
 	PopupImg,
 	Link,
 	PopContent,
 } from '../map/MapWindowStyle';
 import SeekerPin from '../../assets/img/map/SMarker.png';
-import MainLogo from '../../assets/img/map/mainlogo.png';
 import CompanyPin from '../../assets/img/map/EMarker.png';
-import { withStyles } from '@material-ui/core/styles';
 import PinkButton from "../../components/Button/PinkButton";
 import {connect} from 'react-redux'
 import Map from '../map/CustomMap'
@@ -195,12 +189,11 @@ class RiderHomePage extends Component {
 		const { pin } = this.state;
 		
 		let fullName = '';
-		let title, jobTitle, profilePicture, role, geometry, properties;
+		let jobTitle, profilePicture, role, geometry, properties;
 		
 		if (!!pin) {
 			properties = pin.properties;
 			geometry = pin.geometry;
-			title = properties.title;
 			profilePicture = properties.profilePicture;
 			role = properties.role;
 			
@@ -386,7 +379,7 @@ class RiderHomePage extends Component {
 						return <div className="driver-item-container" key={idx}
 									 onClick={e => this.loadDriverProfile(driver)}>
 									<div className="driver-img-container">
-										<img src="http://lorempixel.com/500/500"/>
+										<img src="http://lorempixel.com/500/500" alt={"driver"}/>
 									</div>
 									<div className="driver-item-content">
 										<h2>{driver.username}</h2>

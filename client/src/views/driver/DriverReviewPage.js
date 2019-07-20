@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import PinkButton from "../../components/Button/PinkButton";
 import Rating from "../../components/Ratings/Rating";
-// import Edit from "@material-ui/icons/Edit";
 import Loader from 'react-loader-spinner'
-// import  Rating  from 'material-ui-rating'
 
 import {
 	submitDriverReview
@@ -72,7 +69,7 @@ class DriverReviewPage extends Component {
 				 
 				   <main className="driver-profile-main review">
 						   <div className="driver-profile-img-container ">
-							   <img src="http://lorempixel.com/500/500" className="round"/>
+							   <img src="http://lorempixel.com/500/500" className="round" alt={"driver avatar"}/>
 						   </div>
 						   <h1>{this.props.currentDriver.username}</h1>
 						   <h2>Nawandala, Uganda</h2>

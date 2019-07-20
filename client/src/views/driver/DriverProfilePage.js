@@ -76,7 +76,7 @@ class DriverProfilePage extends Component {
 				   {/*<Edit className="edit-btn-container" onClick={this.editProfile}/>*/}
 				   <header>
 					   <div className="driver-profile-img-container ">
-						   <img src="http://lorempixel.com/500/500" className="round"/>
+						   <img src="http://lorempixel.com/500/500" className="round" alt={"driver avatar"}/>
 					   </div>
 					   <h1>{this.props.currentDriver.username}</h1>
 					   <h3>Nawandala, Uganda</h3>
@@ -102,7 +102,7 @@ class DriverProfilePage extends Component {
 							 onClick={this.editProfile}/>
 					   <header >
 						   <div className="driver-profile-img-avatar">
-							   <img src="http://lorempixel.com/100/100" />
+							   <img src="http://lorempixel.com/100/100" alt={"driver avatar"}/>
 						   </div>
 						   <div className="title">
 							   <h2>{this.props.currentDriver.username}</h2>
@@ -151,7 +151,7 @@ class DriverProfilePage extends Component {
 				   <div className="cars-container">
 					   <h3>MY AMBULANCE</h3>
 					   <div className="car-img-container">
-						   <img src="http://lorempixel.com/1400/1200"/>
+						   <img src="http://lorempixel.com/1400/1200" alt="car"/>
 					   </div>
 				   </div>
 			   </div>
