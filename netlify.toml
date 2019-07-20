@@ -1,6 +1,6 @@
 [build]
-  base = "ride4life/"
-  publish = "ride4life/build/"
+  base = "client/"
+  publish = "client/build/"
   command = "yarn build"
   [[redirects]]
   	 from = "/"
