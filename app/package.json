@@ -36,7 +36,6 @@
     "styled-components": "^4.3.2"
   },
   "scripts": {
-    "yarn-start": "yarn start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
