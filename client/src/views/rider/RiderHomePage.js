@@ -19,8 +19,14 @@ import MapGL, { Marker, Popup, FlyToInterpolator } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import "./RiderHomePage.css"
+import GeolocateControl from "react-map-gl/dist/es6/components/geolocate-control";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+const  geolocateStyle = {
+		float: 'left',
+		margin: '50px',
+		padding: '10px'
+	};
 
 
 class RiderHomePage extends Component {
@@ -282,7 +288,7 @@ class RiderHomePage extends Component {
 	cancelTrip = ()=>{
 		console.log('cancelling trips')
 	}
-	
+
 	
 	render() {
 		return (
@@ -329,12 +335,17 @@ class RiderHomePage extends Component {
 							mapStyle="mapbox://styles/mapbox/streets-v11"
 							onClick={() => this.setState({ pin: null })}
 						>
-							<Geocoder
-								mapRef={this.mapRef}
-								mapboxApiAccessToken={MAPBOX_TOKEN}
-								onViewportChange={this.handleViewportChange}
-								placeholder="Search for places"
+							<GeolocateControl
+								style={geolocateStyle}
+								positionOptions={{enableHighAccuracy: true}}
+								trackUserLocation={true}
 							/>
+							{/*<Geocoder*/}
+							{/*	mapRef={this.mapRef}*/}
+							{/*	mapboxApiAccessToken={MAPBOX_TOKEN}*/}
+							{/*	onViewportChange={this.handleViewportChange}*/}
+							{/*	placeholder="Search for places"*/}
+							{/*/>*/}
 							{/*<LogoImg alt="logo" src={MainLogo} />*/}
 							{/*<KeyBox>*/}
 							{/*	<div className="container">*/}

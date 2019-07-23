@@ -15,6 +15,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Lock from "@material-ui/icons/Lock";
 import {Link} from "react-router-dom";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
+import Map from "../map/Map";
+import SearchableMap from "../map/SearchableMap";
 
 class RiderLoginPage extends React.Component {
 	state = {
@@ -53,10 +55,11 @@ class RiderLoginPage extends React.Component {
 		})}
 	
 	render() {
-		// console.log('this.props', this.props)
 		const { classes } = this.props;
 		return (
 				<div className={classes.container}>
+				<Map/>
+				<SearchableMap/>
 					<GridContainer justify="center">
 						<GridItem xs={12} sm={12} md={4}>
 							<Card>
