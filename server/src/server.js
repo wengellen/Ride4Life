@@ -4,7 +4,8 @@ import morgan from 'morgan'
 import config from './config'
 import cors from 'cors'
 import { connect } from './utils/db'
-import driverRouter from './resources/driver/driver.router'
+import driverRouter from './resources/driverProfile/driverProfile.router'
+import userRouter from './resources/user/user.router'
 
 export const app = express()
 
@@ -16,7 +17,7 @@ app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
 
-app.use('/api/driver', driverRouter)
+app.use('/api/user', userRouter)
 
 export const start = async () => {
 	try {

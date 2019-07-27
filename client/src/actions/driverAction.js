@@ -31,7 +31,7 @@ export const updateProfile = (user) => dispatch => {
 
 // DRIVER
 export const signup_driver= (driver) => dispatch =>{
-	// console.log('signup_driver',driver)
+	// console.log('signup_driver',driverProfile)
 	dispatch({type:DRIVER_SIGNUP_STARTED})
 	// return (
 		return axios.post('https://ride-for-life.herokuapp.com/api/register', {...driver, driver:true})
@@ -50,7 +50,7 @@ export const signup_driver= (driver) => dispatch =>{
 
 export const login_driver= (driver) => dispatch =>{
 	dispatch({type:DRIVER_LOGIN_STARTED})
-	// return (API.post('/api/login', {...driver, driver:true})
+	// return (API.post('/api/login', {...driverProfile, driverProfile:true})
 	return axios.post('https://ride-for-life.herokuapp.com/api/login', {...driver, driver:true})
 	   .then(res =>{
 			localStorage.setItem('token', res.data.token)

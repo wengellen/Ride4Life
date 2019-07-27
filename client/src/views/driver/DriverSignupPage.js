@@ -57,7 +57,7 @@ class DriverSingupPage extends React.Component {
     .then((res) => {
         console.log('res', res)
         if(!res.data){
-            this.props.history.push('/driver-login');
+            this.props.history.push('/driverProfile-login');
         }
     });
   };

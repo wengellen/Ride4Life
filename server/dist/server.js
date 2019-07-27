@@ -17,7 +17,9 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _db = require("./utils/db");
 
-var _driver = _interopRequireDefault(require("./resources/driver/driver.router"));
+var _driverProfile = _interopRequireDefault(require("./resources/driverProfile/driverProfile.router"));
+
+var _user = _interopRequireDefault(require("./resources/user/user.router"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30,7 +32,7 @@ app.use((0, _bodyParser.urlencoded)({
   extended: true
 }));
 app.use((0, _morgan.default)('dev'));
-app.use('/api/driver', _driver.default);
+app.use('/api/user', _user.default);
 
 const start = async () => {
   try {

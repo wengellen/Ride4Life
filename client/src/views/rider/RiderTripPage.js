@@ -30,7 +30,7 @@ class RiderTripPage extends Component {
 	
 	endTrip = ()=>{
 		console.log("end trip")
-		this.props.history.push('/driver/review')
+		this.props.history.push('/driverProfile/review')
 	}
 	
 	componentDidMount() {
