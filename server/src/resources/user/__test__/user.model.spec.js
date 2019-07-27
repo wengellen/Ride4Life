@@ -13,4 +13,24 @@ describe('User Model', function () {
 		   expect(e).toBeTruthy()
 		}
 	})
+	test('email must be unique', async () => {
+		expect.assertions(1)
+		try {
+		 	 await User.init()
+		 	 await User.create([
+				 {
+				 	email:'123@gmail.com',
+					pasword:'123'
+				 },
+				 {
+					 email:'123@gmail.com',
+					 pasword:'123'
+				 },
+		 	 ])
+		}
+		catch(e){
+		   console.error(e)
+		   expect(e).toBeTruthy()
+		 }
+	})
 });

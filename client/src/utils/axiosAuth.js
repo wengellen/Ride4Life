@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const dev = false
-const BASE_URL = dev ? "http://localhost:4500/api" : "https://ride-for-life.herokuapp.com"
+const dev = true
+const BASE_URL = dev ? "http://localhost:7000" : "https://ride-for-life.herokuapp.com"
 
 // export default function (){
 // const token = localStorage.getItem('token') || '' //Math.random().toString(16).substring(-8)

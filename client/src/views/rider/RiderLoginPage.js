@@ -8,7 +8,7 @@ import Card from "../../components/Card/Card";
 import GridItem from "../../components/Grid/GridItem";
 import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Phone from "@material-ui/icons/Phone";
+import Face from "@material-ui/icons/Face";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CardBody from "../../components/Card/CardBody";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -21,7 +21,7 @@ import SearchableMap from "../map/SearchableMap";
 class RiderLoginPage extends React.Component {
 	state = {
 		credentials: {
-			phone: '',
+			username: '',
 			password: ''
 		},
 		isEditing: false,
@@ -47,9 +47,7 @@ class RiderLoginPage extends React.Component {
 		})
 		this.props.login_rider(this.state.credentials)
 		.then(res => {
-			console.log('res', res)
-			if(!res.data){
-				
+			if(res.message){
 				this.props.history.push('/rider-home');
 			}
 		})}
@@ -83,19 +81,19 @@ class RiderLoginPage extends React.Component {
 									</p>
 									<CardBody signup>
 										<CustomInput
-											id="first"
+											id="username"
 											formControlProps={{
 												fullWidth: true
 											}}
 											inputProps={{
-												placeholder: "Phone",
-												type: "phone",
+												placeholder: "username",
+												type: "text",
 												onChange:this.handleChange,
-												value:this.state.credentials.phone,
-												name:'phone',
+												value:this.state.credentials.username,
+												name:'username',
 												startAdornment: (
 													<InputAdornment position="start">
-														<Phone className={classes.inputIconsColor} />
+														<Face className={classes.inputIconsColor} />
 													</InputAdornment>
 												)
 											}}

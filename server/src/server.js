@@ -4,6 +4,7 @@ import morgan from 'morgan'
 import config from './config'
 import cors from 'cors'
 import { connect } from './utils/db'
+import { signup, signin, protect } from './utils/auth'
 import driverRouter from './resources/driverProfile/driverProfile.router'
 import userRouter from './resources/user/user.router'
 
@@ -16,8 +17,12 @@ app.use(json())
 app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
+app.post('/signup', signup)
+app.post('/signin', signin)
 
+app.use('/api', protect)
 app.use('/api/user', userRouter)
+
 
 export const start = async () => {
 	try {

@@ -13,6 +13,7 @@ import CardBody from "../../components/Card/CardBody";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Lock from "@material-ui/icons/Lock";
 import Phone from "@material-ui/icons/Phone";
+import Email from "@material-ui/icons/Email";
 import Face from "@material-ui/icons/Face";
 import {Link} from "react-router-dom";
 import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
@@ -20,6 +21,7 @@ import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginP
 class RiderSingupPage extends React.Component {
     state = {
         profile: {
+            email: '',
             username: '',
             password: '',
             phone:'',
@@ -81,18 +83,35 @@ class RiderSingupPage extends React.Component {
                                   
                                     <CardBody signup>
                                         <CustomInput
-                                            id="first"
+                                            id="email"
                                           
                                             formControlProps={{
                                                 fullWidth: true,
-                                                
                                             }}
                                             inputProps={{
                                                 onChange:this.handleChange,
-                                                value:this.state.profile.username,
-                                                placeholder: "Useraname",
-                                                name:'username',
+                                                value:this.state.profile.email,
+                                                placeholder: "Email",
+                                                name:'email',
                                                 type: "text",
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <Email className={classes.inputIconsColor} />
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                        <CustomInput
+                                            id="username"
+                                            formControlProps={{
+                                                fullWidth: true
+                                            }}
+                                            inputProps={{
+                                                placeholder: "Username",
+                                                type: "username",
+                                                onChange:this.handleChange,
+                                                value:this.state.profile.username,
+                                                name:'username',
                                                 startAdornment: (
                                                     <InputAdornment position="start">
                                                         <Face className={classes.inputIconsColor} />
@@ -120,7 +139,7 @@ class RiderSingupPage extends React.Component {
                                             }}
                                         />
                                         <CustomInput
-                                            id="cellphone"
+                                            id="phone"
                                             formControlProps={{
                                                 fullWidth: true
                                             }}

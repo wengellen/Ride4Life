@@ -17,6 +17,8 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _db = require("./utils/db");
 
+var _auth = require("./utils/auth");
+
 var _driverProfile = _interopRequireDefault(require("./resources/driverProfile/driverProfile.router"));
 
 var _user = _interopRequireDefault(require("./resources/user/user.router"));
@@ -32,6 +34,9 @@ app.use((0, _bodyParser.urlencoded)({
   extended: true
 }));
 app.use((0, _morgan.default)('dev'));
+app.post('/signup', _auth.signup);
+app.post('/signin', _auth.signin);
+app.use('/api', _auth.protect);
 app.use('/api/user', _user.default);
 
 const start = async () => {

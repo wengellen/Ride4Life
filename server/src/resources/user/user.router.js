@@ -1,10 +1,9 @@
 import {Router} from 'express'
-import {getOne, updateOne, createOne} from './user.controllers'
+import {getAccount, updateAccount} from './user.controllers'
 
 const router = Router()
 
-router.get('/', getOne)
-router.put('/', updateOne)
-router.post('/', createOne)
+router.get('/', getAccount)
+router.put('/', updateAccount)
 
 export default router
