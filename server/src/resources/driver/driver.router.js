@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getOne, updateOne, createOne } from './driverProfile.controllers'
+import { getOne, updateOne, createOne } from './driver.controllers'
 
 const router = Router()
 

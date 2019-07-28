@@ -2,7 +2,6 @@
 // DRIVER
 import {API} from "../utils/axiosAuth";
 import axios from 'axios'
-import {RIDER_LOGIN_FAILURE, RIDER_SIGNUP_FAILURE} from "./riderAction";
 
 export const DRIVER_SIGNUP_STARTED = 'DRIVER_SIGNUP_STARTED'
 export const DRIVER_SIGNUP_SUCCESS = 'DRIVER_SIGNUP_SUCCESS'
@@ -31,27 +30,27 @@ export const updateProfile = (user) => dispatch => {
 
 // DRIVER
 export const signup_driver= (driver) => dispatch =>{
-	// console.log('signup_driver',driverProfile)
+	// console.log('signup_driver',driver)
 	dispatch({type:DRIVER_SIGNUP_STARTED})
-	// return (
-		return axios.post('https://ride-for-life.herokuapp.com/api/register', {...driver, driver:true})
+	return (
+		API.post('/signup', {...driver, role:'driver'})
 		.then(res =>{
 			dispatch({type: DRIVER_SIGNUP_SUCCESS, payload: res.data})
 			return res.data
 		})
 		.catch(error => {
 			console.log(error.response)
-			console.log( error.response.data.error)
 			dispatch({type: DRIVER_SIGNUP_FAILURE, payload: error.response.data.error})
 			return error.response
 		})
-	// )
+	)
 }
 
 export const login_driver= (driver) => dispatch =>{
 	dispatch({type:DRIVER_LOGIN_STARTED})
-	// return (API.post('/api/login', {...driverProfile, driverProfile:true})
-	return axios.post('https://ride-for-life.herokuapp.com/api/login', {...driver, driver:true})
+	// return (API.post('/api/login', {...driver, driver:true})
+	return (
+		API.post('/signin', {...driver, role:'driver'})
 	   .then(res =>{
 			localStorage.setItem('token', res.data.token)
 		   dispatch({type: DRIVER_LOGIN_SUCCESS, payload: res.data})
@@ -64,5 +63,6 @@ export const login_driver= (driver) => dispatch =>{
 			}
 			return err.response
 		})
+	)
 }
 

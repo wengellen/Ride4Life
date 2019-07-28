@@ -108,8 +108,6 @@ export const getDriversById = (driverId) => dispatch => {
 // LOGIN / SIGN UP
 export const signup_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_SIGNUP_STARTED})
-	// dispatch({type: RIDER_SIGNUP_SUCCESS, payload: res.data})
-	console.log('rider',rider)
   	return (
 		API.post('/signup', {...rider, role:'rider'})
 		.then(res =>{
@@ -128,7 +126,7 @@ export const signup_rider = (rider) => dispatch => {
 export const login_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_LOGIN_STARTED})
 	return (
-		API.post('/signin', {...rider})
+		API.post('/signin', {...rider, role:'rider'})
 		.then(res =>{
 			localStorage.setItem('token', res.data.token)
 			// localStorage.setItem('loggedInUser', JSON.stringify({...res.data}))

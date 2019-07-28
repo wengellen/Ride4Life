@@ -29,7 +29,6 @@ class RiderLoginPage extends React.Component {
 	};
 	unsubscribeFromAuth = null;
 	
-	
 	handleChange = e => {
 		this.setState({
 			isEditing:true,

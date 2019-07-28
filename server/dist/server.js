@@ -19,9 +19,11 @@ var _db = require("./utils/db");
 
 var _auth = require("./utils/auth");
 
-var _driverProfile = _interopRequireDefault(require("./resources/driverProfile/driverProfile.router"));
-
 var _user = _interopRequireDefault(require("./resources/user/user.router"));
+
+var _driver = _interopRequireDefault(require("./resources/driver/driver.router"));
+
+var _rider = _interopRequireDefault(require("./resources/rider/rider.router"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37,7 +39,8 @@ app.use((0, _morgan.default)('dev'));
 app.post('/signup', _auth.signup);
 app.post('/signin', _auth.signin);
 app.use('/api', _auth.protect);
-app.use('/api/user', _user.default);
+app.use('/api/rider', _rider.default);
+app.use('/api/driver', _driver.default);
 
 const start = async () => {
   try {

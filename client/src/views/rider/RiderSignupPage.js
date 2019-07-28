@@ -83,25 +83,6 @@ class RiderSingupPage extends React.Component {
                                   
                                     <CardBody signup>
                                         <CustomInput
-                                            id="email"
-                                          
-                                            formControlProps={{
-                                                fullWidth: true,
-                                            }}
-                                            inputProps={{
-                                                onChange:this.handleChange,
-                                                value:this.state.profile.email,
-                                                placeholder: "Email",
-                                                name:'email',
-                                                type: "text",
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <Email className={classes.inputIconsColor} />
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
-                                        <CustomInput
                                             id="username"
                                             formControlProps={{
                                                 fullWidth: true
@@ -134,6 +115,24 @@ class RiderSingupPage extends React.Component {
                                                 startAdornment: (
                                                     <InputAdornment position="start">
                                                         <Lock className={classes.inputIconsColor} />
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                        <CustomInput
+                                            id="email"
+                                            formControlProps={{
+                                                fullWidth: true,
+                                            }}
+                                            inputProps={{
+                                                onChange:this.handleChange,
+                                                value:this.state.profile.email,
+                                                placeholder: "Email",
+                                                name:'email',
+                                                type: "text",
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <Email className={classes.inputIconsColor} />
                                                     </InputAdornment>
                                                 )
                                             }}

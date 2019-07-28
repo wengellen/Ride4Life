@@ -5,8 +5,8 @@ import config from './config'
 import cors from 'cors'
 import { connect } from './utils/db'
 import { signup, signin, protect } from './utils/auth'
-import driverRouter from './resources/driverProfile/driverProfile.router'
-import userRouter from './resources/user/user.router'
+import driverRouter from './resources/driver/driver.router'
+import riderRouter from './resources/rider/rider.router'
 
 export const app = express()
 
@@ -21,7 +21,8 @@ app.post('/signup', signup)
 app.post('/signin', signin)
 
 app.use('/api', protect)
-app.use('/api/user', userRouter)
+app.use('/api/rider', riderRouter)
+app.use('/api/driver', driverRouter)
 
 
 export const start = async () => {

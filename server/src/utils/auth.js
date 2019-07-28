@@ -1,5 +1,7 @@
 import config from '../config'
-import { User } from '../resources/user/user.model'
+import { User } from '../resources/trip/trip.model'
+import { Rider } from '../resources/rider/rider.model'
+import { Driver } from '../resources/driver/driver.model'
 import jwt from 'jsonwebtoken'
 
 export const newToken = user => {
@@ -17,16 +19,24 @@ export const verifyToken = token =>
 	})
 
 export const signup = async (req, res) => {
+	let user
 	if (!req.body.email || !req.body.phone ||  !req.body.username || !req.body.password) {
 		return res.status(400).send({ message: 'need email, phone, username and password' })
 	}
-	
+
 	try {
-		const user = await User.create(req.body)
+		if (req.body.role === 'rider'){
+			user = await Rider.create({...req.body})
+			// trip.rider= rider._id
+		}else{
+			user = await Driver.create({...req.body})
+		}
+		
 		const token = newToken(user)
 		return res.status(201).send({ token })
 	} catch (e) {
-		return res.status(500).end()
+		console.log('error',e)
+		res.status(500).json(error)
 	}
 }
 
@@ -39,29 +49,50 @@ export const signin = async (req, res) => {
 	const invalid = { message: 'Invalid username and passoword combination' }
 	
 	try {
-		const user = await User.findOne({ username: req.body.username })
-		.select('username password')
-		.exec()
-		if (!user) {
-			return res.status(401).send(invalid)
+		if (req.body.role === 'rider'){
+			const rider = await Rider.findOne({ username: req.body.username })
+			.select('username password')
+			.exec()
+			
+			if (!rider) {
+				return res.status(401).send(invalid)
+			}
+			
+			const match = await rider.checkPassword(req.body.password)
+			if (!match) {
+				return res.status(401).send(invalid)
+			}
+			const token = newToken(rider)
+			return res.status(200).json({
+				message: "Login successful",
+				role:'rider',
+				user: rider.username,
+				token,
+			});
+		}else{
+			const driver = await Driver.findOne({ username: req.body.username })
+			.select('username password')
+			.exec()
+			if (!driver) {
+				return res.status(401).send(invalid)
+			}
+			
+			const match = await driver.checkPassword(req.body.password)
+			if (!match) {
+				return res.status(401).send(invalid)
+			}
+			const token = newToken(driver)
+			return res.status(200).json({
+				message: "Login successful",
+				role:'rider',
+				user: driver.username,
+				token,
+			});
 		}
 		
-		const match = await user.checkPassword(req.body.password)
-		console.log('match',req.body.password )
-		if (!match) {
-			return res.status(401).send(invalid)
-		}
-		
-		const token = newToken(user)
-		// return res.status(201).send({ token })
-		return res.status(200).json({
-			message: "Login successful",
-			user: user.username,
-			token,
-		});
 	} catch (e) {
 		console.error(e)
-		res.status(500).end()
+		res.status(500).json(error)
 	}
 }
 

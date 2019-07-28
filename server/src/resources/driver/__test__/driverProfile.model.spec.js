@@ -1,7 +1,7 @@
-const DriverProfile = require('../driverProfile.model')
+const DriverProfile = require('../driver.model')
 
 describe('Driver model', () => {
-	test('user must be required', async () => {
+	test('trip must be required', async () => {
 		expect.assertions(1)
 		try {
 			await DriverProfile.create({

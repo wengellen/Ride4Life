@@ -8,7 +8,7 @@ import Card from "../../components/Card/Card";
 import GridItem from "../../components/Grid/GridItem";
 import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Phone from "@material-ui/icons/Phone";
+import Face from "@material-ui/icons/Face";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CardBody from "../../components/Card/CardBody";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -19,7 +19,7 @@ import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginP
 class DriverLoginPage extends React.Component {
 	state = {
 		credentials: {
-			phone: '',
+			username: '',
 			password: ''
 		},
 		isEditing: false
@@ -50,7 +50,7 @@ class DriverLoginPage extends React.Component {
 		.then((res) => {
 			console.log('res', res)
 			if(!res.data){
-				this.props.history.push('/driverProfile-home');
+				this.props.history.push('/driver-home');
 			}
 		});
 	};
@@ -81,19 +81,19 @@ class DriverLoginPage extends React.Component {
 									</p>
 									<CardBody signup>
 										<CustomInput
-											id="first"
+											id="username"
 											formControlProps={{
 												fullWidth: true
 											}}
 											inputProps={{
-												placeholder: "Phone",
-												type: "phone",
+												placeholder: "Username",
+												type: "text",
 												onChange:this.handleChange,
 												value:this.state.credentials.phone,
-												name:'phone',
+												name:'username',
 												startAdornment: (
 													<InputAdornment position="start">
-														<Phone className={classes.inputIconsColor} />
+														<Face className={classes.inputIconsColor} />
 													</InputAdornment>
 												)
 											}}

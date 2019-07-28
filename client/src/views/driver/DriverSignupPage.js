@@ -24,11 +24,11 @@ import {Link} from "react-router-dom";
 class DriverSingupPage extends React.Component {
   state = {
     profile: {
-      username: '',
-      password: '',
-      phone:'',
-      location:'',
-       email: '',
+        email: '',
+        username: '',
+        password: '',
+        phone:'',
+        city:'',
     },
       isEditing: false
   };
@@ -57,7 +57,7 @@ class DriverSingupPage extends React.Component {
     .then((res) => {
         console.log('res', res)
         if(!res.data){
-            this.props.history.push('/driverProfile-login');
+            this.props.history.push('/driver-login');
         }
     });
   };
@@ -124,6 +124,24 @@ class DriverSingupPage extends React.Component {
                             )
                           }}
                       />
+                        <CustomInput
+                            id="email"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                placeholder: "Email...",
+                                type: "email",
+                                onChange:this.handleChange,
+                                value:this.state.profile.email,
+                                name:'email',
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Email className={classes.inputIconsColor} />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
                       <CustomInput
                           id="phone"
                           formControlProps={{
@@ -143,16 +161,16 @@ class DriverSingupPage extends React.Component {
                           }}
                       />
                       <CustomInput
-                          id="location"
+                          id="city"
                           formControlProps={{
                             fullWidth: true
                           }}
                           inputProps={{
-                            placeholder: "Location",
+                            placeholder: "city",
                             type: "option",
                               onChange:this.handleChange,
-                              value:this.state.profile.location,
-                              name:'location',
+                              value:this.state.profile.city,
+                              name:'city',
                             startAdornment: (
                                 <InputAdornment position="start">
                                   <Place className={classes.inputIconsColor}/>
@@ -160,24 +178,7 @@ class DriverSingupPage extends React.Component {
                             )
                           }}
                       />
-                      <CustomInput
-                          id="email"
-                          formControlProps={{
-                            fullWidth: true
-                          }}
-                          inputProps={{
-                            placeholder: "Email...",
-                            type: "email",
-                              onChange:this.handleChange,
-                              value:this.state.profile.email,
-                              name:'email',
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <Email className={classes.inputIconsColor} />
-                                </InputAdornment>
-                            )
-                          }}
-                      />
+                    
                     
                     </CardBody>
                     <div className={classes.textCenter}>
