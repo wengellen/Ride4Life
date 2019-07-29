@@ -1,9 +1,11 @@
 import "mapbox-gl/dist/mapbox-gl.css"
-import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css"
+import "./SearchableMap.css"
 import React, { Component } from 'react'
-import MapGL, {GeolocateControl} from "react-map-gl";
+import MapGL, {GeolocateControl, FlyToInterpolator} from "react-map-gl";
 import DeckGL, { GeoJsonLayer } from "deck.gl";
 import Geocoder from "react-map-gl-geocoder";
+import PinkButton from "../../components/Button/PinkButton";
+import {MapWindow} from "./MapWindowStyle";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 const geolocateStyle = {
@@ -18,12 +20,41 @@ class SearchableMap extends Component {
 		viewport :{
 			latitude: 0,
 			longitude: 0,
-			zoom: 1
+			zoom: 15
 		},
 		searchResultLayer: null
 	}
 	mapRef = React.createRef()
 	geolocateRef = React.createRef()
+	
+	componentDidMount() {
+		window.addEventListener('resize', this.resize);
+		this.resize();
+		this.locateUser()
+	}
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.resize);
+	}
+	
+	resize = () => {
+		this.handleViewportChange({
+			width: window.innerWidth,
+			height: window.innerHeight,
+		});
+	};
+	locateUser = () => {
+		navigator.geolocation.getCurrentPosition(position => {
+			console.log('position',position)
+			
+			this.handleViewportChange({
+				longitude: position.coords.longitude,
+				latitude: position.coords.latitude,
+				zoom: 15,
+				transitionInterpolator: new FlyToInterpolator(),
+				transitionDuration: 1750,
+			});
+		});
+	}
 	
 	handleViewportChange = viewport => {
 		this.setState({
@@ -57,7 +88,6 @@ class SearchableMap extends Component {
 		const { viewport, searchResultLayer} = this.state
 		return (
 			<div style={{ height: '100vh'}}>
-				<h1 style={{textAlign: 'center', fontSize: '25px', fontWeight: 'bolder' }}>Use the search bar to find a location or click <a href="/">here</a> to find your location</h1>
 				<MapGL
 					// onLoad={this.geolocate.trigger()}
 					ref={this.mapRef}
@@ -68,12 +98,14 @@ class SearchableMap extends Component {
 					onViewportChange={this.handleViewportChange}
 					mapboxApiAccessToken={MAPBOX_TOKEN}
 				>
+				
 					<Geocoder
 						mapRef={this.mapRef}
 						onResult={this.handleOnResult}
 						onViewportChange={this.handleGeocoderViewportChange}
 						mapboxApiAccessToken={MAPBOX_TOKEN}
 						position='top-left'
+						style={{padding:"100px"}}
 					/>
 					<GeolocateControl
 						mapRef={this.mapRef}

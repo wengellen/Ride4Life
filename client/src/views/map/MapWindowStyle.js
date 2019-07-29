@@ -4,13 +4,17 @@ export const MapWindow = styled.div`
   .mapboxgl-ctrl-geocoder {
     width: 100%;
     border-radius: 20px;
-
-    @media (max-width: 1050px) {
-      min-width: 200px;
+    //background-color: green;
+    
+    @media (min-width: 1280px) {
+      min-width: 400px;
+    }
+    @media (min-width: 960px) {
+      min-width: 400px;
     }
 
-    @media (max-width: 350px) {
-      min-width: 170px;
+    @media (min-width: 600px) {
+      width: 300%;
     }
     .geocoder-icon-search {
       top: 7px;
@@ -18,11 +22,10 @@ export const MapWindow = styled.div`
     }
 
     input[type='text'] {
-      height: auto;
       width: 100%;
-      border-radius: 20px;
+      border-radius: 4px;
       border: none;
-      padding: 10px 0 10px 14%;
+      padding: 10px 0 10px 6px;
       &:focus {
         outline: none;
       }
@@ -31,6 +34,7 @@ export const MapWindow = styled.div`
       background-color: white;
       border-radius: 4px;
       padding-inline-start: 20px;
+      top:50px;
       li {
         list-style-type: none;
         margin: 2px 0;

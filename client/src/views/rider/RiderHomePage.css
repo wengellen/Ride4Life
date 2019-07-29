@@ -126,7 +126,7 @@
         min-width:300px;
         text-align: left;
         border-radius:4px;
-        z-index: 1000;
+        /*z-index: 1000;*/
         overflow:hidden;
         align-self: flex-start;
     }

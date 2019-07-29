@@ -16,10 +16,11 @@ import {connect} from 'react-redux'
 import Map from '../map/CustomMap'
 import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
 import MapGL, { Marker, Popup, FlyToInterpolator } from 'react-map-gl';
-import Geocoder from 'react-map-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import "./RiderHomePage.css"
 import GeolocateControl from "react-map-gl/dist/es6/components/geolocate-control";
+import SearchableMap from "../map/SearchableMap";
+import DirectionMap from "../map/DirectionMap";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 const  geolocateStyle = {
@@ -76,8 +77,8 @@ class RiderHomePage extends Component {
 	
 	componentDidMount() {
 		window.addEventListener('resize', this.resize);
-		this.resize();
-		this.getMarkers();
+		// this.resize();
+		// this.getMarkers();
 	
 		const tripRequest = JSON.parse(localStorage.getItem('tripRequest'))
 		if(tripRequest && tripRequest.startLocation){
@@ -293,95 +294,43 @@ class RiderHomePage extends Component {
 	render() {
 		return (
 			<div className="map-wrapper ">
-				<div className="map-instructions"
-					 name="instruction" ref={instruction => this.inst = instruction}>
-					<form>
-						 <div className="map-instructions-location">
-							 <h3>Pickup Location</h3>
-							 <input
-								 type="text"
-								 placeholder="Your Address"
-								 name="startLocation"
-								 onChange={this.handleChange}
-								 value={this.state.startLocation && this.state.startLocation.address}/>
-						 </div>
-						<div className="map-instructions-location">
-							<h3>Destination Location</h3>
-							<input
-								type="text"
-								name="endLocation"
-								onChange={this.handleChange}
-								value={this.state.endLocation && this.state.endLocation.address}
-								placeholder="Hospital Name"/>
-						</div>
-						{ this.state.enRoute
-							?   <button className="brown-btn" onClick={this.cancelTrip}>Cancel Route</button>
-							: 	<PinkButton
-								className={`pink-btn ${this.state.enRoute ? "brown-btn" : ""}`}
-							type="submit"
-								onClick={this.findDriversNearby}>Request Ride</PinkButton>
-						}
-					</form>
-				</div>
+				
 				<div className="map-container">
 					{/*<Map zoom={16} center={{ lat: 39.74739, lng: -105 }} />*/}
+					<DirectionMap />
 					<MapWindow>
-						<MapGL
-							ref={this.mapRef}
-							mapboxApiAccessToken={MAPBOX_TOKEN}
-							{...this.state.viewport}
-							onViewportChange={this.handleViewportChange}
-							style={{ position: 'absolute', margin: '-1px' }}
-							mapStyle="mapbox://styles/mapbox/streets-v11"
-							onClick={() => this.setState({ pin: null })}
-						>
-							<GeolocateControl
-								style={geolocateStyle}
-								positionOptions={{enableHighAccuracy: true}}
-								trackUserLocation={true}
-							/>
-							{/*<Geocoder*/}
-							{/*	mapRef={this.mapRef}*/}
-							{/*	mapboxApiAccessToken={MAPBOX_TOKEN}*/}
-							{/*	onViewportChange={this.handleViewportChange}*/}
-							{/*	placeholder="Search for places"*/}
-							{/*/>*/}
-							{/*<LogoImg alt="logo" src={MainLogo} />*/}
-							{/*<KeyBox>*/}
-							{/*	<div className="container">*/}
-							{/*		<div className="key key1">*/}
-							{/*			/!*<PinKey src={SeekerPin} />*!/*/}
-							{/*			<h3>Job Seeker</h3>*/}
-							{/*			<ToggleKnob htmlFor="seeker">*/}
-							{/*				<input*/}
-							{/*					type="checkbox"*/}
-							{/*					name="seeker"*/}
-							{/*					id="seeker"*/}
-							{/*					checked={this.state.filter.seeker}*/}
-							{/*					// onChange={this.markerShow}*/}
-							{/*				/>*/}
-							{/*			</ToggleKnob>*/}
-							{/*		</div>*/}
-							{/*		<div className="key key2">*/}
-							{/*			<PinKey src={CompanyPin} />*/}
-							{/*			<h3>Employer</h3>*/}
-							{/*			<ToggleKnob htmlFor="company">*/}
-							{/*				<input*/}
-							{/*					type="checkbox"*/}
-							{/*					name="company"*/}
-							{/*					id="company"*/}
-							{/*					checked={this.state.filter.company}*/}
-							{/*					// onChange={this.markerShow}*/}
-							{/*				/>*/}
-							{/*			</ToggleKnob>*/}
-							{/*		</div>*/}
-							{/*	</div>*/}
-							{/*</KeyBox>*/}
-							
-							{this.state.data.map(this.renderMarker)}
-							
-							{this.renderPopup()}
-						</MapGL>
+					{/*	<div className="map-instructions"*/}
+					{/*		 name="instruction" ref={instruction => this.inst = instruction}>*/}
+					{/*		<form>*/}
+					{/*			<div className="map-instructions-location">*/}
+					{/*				<h3>Pickup Location</h3>*/}
+					{/*				<input*/}
+					{/*					type="text"*/}
+					{/*					placeholder="Your Address"*/}
+					{/*					name="startLocation"*/}
+					{/*					onChange={this.handleChange}*/}
+					{/*					value={this.state.startLocation && this.state.startLocation.address}/>*/}
+					{/*			</div>*/}
+					{/*			*/}
+					{/*			<div className="map-instructions-location">*/}
+					{/*				<h3>Destination Location</h3>*/}
+					{/*				<input*/}
+					{/*					type="text"*/}
+					{/*					name="endLocation"*/}
+					{/*					onChange={this.handleChange}*/}
+					{/*					value={this.state.endLocation && this.state.endLocation.address}*/}
+					{/*					placeholder="Hospital Name"/>*/}
+					{/*			</div>*/}
+					{/*			{ this.state.enRoute*/}
+					{/*				?   <button className="brown-btn" onClick={this.cancelTrip}>Cancel Route</button>*/}
+					{/*				: 	<PinkButton*/}
+					{/*					className={`pink-btn ${this.state.enRoute ? "brown-btn" : ""}`}*/}
+					{/*					type="submit"*/}
+					{/*					onClick={this.findDriversNearby}>Request Ride</PinkButton>*/}
+					{/*			}*/}
+					{/*		</form>*/}
+					{/*	</div>*/}
+					{/*<SearchableMap/>*/}
 					</MapWindow>
 					{/*);*/}
 				</div>
