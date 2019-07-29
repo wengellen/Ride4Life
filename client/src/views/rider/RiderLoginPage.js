@@ -55,7 +55,6 @@ class RiderLoginPage extends React.Component {
 		const { classes } = this.props;
 		return (
 				<div className={classes.container}>
-				<DirectionMap/>
 					<GridContainer justify="center">
 						<GridItem xs={12} sm={12} md={4}>
 							<Card>
