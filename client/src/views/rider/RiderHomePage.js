@@ -1,40 +1,11 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import {
-	MapWindow,
-	ShowMarker,
-	CloseX,
-	PopupInfo,
-	PopupImg,
-	Link,
-	PopContent,
-} from '../map/MapWindowStyle';
-import SeekerPin from '../../assets/img/map/SMarker.png';
-import CompanyPin from '../../assets/img/map/EMarker.png';
-import PinkButton from "../../components/Button/PinkButton";
 import {connect} from 'react-redux'
-import Map from '../map/CustomMap'
 import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
-import MapGL, { Marker, Popup, FlyToInterpolator } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import "./RiderHomePage.css"
-import GeolocateControl from "react-map-gl/dist/es6/components/geolocate-control";
-import SearchableMap from "../map/SearchableMap";
 import DirectionMap from "../map/DirectionMap";
 
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
-const  geolocateStyle = {
-		float: 'left',
-		margin: '50px',
-		padding: '10px'
-	};
-
-
 class RiderHomePage extends Component {
-	constructor(){
-		super()
-		this.inst = ''
-	}
 	state = {
 		startLocation: {
 			"coordinates" : [
@@ -55,11 +26,9 @@ class RiderHomePage extends Component {
 		data: [],
 	}
 	
-	
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.resize);
 	}
-	
 	
 	componentDidMount() {
 		window.addEventListener('resize', this.resize);
@@ -81,29 +50,11 @@ class RiderHomePage extends Component {
 	componentDidUpdate(prevProps) {
 	}
 	
-	handleRequestRide = (e) => {
-	
-	}
-	
 	loadDriverProfile = (driver)=>{
 		// console.log('login clicked')
 		this.props.getDriversById(driver.driver_id).then(() => {
 	    	this.props.history.push(`/drivers/${driver.driver_id}`);
 		});
-	}
-	
-	findDriversNearby = (e)=>{
-		e.preventDefault()
-		const tripRequest = {
-			startLocation : this.state.startLocation,
-			endLocation : this.state.endLocation,
-		}
-	
-	   localStorage.setItem('tripRequest',   JSON.stringify(tripRequest))
-		this.props.findDriversNearby(tripRequest)
-			.then(res => {
-			this.setState({showDriver: !this.state.showDriver})
-			})
 	}
 	
 	cancelTrip = ()=>{
@@ -114,7 +65,7 @@ class RiderHomePage extends Component {
 		return (
 			<div className="map-wrapper ">
 				<div className="map-container">
-					 <DirectionMap requstRide={this.handleRequestRide}/>
+					 <DirectionMap />
 				</div>
 				<div className="drivers-nearby-container">
 					{this.props.driversNearby && this.props.driversNearby.map((driver, idx) => {

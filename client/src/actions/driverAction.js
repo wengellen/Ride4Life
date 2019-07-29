@@ -1,7 +1,6 @@
 
 // DRIVER
 import {API} from "../utils/axiosAuth";
-import axios from 'axios'
 
 export const DRIVER_SIGNUP_STARTED = 'DRIVER_SIGNUP_STARTED'
 export const DRIVER_SIGNUP_SUCCESS = 'DRIVER_SIGNUP_SUCCESS'

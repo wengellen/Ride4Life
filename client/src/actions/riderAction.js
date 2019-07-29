@@ -33,14 +33,10 @@ export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
 export const sendTripRequest = (trip) => dispatch => {
 	dispatch({type: SEND_TRIP_REQUEST_STARTED})
 	return (
-		new Promise((resolve, reject) => {
-			setTimeout( ()=>{
-				resolve(trip)
-			} , 2000)
-			
-		})
+		API.post('/api/rider/')
 		.then(res =>{
 			// console.log('sendTripRequest',res)
+			console.log('res',res)
 			dispatch({type: SEND_TRIP_REQUEST_SUCCESS, payload: res})
 		})
 		.catch(err =>{

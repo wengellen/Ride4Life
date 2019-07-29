@@ -15,7 +15,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Lock from "@material-ui/icons/Lock";
 import {Link} from "react-router-dom";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
-import DirectionMap from "../map/DirectionMap";
 // import SearchableMap from "../map/SearchableMap";
 
 class RiderLoginPage extends React.Component {

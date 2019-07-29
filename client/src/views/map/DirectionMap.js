@@ -1,19 +1,19 @@
 import React from "react";
-import mapboxgl, {GeolocateControl} from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
 import "mapbox-gl/dist/mapbox-gl.css"; // Updating node module will keep css up to date.
-// import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import "./DirectionMap.css";
-import { FlyToInterpolator } from "react-map-gl";
 import PinkButton from "../../components/Button/PinkButton"; // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
+import {connect} from "react-redux";
+import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
-export default class DirectionMap extends React.Component {
+class DirectionMap extends React.Component {
   state = {
-  	start:[],
-  	end:[],
+	  startLocation:[],
+  	  endLocation:[],
     latitude: 0,
     longitude: 0,
     zoom: 12.5,
@@ -22,54 +22,85 @@ export default class DirectionMap extends React.Component {
   };
 
   componentDidMount() {
-		navigator.geolocation.getCurrentPosition(position => {
+	  let map, directions, geolocate
+	  
+	  navigator.geolocation.getCurrentPosition(position => {
 			 console.log("position", position);
 			 this.setState({
-				start:[ position.coords.longitude, position.coords.latitude],
+			    startLocation:[ position.coords.longitude, position.coords.latitude],
 				loadingMap:false
 			 })
-			const map = new mapboxgl.Map({
+			  map = new mapboxgl.Map({
 				container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
 				style: "mapbox://styles/mapbox/streets-v9",
 				center: [position.coords.longitude, position.coords.latitude],
 				zoom:15
 			});
 		
-			let directions = new MapboxDirections({
+			 directions = new MapboxDirections({
 				accessToken: mapboxgl.accessToken,
 				unit: "metric",
-				profile: "mapbox/cycling"
+				profile: "mapbox/driving"
 			});
-		
-			let geolocate = new mapboxgl.GeolocateControl({
+			  directions.on('destination', (e) => {
+				  this.setState({endLocation:e.feature.geometry.coordinates})
+				  console.log(e); // Logs the current route shown in the interface.
+			  })
+			  
+			  directions.on('route', function(e) {
+				  console.log(e.route); // Logs the current route shown in the interface.
+			  });
+		    geolocate = new mapboxgl.GeolocateControl({
 				positionOptions: {
 					enableHighAccuracy: true,
 					watchPosition: true
 				}
 			});
 		
+			
 			map.addControl(directions, "top-left");
 			map.addControl(geolocate, "top-right");
 		
 			map.on('load',() => {
 				directions.setOrigin([position.coords.longitude, position.coords.latitude]);
+				
 			})
+			
+			
+			
 		
-			map.on('move', () => {
-				const { lng, lat } = map.getCenter();
-				this.setState({
-					longitude: lng.toFixed(4),
-					latitude: lat.toFixed(4),
-					zoom: map.getZoom().toFixed(2)
-				});
-			})
+			// map.on('move', () => {
+			// 	const { lng, lat } = map.getCenter();
+			// 	this.setState({
+			// 		longitude: lng.toFixed(4),
+			// 		latitude: lat.toFixed(4),
+			// 		zoom: map.getZoom().toFixed(2)
+			// 	});
+			// })
 		})
-  }
-
-
-
-  render() {
-	  const {requstRide} = this.props
+    }
+	
+	handleRequestRide = ()=>{
+		const tripRequest = {
+			startLocation : this.state.startLocation,
+			endLocation : this.state.endLocation
+		}
+		
+		// localStorage.setItem('tripRequest',   JSON.stringify(tripRequest))
+		console.log('tripRequest', tripRequest)
+		this.props.sendTripRequest(tripRequest)
+		.then(res => {
+			// this.setState({showDriver: !this.state.showDriver})
+		})
+	}
+	
+	
+	handleUserLocated = (e) => {
+	
+	}
+	
+	
+	render() {
      return (
 		 this.state.loadingMap
 				 ?  <div style={{
@@ -86,7 +117,7 @@ export default class DirectionMap extends React.Component {
 						  style={{position:"relative", display:"flex"}}>
 						 <PinkButton
 							 type="button"
-							 click={()=>requstRide()}
+							 onClick={()=>this.handleRequestRide()}
 							 style={{
 								 zIndex:"10",
 								 bottom:"120px",
@@ -111,12 +142,21 @@ export default class DirectionMap extends React.Component {
 							 style={{
 								 width:"100%",
 								 height:"100%",
-								
 							 }}
 						 >
 						 </div>
 					 </div>
 	 		);
-    
   }
 }
+const mapStateToProps = ({riderReducer, tripReducer}) => (
+	{
+	}
+)
+
+export default connect(
+	mapStateToProps,
+	{   findDriversNearby,
+		sendTripRequest,
+		getDriversById }
+)(DirectionMap);
