@@ -29,16 +29,19 @@ const tripSchema = new mongoose.Schema(
     },
     rider:{
         type: mongoose.SchemaTypes.ObjectId,
-        red:'rider',
+        ref:'rider',
         required:true
     },
     driver:{
         type: mongoose.SchemaTypes.ObjectId,
-        red:'driver',
+        ref:'driver',
     },
     tripRating:{
         type: Number,
         default: 5
+    },
+    quote:{
+        type: Number,
     },
     baseFare:{
         type:Number,

@@ -26,6 +26,7 @@ export const getTripById = async (req, res) => {
 
 export const requestTrip = async (req, res) => {
 	const rider = req.user._id
+	console.log('rider')
 	try {
 		const trip = await Trip.create({...req.body, rider})
 		res.status(201).json({data: trip})

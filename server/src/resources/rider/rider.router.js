@@ -1,11 +1,13 @@
 import { Router } from 'express'
-import { getProfile, updateProfile, getTripHistory, updateLocation } from './rider.controllers'
+import {getMe, getRiderProfile, updateRiderProfile, getRiderTrips, updateRiderLocation, requestTrip } from './rider.controllers'
 
 const router = Router()
 
-router.get('/', getProfile)
-router.put('/', updateProfile)
-router.get('/:id/trips', getTripHistory)
-router.put('/location', updateLocation)
+router.get('/', getMe)
+router.get('/profile', getRiderProfile)
+router.put('/profile', updateRiderProfile)
+router.get('/trips', getRiderTrips)
+router.put('/location', updateRiderLocation)
+router.post('/request', requestTrip)
 
 export default router

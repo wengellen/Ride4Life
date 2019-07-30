@@ -1,5 +1,5 @@
 import config from '../config'
-import { User } from '../resources/trip/trip.model'
+import { User } from '../resources/user/user.model'
 import { Rider } from '../resources/rider/rider.model'
 import { Driver } from '../resources/driver/driver.model'
 import jwt from 'jsonwebtoken'
@@ -27,11 +27,16 @@ export const signup = async (req, res) => {
 	}
 
 	try {
-		if (req.body.role === 'rider'){
-			user = await Rider.create({...req.body})
-			// trip.rider= rider._id
-		}else{
-			user = await Driver.create({...req.body})
+	    switch (req.body.role) {
+			case 'rider':
+				user = await Rider.create({...req.body})
+				break;
+			case 'driver':
+				user = await Driver.create({...req.body})
+				break;
+			case 'admin':
+				user = await User.create({...req.body})
+				break;
 		}
 		
 		const token = newToken(user)
@@ -43,6 +48,7 @@ export const signup = async (req, res) => {
 }
 
 export const signin = async (req, res) => {
+	let doc
 	if (!req.body.username || !req.body.password) {
 		return res.status(400).send({ message: 'need username and password' })
 	}
@@ -50,7 +56,17 @@ export const signin = async (req, res) => {
 	const invalid = { message: 'Invalid username and password combination' }
 	
 	try {
-		    let doc = req.body.role  === 'rider' ? Rider : Driver
+		switch (req.body.role) {
+			case 'rider':
+				doc = Rider
+				break;
+			case 'driver':
+				doc = Driver
+				break;
+			case 'admin':
+				doc = User
+				break;
+		}
 			const user = await doc.findOne({ username: req.body.username })
 			.select('username password role')
 			.exec()
@@ -78,6 +94,7 @@ export const signin = async (req, res) => {
 }
 
 export const protect = async (req, res, next) => {
+	let doc
 	const bearer = req.headers.authorization
 	
 	if (!bearer || !bearer.startsWith('Bearer ')) {
@@ -92,7 +109,17 @@ export const protect = async (req, res, next) => {
 		return res.status(401).end()
 	}
 	
-	let doc = payload.role === 'rider' ? Rider : Driver
+	switch (payload.role) {
+		case 'rider':
+			doc = Rider
+			break;
+		case 'driver':
+			doc = Driver
+			break;
+		case 'admin':
+			doc = User
+			break;
+	}
 	const user = await doc.findById(payload.id)
 	.select('-password')
 	.lean()

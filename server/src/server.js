@@ -8,6 +8,7 @@ import { signup, signin, protect } from './utils/auth'
 import driverRouter from './resources/driver/driver.router'
 import riderRouter from './resources/rider/rider.router'
 import tripRouter from './resources/trip/trip.router'
+import userRouter from './resources/user/user.router'
 
 export const app = express()
 
@@ -25,6 +26,8 @@ app.use('/api', protect)
 app.use('/api/rider', riderRouter)
 app.use('/api/driver', driverRouter)
 app.use('/api/trip', tripRouter)
+
+app.use('/api/user', userRouter)
 
 
 export const start = async () => {

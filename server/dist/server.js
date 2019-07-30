@@ -25,6 +25,8 @@ var _rider = _interopRequireDefault(require("./resources/rider/rider.router"));
 
 var _trip = _interopRequireDefault(require("./resources/trip/trip.router"));
 
+var _user = _interopRequireDefault(require("./resources/user/user.router"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const app = (0, _express.default)();
@@ -42,6 +44,7 @@ app.use('/api', _auth.protect);
 app.use('/api/rider', _rider.default);
 app.use('/api/driver', _driver.default);
 app.use('/api/trip', _trip.default);
+app.use('/api/user', _user.default);
 
 const start = async () => {
   try {
