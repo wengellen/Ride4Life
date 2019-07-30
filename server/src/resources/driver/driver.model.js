@@ -5,10 +5,9 @@ const driverSchema = new mongoose.Schema(
   {
     vehicles: [{ type: String }],
     location: {
-      coordinates: [{ type: Number }, { type: Number }],
-      address: {
-        type: String
-      }
+      type: { type: String },
+      address: {type:String},
+      coordinates: []
     },
     status: {
       type: String,

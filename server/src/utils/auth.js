@@ -5,7 +5,8 @@ import { Driver } from '../resources/driver/driver.model'
 import jwt from 'jsonwebtoken'
 
 export const newToken = user => {
-	return jwt.sign({ id: user.id }, config.secrets.jwt, {
+	console.log('user',user)
+	return jwt.sign({ id: user.id, role: user.role }, config.secrets.jwt, {
 		expiresIn: config.secrets.jwtExp
 	})
 }
@@ -13,6 +14,7 @@ export const newToken = user => {
 export const verifyToken = token =>
 	new Promise((resolve, reject) => {
 		jwt.verify(token, config.secrets.jwt, (err, payload) => {
+			
 			if (err) return reject(err)
 			resolve(payload)
 		})
@@ -36,63 +38,42 @@ export const signup = async (req, res) => {
 		return res.status(201).send({ token })
 	} catch (e) {
 		console.log('error',e)
-		res.status(500).json(error)
+		res.status(500).send(e)
 	}
 }
 
 export const signin = async (req, res) => {
-	console.log("req",req)
 	if (!req.body.username || !req.body.password) {
 		return res.status(400).send({ message: 'need username and password' })
 	}
 	
-	const invalid = { message: 'Invalid username and passoword combination' }
+	const invalid = { message: 'Invalid username and password combination' }
 	
 	try {
-		if (req.body.role === 'rider'){
-			const rider = await Rider.findOne({ username: req.body.username })
-			.select('username password')
+		    let doc = req.body.role  === 'rider' ? Rider : Driver
+			const user = await doc.findOne({ username: req.body.username })
+			.select('username password role')
 			.exec()
 			
-			if (!rider) {
+			if (!user) {
 				return res.status(401).send(invalid)
 			}
 			
-			const match = await rider.checkPassword(req.body.password)
+			const match = await user.checkPassword(req.body.password)
 			if (!match) {
 				return res.status(401).send(invalid)
 			}
-			const token = newToken(rider)
+			const token = newToken(user)
 			return res.status(200).json({
 				message: "Login successful",
-				role:'rider',
-				user: rider.username,
+				role: req.body.role,
+				user: user.username,
 				token,
 			});
-		}else{
-			const driver = await Driver.findOne({ username: req.body.username })
-			.select('username password')
-			.exec()
-			if (!driver) {
-				return res.status(401).send(invalid)
-			}
-			
-			const match = await driver.checkPassword(req.body.password)
-			if (!match) {
-				return res.status(401).send(invalid)
-			}
-			const token = newToken(driver)
-			return res.status(200).json({
-				message: "Login successful",
-				role:'rider',
-				user: driver.username,
-				token,
-			});
-		}
 		
 	} catch (e) {
 		console.error(e)
-		res.status(500).json(error)
+		res.status(500).send(e)
 	}
 }
 
@@ -111,11 +92,12 @@ export const protect = async (req, res, next) => {
 		return res.status(401).end()
 	}
 	
-	const user = await User.findById(payload.id)
+	let doc = payload.role === 'rider' ? Rider : Driver
+	const user = await doc.findById(payload.id)
 	.select('-password')
 	.lean()
 	.exec()
-	
+
 	if (!user) {
 		return res.status(401).end()
 	}

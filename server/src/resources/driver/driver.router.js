@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { getOne, updateOne, createOne } from './driver.controllers'
+import { getProfile, updateProfile, getTripHistory, updateCurrentLocation } from './driver.controllers'
 
 const router = Router()
 
-router.get('/', getOne)
-router.put('/', updateOne)
-router.post('/', createOne)
-
+router.get('/', getProfile)
+router.put('/', updateProfile)
+router.get('/:id/trips', getTripHistory)
+router.post('/:id', updateCurrentLocation)
+// router.post('/:id/trip', requestTrip)
 export default router
+

@@ -4,13 +4,9 @@ import bcrypt from "bcrypt";
 const riderSchema = new mongoose.Schema(
   {
     location: {
-      coordinates: [
-        { type: Number },
-        { type: Number  }
-      ],
-      address: {
-        type: String,
-      }
+        type: { type: String },
+        address: {type:String},
+        coordinates: []
     },
     status: {
       type: String,
