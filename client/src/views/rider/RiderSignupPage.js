@@ -52,7 +52,7 @@ class RiderSingupPage extends React.Component {
         this.props.signup_rider(this.state.profile)
         .then((res) => {
             console.log('res', res)
-            if(!res.data){
+            if(!res.error){
                 this.props.history.push('/rider-login');
     
             }

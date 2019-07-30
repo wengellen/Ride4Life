@@ -114,7 +114,7 @@
 /* At the top level of your code */
 @media screen and (min-width: 600px) {
     .map-wrapper{
-        background-color: red;
+        /*background-color: red;*/
     }
 
     .map-instructions {

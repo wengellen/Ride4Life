@@ -62,10 +62,10 @@ export const signup = async (req, res) => {
 		}
 		
 		const token = newToken(user)
-		return res.status(201).send({ data: token })
+		return res.status(201).json({ data: token })
 	} catch (e) {
 		console.log('error',e)
-		res.status(500).send(e)
+		res.status(500).json({error:e})
 	}
 }
 
