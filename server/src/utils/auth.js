@@ -22,10 +22,32 @@ export const verifyToken = token =>
 
 export const signup = async (req, res) => {
 	let user
-	if (!req.body.email || !req.body.phone ||  !req.body.username || !req.body.password) {
+	let duplicateErrorMessages = []
+	const {username, password, email, phone} = req.body
+	if (!email || !phone ||  !username || !password) {
 		return res.status(400).send({ message: 'need email, phone, username and password' })
 	}
-
+	// if username is taken?
+	
+	const usernameFound = await Rider.find({username}).exec()
+	console.log('usernameFound,',usernameFound)
+	
+	if(usernameFound.length > 0){
+		duplicateErrorMessages.push('Username')
+	}
+	
+	// if email exist
+	const emailFound = await Rider.find({email}).exec()
+	console.log('emailFound,',emailFound)
+	if(emailFound.length > 0){
+		duplicateErrorMessages.push('Email')
+	}
+	
+	if (duplicateErrorMessages.length > 0 ){
+		let count = duplicateErrorMessages.length > 1 ? 'are' : 'is'
+		return res.status(400).json({ error: `The ${duplicateErrorMessages.join()} ${count} taken`})
+	}
+	
 	try {
 	    switch (req.body.role) {
 			case 'rider':
@@ -40,7 +62,7 @@ export const signup = async (req, res) => {
 		}
 		
 		const token = newToken(user)
-		return res.status(201).send({ token })
+		return res.status(201).send({ data: token })
 	} catch (e) {
 		console.log('error',e)
 		res.status(500).send(e)
@@ -109,6 +131,7 @@ export const protect = async (req, res, next) => {
 		return res.status(401).end()
 	}
 	
+	console.log('payload', payload)
 	switch (payload.role) {
 		case 'rider':
 			doc = Rider

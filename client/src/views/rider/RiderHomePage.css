@@ -142,7 +142,7 @@
 @media screen and (min-width: 960px) {
     .map-wrapper{
         /*align-items: center;*/
-        background-color: green;
+        /*background-color: green;*/
     }
 }
 
@@ -150,6 +150,6 @@
 @media screen and (min-width: 1280px) {
     .map-wrapper{
         /*align-items: center;*/
-        background-color: purple;
+        /*background-color: purple;*/
     }
 }
