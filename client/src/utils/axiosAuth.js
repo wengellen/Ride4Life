@@ -11,7 +11,7 @@ export const API =
 					timeout:60000,
 					headers:{
 						'Content-Type':'application/json',
-						'Authorization': localStorage.getItem('token')
+						'Authorization': `Bearer ${localStorage.getItem('token')}`
 					}
 				})
 //

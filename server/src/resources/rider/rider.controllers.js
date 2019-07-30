@@ -26,13 +26,13 @@ export const getRiderTrips = async (req, res) => {
 
 export const updateRiderLocation = async (req, res) => {
   const { coordinates } = req.body;
+
   try {
     const rider = await Rider.findByIdAndUpdate(
           req.user._id ,
       { location: { coordinates } },
         {new:true}
     ).exec();
-  
     if (!!rider){
       res.status(200).json({data: rider})
     }else{

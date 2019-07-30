@@ -32,6 +32,8 @@ class RiderHomePage extends Component {
 	
 	componentDidMount() {
 		window.addEventListener('resize', this.resize);
+		
+	
 	
 		const tripRequest = JSON.parse(localStorage.getItem('tripRequest'))
 		if(tripRequest && tripRequest.startLocation){
@@ -100,5 +102,6 @@ export default connect(
 	mapStateToProps,
 	{ findDriversNearby,
 	  sendTripRequest,
-	  getDriversById }
+	  getDriversById,
+	  }
 )(RiderHomePage);

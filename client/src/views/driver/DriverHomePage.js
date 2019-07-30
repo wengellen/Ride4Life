@@ -4,7 +4,7 @@ import Map from "../map/CustomMap";
 import {
   findDriversNearby,
   getDriversById,
-  sendTripRequest
+  updateDriverLocation, updateRiderLocation,
 } from "../../actions";
 
 class DriverHomePage extends Component {
@@ -13,20 +13,32 @@ class DriverHomePage extends Component {
     this.inst = "";
   }
   state = {
-    startLocation: {
-      coordinates: [77.612257, 12.934729],
-      address: "239 Harbor way San Francisco, CA"
+    location: {
+      coordinates: [77.612257, 12.934729]
     },
-    endLocation: {
-      coordinates: [77.612257, 12.934729],
-      address: ""
-    },
+    
     showEstimate: false,
     showDriver: false,
     enRoute: false
   };
 
   componentDidMount() {
+    navigator.geolocation.getCurrentPosition(position => {
+      console.log("position", position);
+      
+      this.setState({
+        location: [position.coords.longitude, position.coords.latitude]
+      });
+      this.props.updateDriverLocation({
+        coordinates: [position.coords.longitude, position.coords.latitude]
+      })
+      .then(res => {
+        console.log('updateRiderLocation',updateRiderLocation)
+      });
+  
+    })
+
+  
     const tripRequest = JSON.parse(localStorage.getItem("tripRequest"));
     if (tripRequest && tripRequest.startLocation) {
       const trip = {
@@ -136,5 +148,5 @@ const mapStateToProps = ({ riderReducer, tripReducer }) => ({
 
 export default connect(
   mapStateToProps,
-  { findDriversNearby, sendTripRequest, getDriversById }
+  { findDriversNearby, getDriversById, updateDriverLocation }
 )(DriverHomePage);

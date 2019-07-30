@@ -6,6 +6,7 @@ export {
 	DRIVER_LOGIN_STARTED,
 	DRIVER_LOGIN_SUCCESS,
 	DRIVER_LOGIN_FAILURE,
+	updateDriverLocation,
 	updateProfile,
 	signup_driver,
 	login_driver
@@ -28,6 +29,9 @@ export {
 	SEND_TRIP_REQUEST_STARTED,
 	SEND_TRIP_REQUEST_SUCCESS,
 	SEND_TRIP_REQUEST_FAILURE,
+	UPDATE_LOCATION_STARTED,
+	UPDATE_LOCATION_SUCCESS,
+	UPDATE_LOCATION_FAILURE,
 
 	SUBMIT_REVIEW_STARTED,
 	SUBMIT_REVIEW_SUCCESS,
@@ -39,5 +43,6 @@ export {
 	signup_rider,
 	login_rider,
 	sendTripRequest,
-	submitDriverReview
+	submitDriverReview,
+	updateRiderLocation
 }from './riderAction'

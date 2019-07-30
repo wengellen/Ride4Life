@@ -23,6 +23,10 @@ export const SEND_TRIP_REQUEST_STARTED = 'SEND_TRIP_REQUEST_STARTED'
 export const SEND_TRIP_REQUEST_SUCCESS = 'SEND_TRIP_REQUEST_SUCCESS'
 export const SEND_TRIP_REQUEST_FAILURE = 'SEND_TRIP_REQUEST_FAILURE'
 
+export const UPDATE_LOCATION_STARTED = 'UPDATE_LOCATION_STARTED'
+export const UPDATE_LOCATION_SUCCESS = 'UPDATE_LOCATION_SUCCESS'
+export const UPDATE_LOCATION_FAILURE = 'UPDATE_LOCATION_FAILURE'
+
 export const SUBMIT_REVIEW_STARTED = 'SUBMIT_REVIEW_STARTED'
 export const SUBMIT_REVIEW_SUCCESS = 'SUBMIT_REVIEW_SUCCESS'
 export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
@@ -32,8 +36,9 @@ export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
 // Should return a list of drivers nearby
 export const sendTripRequest = (trip) => dispatch => {
 	dispatch({type: SEND_TRIP_REQUEST_STARTED})
+	console.log('trip',trip)
 	return (
-		API.post('/api/rider/')
+		API.post('/api/rider/request')
 		.then(res =>{
 			// console.log('sendTripRequest',res)
 			console.log('res',res)
@@ -45,6 +50,21 @@ export const sendTripRequest = (trip) => dispatch => {
 	)
 }
 
+// Should return a list of drivers nearby
+export const updateRiderLocation = (location) => dispatch => {
+	dispatch({type: UPDATE_LOCATION_STARTED})
+	console.log('rider location',location)
+	return (
+		API.put('/api/rider/location')
+		.then(res =>{
+			console.log('res',res)
+			dispatch({type: UPDATE_LOCATION_SUCCESS, payload: res})
+		})
+		.catch(err =>{
+			dispatch({type: UPDATE_LOCATION_FAILURE, payload: err.message})
+		})
+	)
+}
 
 // Find drivers nearby
 export const submitDriverReview = (review, driver_id) => dispatch => {

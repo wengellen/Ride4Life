@@ -14,7 +14,25 @@ export const UPDATE_PROFILE_STARTED = 'UPDATE_PROFILE_STARTED'
 export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS'
 export const UPDATE_PROFILE_FAILURE = 'UPDATE_PROFILE_FAILURE'
 
+export const UPDATE_LOCATION_STARTED = 'UPDATE_LOCATION_STARTED'
+export const UPDATE_LOCATION_SUCCESS = 'UPDATE_LOCATION_SUCCESS'
+export const UPDATE_LOCATION_FAILURE = 'UPDATE_LOCATION_FAILURE'
 
+// Should return a list of drivers nearby
+export const updateDriverLocation = (location) => dispatch => {
+	dispatch({type: UPDATE_LOCATION_STARTED})
+	console.log('location',location)
+	return (
+		API.put('/api/driver/location')
+		.then(res =>{
+			console.log('res',res)
+			dispatch({type: UPDATE_LOCATION_SUCCESS, payload: res})
+		})
+		.catch(err =>{
+			dispatch({type: UPDATE_LOCATION_FAILURE, payload: err.message})
+		})
+	)
+}
 // Update Profile
 export const updateProfile = (user) => dispatch => {
 	dispatch({type: UPDATE_PROFILE_STARTED})

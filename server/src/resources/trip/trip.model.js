@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const tripSchema = new mongoose.Schema(
   {
-      requestTime:{
-        type:Date,
-        required:true,
-        default:"2016-10-31T12:12:37.321Z"
-      },
       startLocation:{
           type: { type: String },
           address: {type:String},
