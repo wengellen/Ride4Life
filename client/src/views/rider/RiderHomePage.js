@@ -32,21 +32,19 @@ class RiderHomePage extends Component {
 	
 	componentDidMount() {
 		window.addEventListener('resize', this.resize);
-		
 	
-	
-		const tripRequest = JSON.parse(localStorage.getItem('tripRequest'))
-		if(tripRequest && tripRequest.startLocation){
-			const trip = {
-				startLocation : tripRequest.startLocation,
-				endLocation : tripRequest.endLocation,
-			}
-			
-			this.props.findDriversNearby(trip)
-			.then(res => {
-				this.setState({showDriver: !this.state.showDriver})
-			})
-		}
+		// const tripRequest = JSON.parse(localStorage.getItem('tripRequest'))
+		// if(tripRequest && tripRequest.startLocation){
+		// 	const trip = {
+		// 		startLocation : tripRequest.startLocation,
+		// 		endLocation : tripRequest.endLocation,
+		// 	}
+		//
+		// 	this.props.findDriversNearby(trip)
+		// 	.then(res => {
+		// 		this.setState({showDriver: !this.state.showDriver})
+		// 	})
+		// }
 	}
 	
 	componentDidUpdate(prevProps) {

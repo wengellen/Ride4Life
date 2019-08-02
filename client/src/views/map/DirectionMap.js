@@ -12,29 +12,60 @@ import {
   sendTripRequest,
   updateRiderLocation
 } from "../../actions";
+import socketIOClient from "socket.io-client";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
 class DirectionMap extends React.Component {
-  state = {
-    startLocation: [],
-    endLocation: [],
-    distance: 0,
-    longitude: 0,
-    zoom: 12.5,
-    searchResultLayer: null,
-    loadingMap: true
-  };
 
-  componentDidMount() {
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            location:[],
+            startLocation: [],
+            endLocation: [],
+            distance: 0,
+            longitude: 0,
+            zoom: 12.5,
+            searchResultLayer: null,
+            loadingMap: true,
+            response: false,
+            endpoint: "http://127.0.0.1:7000",
+        };
+       this.socket = socketIOClient(this.state.endpoint);
+    }
+    
+    
+    componentDidMount() {
     let map, directions, geolocate;
+      const user = JSON.parse(localStorage.getItem('user'))
+      navigator.geolocation.getCurrentPosition(position => {
+          console.log("position", position);
+    
+          this.setState({
+              startLocation: [position.coords.longitude, position.coords.latitude],
+              location:[position.coords.longitude, position.coords.latitude],
+              loadingMap: false
+          });
+          
+          this.props.findDriversNearby({
+                      coordinates: [position.coords.longitude, position.coords.latitude],
+                      user:user
+          })
+          .then(res => {
+              console.log('findDriversNearby res',res)
+          });
+      
+          this.socket.emit('UPDATE_RIDER_LOCATION',
+            {
+                coordinates: [position.coords.longitude, position.coords.latitude],
+                role: "rider",
+                username:user.username,
+                user:user
+            }
+        )
 
-    navigator.geolocation.getCurrentPosition(position => {
-      console.log("position", position);
-      this.setState({
-        startLocation: [position.coords.longitude, position.coords.latitude],
-        loadingMap: false
-      });
       map = new mapboxgl.Map({
         container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
         style: "mapbox://styles/mapbox/streets-v9",
@@ -51,7 +82,8 @@ class DirectionMap extends React.Component {
         this.setState({
           endLocation: e.feature.geometry.coordinates,
           duration: e.feature.duration,
-          distance: e.feature.distance
+          distance: e.feature.distance,
+          address: e.feature["place_name"]
         });
         console.log(e); // Logs the current route shown in the interface.
       });
@@ -60,9 +92,6 @@ class DirectionMap extends React.Component {
         console.log(e.route); // Logs the current route shown in the interface.
       });
 
-      directions.on("", function(e) {
-        console.log(e.route); // Logs the current route shown in the interface.
-      });
 
       geolocate = new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -81,13 +110,7 @@ class DirectionMap extends React.Component {
         ]);
       });
 
-      this.props
-        .updateRiderLocation({
-          coordinates: [position.coords.longitude, position.coords.latitude]
-        })
-        .then(res => {
-            console.log('updateRiderLocation',updateRiderLocation)
-        });
+    
 
       // map.on('move', () => {
       // 	const { lng, lat } = map.getCenter();
@@ -110,11 +133,20 @@ class DirectionMap extends React.Component {
         coordinates: this.state.endLocation,
         type: "Point"
       },
+     location: {
+        coordinates: this.state.location,
+        type: "Point"
+     },
       distance: this.state.distance,
       duration: this.state.duration
     };
-
-    // localStorage.setItem('tripRequest',   JSON.stringify(tripRequest))
+    
+     this.socket.emit('REQUEST_TRIP', {
+        user: JSON.parse(localStorage.getItem('user')),
+         ...tripRequest
+     });
+    
+      // localStorage.setItem('tripRequest',   JSON.stringify(tripRequest))
     console.log("tripRequest", tripRequest);
     this.props.sendTripRequest(tripRequest).then(res => {
       // this.setState({showDriver: !this.state.showDriver})
@@ -148,7 +180,7 @@ class DirectionMap extends React.Component {
           type="button"
           onClick={() => this.handleRequestRide()}
           style={{
-            zIndex: "10",
+            zIndex: "1000",
             bottom: "120px",
             display: "block",
             position: "absolute",

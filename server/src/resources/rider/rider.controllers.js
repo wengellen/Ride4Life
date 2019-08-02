@@ -1,5 +1,6 @@
 import { Rider } from "./rider.model";
 import { Trip } from "../trip/trip.model";
+import {Driver} from "../driver/driver.model";
 
 
 export const getMe = (req, res) => {
@@ -26,6 +27,7 @@ export const getRiderTrips = async (req, res) => {
 
 export const updateRiderLocation = async (req, res) => {
   const { coordinates } = req.body;
+  console.log('coordinates', coordinates)
 
   try {
     const rider = await Rider.findByIdAndUpdate(
@@ -51,5 +53,15 @@ export const requestTrip = async (req, res) => {
   }
   catch(e){
     return res.status(400).send(e)
+  }
+}
+
+export const fetchNearestDriver = async (req, res) => {
+  const {coordinates, user} = req.body
+  try {
+    const drivers = await Driver.find({status:"standby"}).lean().exec()
+    res.status(200).json(drivers);
+  } catch (e) {
+    res.status(500).json(e);
   }
 }

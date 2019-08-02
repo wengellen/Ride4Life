@@ -29,13 +29,16 @@ const store = createStore(
 )
 
 class App extends React.Component {
-	state = {
-		user:null
-	};
-	
-	componentDidMount() {
+	constructor() {
+		super();
+		this.state = {
+			user:null,
+		
+		};
 	}
+	componentDidMount() {
 	
+	}
 	componentWillUnmount =()=> {
 		this.unsubscribeFromAuth()
 	}

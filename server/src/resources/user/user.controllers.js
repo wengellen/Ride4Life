@@ -38,3 +38,4 @@ export const getAllTrips = async (req, res) => {
   }
 };
 
+

@@ -24,12 +24,11 @@ export const getDriverTrips = async (req, res) => {
 
 export const updateDriverLocation = async (req, res) => {
   const { coordinates } = req.body;
-  console.log('coordinates',coordinates)
-  console.log(' req.user.', req.user)
+  console.log('coordinates', coordinates)
   try {
     const driver = await Driver.findByIdAndUpdate(
       req.user._id,
-      { location: { coordinates } },
+      { location: { coordinates }, status:"standby" },
       { new: true }
     ).exec();
 

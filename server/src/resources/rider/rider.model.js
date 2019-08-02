@@ -4,9 +4,14 @@ import bcrypt from "bcrypt";
 const riderSchema = new mongoose.Schema(
   {
     location: {
-        type: { type: String },
+        type: {
+            type: String,
+            default:"Point"
+        },
         address: {type:String},
-        coordinates: []
+        coordinates: {
+            type: [Number]
+        }
     },
     status: {
       type: String,
@@ -81,5 +86,7 @@ riderSchema.methods.checkPassword = function(password) {
         })
     })
 }
+
+riderSchema.index({ location: "2dsphere" });
 
 export const Rider = mongoose.model("rider", riderSchema);

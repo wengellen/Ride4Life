@@ -1,13 +1,26 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+const geoSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        default: 'Point'
+    },
+    address: {type:String},
+    coordinates: {
+        type: [Number]
+    }
+});
 const driverSchema = new mongoose.Schema(
   {
     vehicles: [{ type: String }],
     location: {
-      type: { type: String },
-      address: {type:String},
-      coordinates: []
+        type: {
+            type: String,
+            default: 'Point'
+        },
+        address: {type:String},
+        coordinates: []
     },
     status: {
       type: String,
@@ -73,6 +86,8 @@ const driverSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
 driverSchema.pre("save", function(next) {
   if (!this.isModified("password")) {
     return next();
@@ -99,4 +114,7 @@ driverSchema.methods.checkPassword = function(password) {
     });
   });
 };
+
+driverSchema.index({ location: 1});
+
 export const Driver = mongoose.model("driver", driverSchema);

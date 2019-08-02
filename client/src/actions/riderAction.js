@@ -95,12 +95,12 @@ export const findDriversNearby = (location) => dispatch => {
 	console.log('findDriversNearby location',location)
 	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
 	return (
-		API.get('/api/drivers')
+		API.get('/api/rider/drivers')
 		.then(res =>{
 			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
+			console.log('findDriversNearby', res.data)
 		})
 		.catch(err =>{
-			
 			dispatch({type: FIND_DRIVERS_NEARBY_FAILURE, payload: err.message})
 		})
 	)
@@ -145,6 +145,8 @@ export const login_rider = (rider) => dispatch => {
 		API.post('/signin', {...rider, role:'rider'})
 		.then(res =>{
 			localStorage.setItem('token', res.data.token)
+			localStorage.setItem('user', JSON.stringify(res.data.user))
+			console.log('res.data',res.data)
 			// localStorage.setItem('loggedInUser', JSON.stringify({...res.data}))
 			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
 			return res.data

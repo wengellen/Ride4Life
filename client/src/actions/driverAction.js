@@ -53,12 +53,13 @@ export const signup_driver= (driver) => dispatch =>{
 		API.post('/signup', {...driver, role:'driver'})
 		.then(res =>{
 			dispatch({type: DRIVER_SIGNUP_SUCCESS, payload: res.data})
+			console.log('res.data',res.data)
 			return res.data
 		})
-		.catch(error => {
-			console.log(error.response)
-			dispatch({type: DRIVER_SIGNUP_FAILURE, payload: error.response.data.error})
-			return error.response
+		.catch(err => {
+			console.log(err)
+			dispatch({type: DRIVER_SIGNUP_FAILURE, payload: err.response.data})
+			return err.response.data
 		})
 	)
 }
@@ -69,16 +70,18 @@ export const login_driver= (driver) => dispatch =>{
 	return (
 		API.post('/signin', {...driver, role:'driver'})
 	   .then(res =>{
+	   		console.log('signin usccess', res)
 			localStorage.setItem('token', res.data.token)
+			localStorage.setItem('user', JSON.stringify(res.data.user))
 		   dispatch({type: DRIVER_LOGIN_SUCCESS, payload: res.data})
 		   return res.data
 		})
 		.catch(err =>{
-			console.log('err', err.response.error)
+			console.log('err', err)
 			if (err.response.status === 401) {
-				dispatch({type: DRIVER_LOGIN_FAILURE, payload: err.response.data.message})
+				dispatch({type: DRIVER_LOGIN_FAILURE, payload: err.response.data})
 			}
-			return err.response
+			return  err.response.data
 		})
 	)
 }

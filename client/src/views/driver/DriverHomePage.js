@@ -4,37 +4,69 @@ import Map from "../map/CustomMap";
 import {
   findDriversNearby,
   getDriversById,
-  updateDriverLocation, updateRiderLocation,
+  updateDriverLocation,
 } from "../../actions";
+import socketIOClient from "socket.io-client";
 
 class DriverHomePage extends Component {
-  constructor() {
-    super();
-    this.inst = "";
-  }
-  state = {
-    location: {
-      coordinates: [77.612257, 12.934729]
-    },
-    
-    showEstimate: false,
-    showDriver: false,
-    enRoute: false
-  };
+    constructor(props) {
+        super(props);
+        this.state = {
+            location: {
+                coordinates: [77.612257, 12.934729]
+            },
+            response: false,
+            showEstimate: false,
+            showDriver: false,
+            enRoute: false,
+            requestDetails:{},
+            endpoint: "http://127.0.0.1:7000",
+        };
+        this.socket = socketIOClient(this.state.endpoint);
+    }
+
 
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition(position => {
-      console.log("position", position);
-      
-      this.setState({
-        location: [position.coords.longitude, position.coords.latitude]
-      });
-      this.props.updateDriverLocation({
-        coordinates: [position.coords.longitude, position.coords.latitude]
-      })
-      .then(res => {
-        console.log('updateRiderLocation',updateRiderLocation)
-      });
+    const user = JSON.parse(localStorage.getItem('user'))
+    let  coordinates
+     navigator.geolocation.getCurrentPosition(position => {
+         coordinates = [position.coords.longitude, position.coords.latitude]
+          console.log("position", position);
+          this.socket = socketIOClient(this.state.endpoint);
+          this.socket.emit('UPDATE_DRIVER_LOCATION',
+          {
+                coordinates,
+                 role: "driver",
+                 username:user.username,
+                 user:user,
+                 
+              }
+          )
+          this.socket.on('REQUEST_TRIP', (data) => {
+             const requestDetails = data
+             this.setState({requestDetails:data}) //Save request details
+        
+             //display citizen info
+            console.log("You have a new request! \n" + JSON.stringify(requestDetails))
+        
+             //Show citizen location on the map
+             // L.marker([requestDetails.location.latitude, requestDetails.location.longitude], {
+             //     icon: L.icon({
+             //         iconUrl: '/images/citizen.png',
+             //         iconSize: [50, 50]
+             //     })
+             // }).addTo(map);
+        
+         });
+          
+          this.setState({
+            location: [position.coords.longitude, position.coords.latitude]
+          });
+          // this.props.updateDriverLocation({
+          //     coordinates
+          // })
+          // .then(res => {
+          // });
   
     })
 
@@ -59,8 +91,8 @@ class DriverHomePage extends Component {
     // }
   }
 
+
   handleChange = e => {
-    // console.log('e',e)
     this.setState({
       [e.currentTarget.name]: {
         address: e.currentTarget.value

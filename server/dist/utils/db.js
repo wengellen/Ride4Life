@@ -3,11 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.connect = void 0;
+exports.fetchNearestCops = exports.connect = void 0;
 
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
 var _config = _interopRequireDefault(require("../config"));
+
+var _driver = require("../resources/driver/driver.model");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19,8 +21,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 const connect = (url = _config.default.dbUrl, opts = {}) => {
   return _mongoose.default.connect(url, _objectSpread({}, opts, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useCreateIndex: true
   }));
 };
 
 exports.connect = connect;
+
+const fetchNearestCops = async coordinates => {
+  try {
+    const drivers = await _driver.Driver.find({
+      status: "standby"
+    }).lean().exec();
+    return drivers;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+exports.fetchNearestCops = fetchNearestCops;

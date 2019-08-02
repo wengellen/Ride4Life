@@ -65,7 +65,7 @@ export const driverReducer = (state = initialState, action)=>{
 		case DRIVER_SIGNUP_FAILURE:
 			return {...state,
 				driverSignupStarted:false,
-				serverMessage:action.payload,
+				serverMessage:action.payload.message,
 			}
 			
 		case DRIVER_LOGIN_STARTED:
@@ -82,7 +82,7 @@ export const driverReducer = (state = initialState, action)=>{
 		
 			return {...state,
 				driverLoginStarted:false,
-				serverMessage:action.payload
+				serverMessage:action.payload.message,
 			}
 		default:
 			return {...state}
