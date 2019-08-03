@@ -119,7 +119,7 @@ class DirectionMap extends React.Component {
     }
     loadDriverProfile = (driver)=>{
         console.log('driver', driver)
-        this.props.getDriversById(driver.driver_id).then(() => {
+        this.props.getDriversById(driver._id).then(() => {
             
             this.props.history.push(`/drivers/${driver.driver_id}`);
         });
@@ -199,15 +199,16 @@ class DirectionMap extends React.Component {
                     {this.props.driversNearby && this.props.driversNearby.map((driver, idx) => {
                         return <div className="driver-item-container" key={idx}
                                     onClick={e => this.loadDriverProfile(driver)}>
-                            <div className="driver-img-container">
-                                <img src="http://lorempixel.com/500/500" alt={"driver"}/>
-                            </div>
                             <div className="driver-item-content">
                                 <h2>{driver.username}</h2>
                                 <h3>2 mi
                                     <span>{`, ${driver.earnedRatings} stars` }</span>
                                 </h3>
                             </div>
+                            <div className="driver-img-container">
+                                <img src="http://lorempixel.com/500/500" alt={"driver"}/>
+                            </div>
+                           
                         </div>
                     })}
                 </div>

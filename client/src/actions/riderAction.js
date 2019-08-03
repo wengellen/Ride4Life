@@ -109,8 +109,9 @@ export const findDriversNearby = (location) => dispatch => {
 // Find drivers nearby
 export const getDriversById = (driverId) => dispatch => {
 	dispatch({type: FIND_DRIVER_BY_ID_STARTED})
+	console.log('driverId,',driverId)
 	return (
-		API.get(`/api/drivers/${driverId}`)
+		API.get(`/api/driver/${driverId}`)
 		.then(res =>{
 			dispatch({type: FIND_DRIVER_BY_ID_SUCCESS, payload: res.data})
 		})

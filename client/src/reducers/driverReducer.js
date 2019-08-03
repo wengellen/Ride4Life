@@ -32,21 +32,6 @@ const initialState = {
 			}
 		},
 	],
-	
-	// riders:
-	// 	[{
-	// 		"requestTime" : {date:"2016-10-31T12:12:37.321Z"},
-	// 		"location" : {
-	// 			"coordinates" : [
-	// 				77.612257,
-	// 				12.934729
-	// 			],
-	// 			"address" : "The Forum, 21 Hosur Road, Bengaluru South, Karnataka, India"
-	// 		},
-	// 		"citizenId" : "citizen1",
-	// 		"status" : "engaged",
-	// 		"copId" : "06"
-	// 	}]
 }
 
 export const driverReducer = (state = initialState, action)=>{
