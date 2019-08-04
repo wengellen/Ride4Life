@@ -162,7 +162,7 @@ export const login_rider = (rider) => dispatch => {
 }
 export const logoutUser = () => dispatch => {
 	localStorage.removeItem('token')
-	localStorage.removeItem('loggedInUser')
+	localStorage.removeItem('user')
 	dispatch({type: LOGOUT_USER})
 }
 

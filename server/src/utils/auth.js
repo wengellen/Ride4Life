@@ -137,7 +137,9 @@ export const protect = async (req, res, next) => {
   }
 
   const token = bearer.split("Bearer ")[1].trim();
+
   let payload;
+  console.log("payload", payload)
   try {
     payload = await verifyToken(token);
   } catch (e) {

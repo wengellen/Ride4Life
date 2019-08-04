@@ -372,6 +372,45 @@ Review Container
     justify-content: space-between;
   }
 
+/* Sliding Panel */
+.sliding-panel{
+      position:absolute;
+      display:flex;
+      align-items: center;
+      flex-direction: column;
+      width:100%;
+      height: 100vh;
+      background-color:whitesmoke;
+      transform: translateY(-3000px);
+      transition: all 0.5s ease-in-out;
+      z-index:3;
+}
+
+.sliding-panel.show{
+    padding: 100px;
+    transform: translateY(0);
+    position:absolute;
+    top:0;
+}
+
+.sliding-panel-button{
+    background-color: #676AA3;
+    display:block;
+}
+
+.sliding-panel-close-button{
+    position: absolute !important;
+    width:60px;
+    height:60px;
+    top:120px;
+    right:20px;
+}
+
+.nav-drawer{
+    position: absolute;
+    top:140px;
+}
+
 
 
 /* At the top level of your code */
@@ -405,3 +444,4 @@ Review Container
         display:none;
     }
 }
+

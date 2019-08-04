@@ -13,7 +13,6 @@ import {
     updateRiderLocation,
 } from '../../actions'
 import socketIOClient from 'socket.io-client'
-
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMap extends React.Component {
@@ -31,10 +30,13 @@ class DirectionMap extends React.Component {
             endpoint: 'http://127.0.0.1:7000',
         }
         this.socket = socketIOClient(this.state.endpoint)
+        this.map = null
     }
-
+    
+    mapContainer = React.createRef()
+    
     componentDidMount() {
-        let map, directions, geolocate
+        let  directions, geolocate
         const rider = JSON.parse(localStorage.getItem('user'))
       
         navigator.geolocation.getCurrentPosition(position => {
@@ -71,7 +73,7 @@ class DirectionMap extends React.Component {
                 rider: rider,
             })
 
-            map = new mapboxgl.Map({
+            this.map = new mapboxgl.Map({
                 container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
                 style: 'mapbox://styles/mapbox/streets-v9',
                 center: [position.coords.longitude, position.coords.latitude],
@@ -104,11 +106,11 @@ class DirectionMap extends React.Component {
                     watchPosition: true,
                 },
             })
-
-            map.addControl(directions, 'top-left')
-            map.addControl(geolocate, 'top-right')
-
-            map.on('load', () => {
+    
+            this.map.addControl(directions, 'top-left')
+            this.map.addControl(geolocate, 'top-right')
+    
+            this.map.on('load', () => {
                 directions.setOrigin([
                     position.coords.longitude,
                     position.coords.latitude,
@@ -116,6 +118,12 @@ class DirectionMap extends React.Component {
             })
         })
     }
+    
+    componentWillUnmount = () => {
+       console.log('this.map', this.map)
+        setTimeout(() => this.map.remove())
+    }
+    
     loadDriverProfile = (driver)=>{
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
@@ -169,7 +177,6 @@ class DirectionMap extends React.Component {
                 className="map-wrapper"
                 style={{ position: 'relative', display: 'flex' }}
             >
-                {/*<PinkButton className={"mapbox-directions-request-button"} >Request Ride</PinkButton>*/}
                 <PinkButton
                     type="button"
                     onClick={() => this.handleRequestRide()}
