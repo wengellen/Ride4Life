@@ -206,7 +206,7 @@ class DirectionMap extends React.Component {
                                 </h3>
                             </div>
                             <div className="driver-img-container">
-                                <img src="http://lorempixel.com/500/500" alt={"driver"}/>
+                                <img src="http://lorempixel.com/180/120" alt={"driver"}/>
                             </div>
                            
                         </div>

@@ -469,7 +469,9 @@
         left:0;
         width:100%;
     }
-
+    .directions-icon.directions-icon-reverse{
+        display:none
+     }
     /*.directions-control.directions-control { width:100%; max-width:100%; }*/
     /*!* Input container *!*/
     /*.directions-control.directions-control-inputs { top:0;left:0; }*/
