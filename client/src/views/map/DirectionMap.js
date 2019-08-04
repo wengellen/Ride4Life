@@ -25,7 +25,6 @@ class DirectionMap extends React.Component {
             endLocation: [],
             distance: 0,
             longitude: 0,
-            zoom: 12.5,
             searchResultLayer: null,
             loadingMap: true,
             response: false,
@@ -76,7 +75,7 @@ class DirectionMap extends React.Component {
                 container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
                 style: 'mapbox://styles/mapbox/streets-v9',
                 center: [position.coords.longitude, position.coords.latitude],
-                zoom: 15,
+                zoom: 13,
             })
             
             // Directions
@@ -120,7 +119,6 @@ class DirectionMap extends React.Component {
     loadDriverProfile = (driver)=>{
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
-            
             this.props.history.push(`/drivers/${driver.driver_id}`);
         });
     }
@@ -171,29 +169,31 @@ class DirectionMap extends React.Component {
                 className="map-wrapper"
                 style={{ position: 'relative', display: 'flex' }}
             >
+                {/*<PinkButton className={"mapbox-directions-request-button"} >Request Ride</PinkButton>*/}
                 <PinkButton
                     type="button"
                     onClick={() => this.handleRequestRide()}
                     style={{
                         zIndex: '1000',
-                        bottom: '120px',
+                        bottom: '75px',
                         display: 'block',
                         position: 'absolute',
                         margin: '0px auto',
-                        textAlign: 'center',
+                        padding:0,
+                        lineHeight:'1.2rem',
                         color: '#fff',
                         background: '#ee8a65',
-                        borderRadius: '50%',
-                        width: '140px',
-                        height: '140px',
+                        borderRadius: '50px',
+                        width: '90px',
+                        height: '90px',
                         fontWeight: 'bold',
-                        fontSize: '1.1rem',
-                        border: '1px solid white',
-                        boxShadow: '1px 1px 0 8px rgba(0,0,0,0.1)',
+                        fontSize: '0.9rem',
+                        // border: '1px solid white',
+                        boxShadow: '1px 1px 0 8px rgba(255,255,255,0.2)',
                         justifySelf: 'center',
                     }}
                 >
-                    Request Ride
+                    Request
                 </PinkButton>
                 <div className="drivers-nearby-container">
                     {this.props.driversNearby && this.props.driversNearby.map((driver, idx) => {

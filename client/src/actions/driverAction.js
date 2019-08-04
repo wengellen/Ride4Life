@@ -47,7 +47,6 @@ export const updateProfile = (user) => dispatch => {
 
 // DRIVER
 export const signup_driver= (driver) => dispatch =>{
-	// console.log('signup_driver',driver)
 	dispatch({type:DRIVER_SIGNUP_STARTED})
 	return (
 		API.post('/signup', {...driver, role:'driver'})

@@ -153,7 +153,6 @@ export const login_rider = (rider) => dispatch => {
 			return res.data
 		})
 		.catch(err =>{
-			console.log('err', err.response.error)
 			if (err.response.status === 401) {
 				dispatch({type: RIDER_LOGIN_FAILURE, payload: err.response.data.message})
 			}

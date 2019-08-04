@@ -27,15 +27,26 @@ const headerStyle = theme => ({
     boxShadow:
       "0 4px 18px 0px rgba(" +
       hexToRgb(blackColor) +
-      ", 0.12), 0 7px 10px -5px rgba(" +
+      ", 0.10), 0 7px 10px -5px rgba(" +
       hexToRgb(blackColor) +
-      ", 0.15)",
+      ", 0.13)",
     transition: "all 150ms ease 0s",
     alignItems: "center",
     flexFlow: "row nowrap",
     justifyContent: "space-between",
     position: "relative",
+    zIndex:4000,
+    "@media screen and (max-width: 600px)": {
+      padding:"4px 0",
+      boxShadow:
+          "0 4px 18px 0px rgba(" +
+          hexToRgb(blackColor) +
+          ", 0.05), 0 7px 10px -5px rgba(" +
+          hexToRgb(blackColor) +
+          ", 0.1)",
+    }
     // marginBottom:"3rem"
+
   },
   absolute: {
     position: "absolute",
@@ -75,6 +86,12 @@ const headerStyle = theme => ({
       marginLeft: "20px",
       "& img":{
         maxWidth: "100%",
+      },
+      // some jss/css to make the cards look a bit better on Internet Explorer
+      "@media screen and (max-width: 600px)": {
+        width: "45px",
+        height:"45px",
+        marginLeft:"10px"
       }
     },
   titleNoUnder:{

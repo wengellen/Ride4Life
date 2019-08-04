@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import Map from '../map/CustomMap'
 import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
+import DirectionMap from "../map/DirectionMap";
 
 class RiderTripPage extends Component {
 	constructor(){
@@ -113,7 +113,7 @@ class RiderTripPage extends Component {
 					</form>
 				</div>
 				<div className="map-container">
-					<Map zoom={16} center={{ lat: 39.74739, lng: -105 }} />
+					<DirectionMap  />
 				</div>
 				
 			</div>
