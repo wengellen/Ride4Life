@@ -33,7 +33,8 @@ const driverSchema = new mongoose.Schema(
       default: "true"
     },
     avatar: {
-        type: String
+        type: String,
+        default:"https://i.pravatar.cc/60"
     },
     memberSince: {
         type: Date
@@ -42,7 +43,8 @@ const driverSchema = new mongoose.Schema(
         type: Number
     },
     rating: {
-        type: Number
+        type: Number,
+        default:0
     },
     numRiderRated: {
         type: Number

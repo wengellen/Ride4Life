@@ -20,6 +20,7 @@ export const initialize = function(server) {
         logger.debug(`A user connected with ${socket.id}`)
 
         socket.on('join', function(data) {
+            console.log('data',data)
             //Listen to any join event from connected users
             socket.join(data.username) //User joins a unique room/channel that's named after the userId
             console.log('User joined room: ' + data.username)
@@ -35,12 +36,11 @@ export const initialize = function(server) {
             })
             console.log('data', data)
             const { coordinates } = data
-            console.log('coordinates', coordinates)
 
             try {
                 const driver = await Driver.findByIdAndUpdate(
                     data.driver._id,
-                    { location: { coordinates } },
+                    { location: { coordinates }, status:'standby' },
                     { new: true }
                 ).exec()
                 console.log('driver', driver)
@@ -49,6 +49,7 @@ export const initialize = function(server) {
             }
             ids.set(socket.socketId, data)
             socket.join(data.username)
+            
         })
 
         socket.on('UPDATE_RIDER_LOCATION', async data => {
@@ -70,6 +71,7 @@ export const initialize = function(server) {
                 console.log('error', e)
             }
             ids.set(socket.socketId, data)
+            
         })
 
         socket.on('REQUEST_TRIP', async data => {
@@ -100,22 +102,12 @@ export const initialize = function(server) {
         })
 
         // git status
-        socket.on('TRIP_ACCEPTED', async data => {
+        socket.on('ACCEPT_TRIP', async data => {
             const { driver, rider } = data
-            console.log('data', data)
-            logger.debug(`TRIP_ACCEPTED triggered for ${driver.username}`)
-
-            trips.set(username, {
-                socketId: socket.socketId,
-                ...data,
-            })
-            ids.set(socket.socketId, data)
-
             socket.join(rider.username)
-
             console.log('rider', rider)
             console.log('drivers', driver)
-            socketIo.sockets.in(rider.username).emit('TRIP_ACCEPTED', data)
+            socketIo.sockets.in(rider.username).emit('ACCEPT_TRIP', data)
         })
     })
 

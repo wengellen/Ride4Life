@@ -38,10 +38,6 @@ class App extends React.Component {
             slidingPanelComponent: null,
         }
     }
-    componentDidMount() {}
-    componentWillUnmount = () => {
-        this.unsubscribeFromAuth()
-    }
     openPanel = type => {
         this.setState({
             showSlidingPanel: true,

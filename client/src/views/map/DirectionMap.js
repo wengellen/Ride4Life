@@ -19,9 +19,9 @@ class DirectionMap extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            location: [],
-            startLocation: [],
-            endLocation: [],
+            location: [-122.431297, 37.7749],
+            startLocation: [-122.431297, 37.7749],
+            endLocation: [0,0],
             distance: 0,
             longitude: 0,
             searchResultLayer: null,
@@ -31,17 +31,21 @@ class DirectionMap extends React.Component {
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.map = null
-    }
+        this.directions = null
+        this.geolocate = null
+   }
     
     mapContainer = React.createRef()
     
     componentDidMount() {
-        let  directions, geolocate
         const rider = JSON.parse(localStorage.getItem('user'))
-      
+        // this.socket.emit('join', {
+        //     username: rider.username,
+        //     rider:rider
+        // }); //J
+        //
         navigator.geolocation.getCurrentPosition(position => {
             console.log('position', position)
-
             this.setState({
                 startLocation: [
                     position.coords.longitude,
@@ -72,56 +76,55 @@ class DirectionMap extends React.Component {
                 username: rider.username,
                 rider: rider,
             })
-
-            this.map = new mapboxgl.Map({
-                container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
-                style: 'mapbox://styles/mapbox/streets-v9',
-                center: [position.coords.longitude, position.coords.latitude],
-                zoom: 13,
-            })
-            
-            // Directions
-            directions = new MapboxDirections({
-                accessToken: mapboxgl.accessToken,
-                unit: 'imperial',
-                profile: 'mapbox/driving',
-            })
-            
-            directions.on('destination', e => {
-                this.setState({
-                    endLocation: e.feature.geometry.coordinates,
-                    duration: e.feature.duration,
-                    distance: e.feature.distance,
-                    address: e.feature['place_name'],
-                })
-            })
-
-            directions.on('route', function(e) {
-                console.log(e.route) // Logs the current route shown in the interface.
-            })
-
-            geolocate = new mapboxgl.GeolocateControl({
-                positionOptions: {
-                    enableHighAccuracy: true,
-                    watchPosition: true,
-                },
-            })
+        })
     
-            this.map.addControl(directions, 'top-left')
-            this.map.addControl(geolocate, 'top-right')
+        this.map = new mapboxgl.Map({
+            container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
+            style: 'mapbox://styles/mapbox/streets-v9',
+            center: this.state.startLocation,
+            zoom: 13,
+        })
     
-            this.map.on('load', () => {
-                directions.setOrigin([
-                    position.coords.longitude,
-                    position.coords.latitude,
-                ])
+        // Directions
+        this.directions = new MapboxDirections({
+            accessToken: mapboxgl.accessToken,
+            unit: 'imperial',
+            profile: 'mapbox/driving',
+        })
+    
+        this.directions.on('destination', e => {
+            this.setState({
+                endLocation: e.feature.geometry.coordinates,
+                duration: e.feature.duration,
+                distance: e.feature.distance,
+                address: e.feature['place_name'],
             })
+        })
+    
+        this.directions.on('route', function(e) {
+            console.log(e.route) // Logs the current route shown in the interface.
+        })
+    
+        this.geolocate = new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true,
+                watchPosition: true,
+            },
+        })
+    
+        this.map.addControl(this.directions, 'top-left')
+        this.map.addControl(this.geolocate, 'top-right')
+    
+        this.map.on('load', () => {
+            this.directions.setOrigin(this.state.startLocation)
         })
     }
     
     componentWillUnmount = () => {
        console.log('this.map', this.map)
-        setTimeout(() => this.map.remove())
+       if (this.map){
+         setTimeout(() => this.map.remove())
+       }
     }
     
     loadDriverProfile = (driver)=>{
@@ -152,6 +155,16 @@ class DirectionMap extends React.Component {
         this.socket.emit('REQUEST_TRIP', {
             rider: JSON.parse(localStorage.getItem('user')),
             ...tripRequest,
+        })
+    
+        this.socket.on('ACCEPT_TRIP', data => {
+            const requestDetails = data
+            // this.setState({ requestDetails: data }) //Save request details
+        
+            console.log(
+                'A driver has accepted your trip \n' +
+                JSON.stringify(requestDetails)
+            )
         })
     }
 
@@ -209,7 +222,7 @@ class DirectionMap extends React.Component {
                             <div className="driver-item-content">
                                 <h2>{driver.username}</h2>
                                 <h3>2 mi
-                                    <span>{`, ${driver.earnedRatings} stars` }</span>
+                                    <span>{`, ${driver.rating} stars` }</span>
                                 </h3>
                             </div>
                             <div className="driver-img-container">
