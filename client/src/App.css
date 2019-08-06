@@ -277,6 +277,7 @@ Review Container
  */
 
 .trip-estimate-container{
+    z-index: 2000;
     color:white;
     background-color: #353A50;
     width: 100%;
@@ -284,16 +285,19 @@ Review Container
     padding: 2rem;
     border-radius: 16px;
     box-shadow: 0 2px 20px 0 rgba(0,0,0,0.18) ;
-    display:none;
+    bottom:-200px;
+    position:absolute;
+    /*display:none;*/
     /*position: absolute;*/
     /*z-index:100;*/
     transition: all 1s cubic-bezier(0, 1, 0.5, 1);
     /*bottom:0;*/
-    /*transform: translateY(0);*/
+    /*transform: translateY(-500px);*/
 }
 
-.trip-estimate-container.slideup{
-    display:block;
+.trip-estimate-container.show{
+    /*display:block;*/
+    bottom:50px;
     /*bottom:300px;*/
     /*transform: translateY(-500px);*/
 }
@@ -414,7 +418,7 @@ Review Container
 
 
 /* At the top level of your code */
-@media screen and (max-width: 500px) {
+@media screen and (min-width: 600px) {
     .pink-btn{
         margin-top: 1rem;
     }

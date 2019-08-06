@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import PinkButton from "../../components/Button/PinkButton";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import Chat from "@material-ui/icons/Chat";
 import Share from "@material-ui/icons/Share";
@@ -40,24 +39,24 @@ class DriverProfilePage extends Component {
 	   this.setState({showEstimate: !this.state.showEstimate})
 	}
 	
-	sendTripRequest = (e)=>{
-		e.preventDefault()
-		const user =  JSON.parse(localStorage.getItem('loggedInUser'))
-		const tripRequest =  JSON.parse(localStorage.getItem('tripRequest'))
-		const trip = {
-				trip_id:1,
-				driver_id:2,
-				requestTime : {date:"2016-10-31T12:12:37.321Z"},
-			    tripInfo: tripRequest,
-				status : "confirmed",
-		}
+	// sendTripRequest = (e)=>{
+	// 	e.preventDefault()
+	// 	const user =  JSON.parse(localStorage.getItem('user'))
+		// const tripRequest =  JSON.parse(localStorage.getItem('tripRequest'))
+		// const trip = {
+		// 		trip_id:1,
+		// 		driver_id:2,
+		// 		requestTime : {date:"2016-10-31T12:12:37.321Z"},
+		// 	    tripInfo: tripRequest,
+		// 		status : "confirmed",
+		// }
 		
 		
-		this.props.sendTripRequest(trip)
-			.then(res => {
-				this.props.history.push(`/rider/${user.rider_id}/trip`);
-			})
-	}
+		// this.props.sendTripRequest(trip)
+		// 	.then(res => {
+		// 		this.props.history.push(`/rider/${user._id}/trip`);
+		// 	})
+	// }
 	
 	render() {
 	   if(this.props.findDriverByIdStarted){
@@ -65,14 +64,6 @@ class DriverProfilePage extends Component {
 	   }else{
 		   return (
 			   <div className="driver-profile-container">
-				   <main className={`trip-estimate-container ${this.state.showEstimate ? "slideup": ""}`} >
-					   <div className="trip-estimate-content">
-						   <p>Estimated Pickup Time: 4 Mins</p>
-						   <h2>$10</h2>
-						   <h1>Fare Estimate</h1>
-					   </div>
-					   <PinkButton className="brown-btn" onClick={this.sendTripRequest}>Confirm Ride Request</PinkButton>
-				   </main>
 				   {/*<Edit className="edit-btn-container" onClick={this.editProfile}/>*/}
 				   <header>
 					   <div className="driver-profile-img-container ">
@@ -95,7 +86,7 @@ class DriverProfilePage extends Component {
 						   <p>REVIEWS</p>
 					   </div>
 				   </div>
-				   <button className="brown-btn" onClick={this.getFareEstimate}>Get Price Estimate</button>
+				   {/*<button className="brown-btn" onClick={this.getFareEstimate}>Get Price Estimate</button>*/}
 				
 				   <main className="driver-profile-main">
 					   <Edit className="edit-btn-container"
@@ -122,7 +113,7 @@ class DriverProfilePage extends Component {
 					   }
 					   { this.props.currentDriver.review && this.props.currentDriver.review.map((item, idx) => (
 						   <div className="review-container" key={idx}>
-							   { item.username === JSON.parse(localStorage.getItem('loggedInUser')).username
+							   { item.username === JSON.parse(localStorage.getItem('user')).username
 							   	 ? <Clear/>
 							   	 : null
 							   }

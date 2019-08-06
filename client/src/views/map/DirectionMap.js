@@ -28,6 +28,8 @@ class DirectionMap extends React.Component {
             loadingMap: true,
             response: false,
             endpoint: 'http://127.0.0.1:7000',
+            showEstimate:false,
+            requestDetails:null
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.map = null
@@ -39,11 +41,6 @@ class DirectionMap extends React.Component {
     
     componentDidMount() {
         const rider = JSON.parse(localStorage.getItem('user'))
-        // this.socket.emit('join', {
-        //     username: rider.username,
-        //     rider:rider
-        // }); //J
-        //
         navigator.geolocation.getCurrentPosition(position => {
             console.log('position', position)
             this.setState({
@@ -130,7 +127,7 @@ class DirectionMap extends React.Component {
     loadDriverProfile = (driver)=>{
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
-            this.props.history.push(`/drivers/${driver.driver_id}`);
+            this.props.history.push(`/drivers/${driver._id}`);
         });
     }
 
@@ -158,13 +155,25 @@ class DirectionMap extends React.Component {
         })
     
         this.socket.on('ACCEPT_TRIP', data => {
-            const requestDetails = data
-            // this.setState({ requestDetails: data }) //Save request details
-        
+            this.setState({
+                showEstimate: true,
+                requestDetails: data
+            }) //Save request details
+            
             console.log(
                 'A driver has accepted your trip \n' +
-                JSON.stringify(requestDetails)
+                JSON.stringify(data)
             )
+        })
+    }
+    
+    handleConfirmRuquest = () => {
+        console.log('requestDetails',this.state.requestDetails)
+        this.socket.emit('CONFIRM_TRIP', {
+            ...this.state.requestDetails,
+        })
+        this.setState({
+            showEstimate: false,
         })
     }
 
@@ -190,6 +199,14 @@ class DirectionMap extends React.Component {
                 className="map-wrapper"
                 style={{ position: 'relative', display: 'flex' }}
             >
+                <main className={`trip-estimate-container ${this.state.showEstimate ? "show": ""}`} >
+                    <div className="trip-estimate-content">
+                        <p>Estimated Pickup Time: 4 Mins</p>
+                        <h2>${this.state.requestDetails && this.state.requestDetails.quote}</h2>
+                        <h1>Fare Estimate</h1>
+                    </div>
+                    <PinkButton className="brown-btn" onClick={this.handleConfirmRuquest}>Confirm Ride Request</PinkButton>
+                </main>
                 <PinkButton
                     type="button"
                     onClick={() => this.handleRequestRide()}
@@ -240,6 +257,7 @@ class DirectionMap extends React.Component {
                         height: '100%',
                     }}
                 ></div>
+               
             </div>
         )
     }

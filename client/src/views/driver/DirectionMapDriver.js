@@ -69,6 +69,16 @@ class DirectionMapDriver extends React.Component {
                         JSON.stringify(requestDetails)
                 )
             })
+            
+            this.socket.on('CONFIRM_TRIP', data => {
+                const requestDetails = data
+                this.setState({ requestDetails: data }) //Save request details
+
+                console.log(
+                    'Rider has accept your service! \n' +
+                        JSON.stringify(requestDetails)
+                )
+            })
 
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],

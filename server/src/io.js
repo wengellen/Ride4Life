@@ -3,6 +3,7 @@ import * as logger from './logger'
 import { fetchNearestCops } from './utils/db'
 import { Rider } from './resources/rider/rider.model'
 import { Driver} from './resources/driver/driver.model'
+import {Trip} from "./resources/trip/trip.model";
 
 let socketIo
 const riders = new Map()
@@ -101,13 +102,30 @@ export const initialize = function(server) {
             }
         })
 
-        // git status
+        // Driver can accept trip
         socket.on('ACCEPT_TRIP', async data => {
             const { driver, rider } = data
             socket.join(rider.username)
             console.log('rider', rider)
             console.log('drivers', driver)
-            socketIo.sockets.in(rider.username).emit('ACCEPT_TRIP', data)
+            socketIo.sockets.in(rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
+        })
+    
+    
+        // Rider can confirm trip
+        socket.on('CONFIRM_TRIP', async data => {
+            const { driver, rider, trip } = data
+            // socket.join(rider.username)
+            console.log('rider', rider)
+            console.log('drivers', driver)
+            try {
+                const trip = await Trip.create({...data, status:"pickingUp"})
+                console.log(trip)
+                socketIo.sockets.in(driver.username).emit('CONFIRM_TRIP', data)
+            }
+            catch(e){
+                console.log('there has been an error',e)
+            }
         })
     })
 

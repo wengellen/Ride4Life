@@ -18,7 +18,17 @@ export const getTrips = async (req, res) => {
 	}
 }
 
-export const updateTrip = (req, res) => {
+// export const createTrip = async (req, res) => {
+// 	try {
+// 		const doc = await Trip.create({ ...req.body, createdBy })
+// 		res.status(201).json({ data: doc })
+// 	} catch (e) {
+// 		console.error(e)
+// 		res.status(400).end()
+// 	}
+// }
+
+export const updateTrip = async(req, res) => {
 }
 
 export const getTripById = async (req, res) => {
