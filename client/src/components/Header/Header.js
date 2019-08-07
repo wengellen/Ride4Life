@@ -1,20 +1,15 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import { connect } from 'react-redux'
-// nodejs library to set properties for components
 import PropTypes from 'prop-types'
-// @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
 import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
-// @material-ui/icons
 import Menu from '@material-ui/icons/Menu'
 import Close from '@material-ui/icons/Close'
 // core components
 import headerStyle from 'assets/jss/material-kit-pro-react/components/headerStyle.jsx'
 import logo from 'assets/img/safe_logo.png'
-// import { user } from '../../actions'
 import { Avatar } from '@material-ui/core'
 
 class Header extends React.Component {
@@ -38,7 +33,7 @@ class Header extends React.Component {
     }
 
     headerColorChange() {
-        const { classes, color, changeColorOnScroll, onlogout } = this.props
+        const { classes, color, changeColorOnScroll } = this.props
         const windowsScrollTop = window.pageYOffset
         if (windowsScrollTop > changeColorOnScroll.height) {
             document.body
@@ -63,7 +58,7 @@ class Header extends React.Component {
     }
     render() {
         console.log('this.props', this.props)
-        const { classes, color, links, fixed, absolute, openPanel, user } = this.props
+        const { classes, color, links, fixed, absolute, openPanel, user, logoutUser } = this.props
         const appBarClasses = classNames({
             [classes.appBar]: true,
             [classes[color]]: color,
@@ -87,15 +82,12 @@ class Header extends React.Component {
                     ) : (
                         <div className={`login-container ${!user ? "hide" : "show"}`}>
                             <button
-                                className={classes.titleNoUnder}
-                                display={{ xs: 'none', sm: 'block' }}
                                 onClick={() => openPanel('login')}
                             >
                                 Sign in
                             </button>
                             <button
-                                className={classes.titleNoUnder}
-                                display={{ xs: 'none', sm: 'block' }}
+                                className={"signup"}
                                 onClick={() => openPanel('signup')}
                             >
                                 Sign up

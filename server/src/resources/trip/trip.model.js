@@ -19,7 +19,7 @@ const tripSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["requesting","cancelledByDriver", "cancelledByRider", "accepted", "pickingUp", "enRoute"],
+      enum: ["requesting","cancelledByDriver", "cancelledByRider", "accepted", "pickingUp", "enRoute", "ended"],
       default: "requesting"
     },
     rider:{
@@ -30,6 +30,9 @@ const tripSchema = new mongoose.Schema(
     driver:{
         type: mongoose.SchemaTypes.ObjectId,
         ref:'driver',
+    },
+    review:{
+        type: String,
     },
     tripRating:{
         type: Number,

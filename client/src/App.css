@@ -10,9 +10,21 @@
 }
 
 /*
-HEADER
+ Home Page
 */
 
+.app-header {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-top:20px;
+    font-size:0.65rem;
+}
+
+
+/*
+HEADER
+*/
 button.menuButton.show{
     display:block;
 }
@@ -24,19 +36,25 @@ button.menuButton.hide{
 /**
  NavBar
  */
-
  .login-container{
     display:flex;
     width: 100%;
-    /*width: 40%;*/
  }
 
-/* At the top level of your code */
-/*@media screen and (max-width: 1023px) {*/
-    /*.map-wrapper{*/
+.login-container button{
+    font-weight: bold;
+}
 
-    /*}*/
-/*}*/
+
+.login-container .signup{
+     background-color:#78849E;
+     outline:none;
+     border:none;
+     border-radius: 10px;
+     color: white;
+     padding:4px 10px;
+     margin-right:10px;
+ }
 
 
 /*

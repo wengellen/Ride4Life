@@ -20,6 +20,7 @@ export const verifyToken = token =>
 
 export const signup = async (req, res) => {
   let user;
+  let emailFound// = await Rider.find({ email }).exec();
   let duplicateErrorMessages = [];
   const { username, password, email, phone } = req.body;
   if (!email || !phone || !username || !password) {
@@ -28,17 +29,29 @@ export const signup = async (req, res) => {
       .send({ error: 1, message: "need email, phone, username and password" });
   }
   // if username is taken?
-
-  const usernameFound = await Rider.find({ username }).exec();
-  console.log("usernameFound,", usernameFound);
-
-  if (usernameFound.length > 0) {
+  switch (req.body.role) {
+    case "rider":
+      user = await Rider.find({ username }).exec();
+      emailFound =  await Rider.find({ email }).exec();
+      break;
+    case "driver":
+      user = await Driver.find({ username }).exec();
+      emailFound =  await Driver.find({ email }).exec();
+  
+      break;
+    case "admin":
+      user = await User.find({ username }).exec();
+      emailFound =  await User.find({ email }).exec();
+  
+      break;
+  }
+  console.log("user,", user);
+  console.log("emailFound,", emailFound);
+  
+  if (user.length > 0) {
     duplicateErrorMessages.push("Username");
   }
-
   // if email exist
-  const emailFound = await Rider.find({ email }).exec();
-  console.log("emailFound,", emailFound);
   if (emailFound.length > 0) {
     duplicateErrorMessages.push("Email");
   }
@@ -99,6 +112,7 @@ export const signin = async (req, res) => {
         doc = User;
         break;
     }
+    
     const user = await doc
       .findOne({ username: req.body.username })
       .select("_id, username password role")

@@ -12,7 +12,7 @@ export const getDriverById = async (req, res) => {
     try {
         const driver = await Driver.findOne({ driver: driverId})
             .exec()
-        res.status(200).json({ data: driver })
+        res.status(200).json( driver )
     } catch (e) {
         res.status(500).json({ error: e })
     }
@@ -25,7 +25,7 @@ export const getDriverTrips = async (req, res) => {
         const trips = await Trip.find({ driver: req.user._id })
             .populate('driver')
             .exec()
-        res.status(200).json({ data: trips })
+        res.status(200).json( trips )
     } catch (e) {
         res.status(500).json({ error: e })
     }

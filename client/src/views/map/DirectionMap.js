@@ -225,7 +225,6 @@ class DirectionMap extends React.Component {
                         height: '90px',
                         fontWeight: 'bold',
                         fontSize: '0.9rem',
-                        // border: '1px solid white',
                         boxShadow: '1px 1px 0 8px rgba(255,255,255,0.2)',
                         justifySelf: 'center',
                     }}
@@ -243,9 +242,8 @@ class DirectionMap extends React.Component {
                                 </h3>
                             </div>
                             <div className="driver-img-container">
-                                <img src="http://lorempixel.com/180/120" alt={"driver"}/>
+                                <img src={driver.avatar} alt={"driver"}/>
                             </div>
-                           
                         </div>
                     })}
                 </div>

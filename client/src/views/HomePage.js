@@ -7,8 +7,8 @@ class HomePage extends Component {
     render() {
     return (
       <div className="App">
-            <header className="App-header">
-                <h1>Wecome to Rdice for life</h1>
+            <header className="app-header">
+                <h1>Wecome to Ride for life</h1>
             </header>
       </div>
     );

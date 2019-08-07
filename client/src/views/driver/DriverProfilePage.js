@@ -59,7 +59,8 @@ class DriverProfilePage extends Component {
 	// }
 	
 	render() {
-	   if(this.props.findDriverByIdStarted){
+		const {currentDriver, findDriverByIdStarted} = this.props
+	   if(findDriverByIdStarted){
 		   return (<Loader/>)
 	   }else{
 		   return (
@@ -67,22 +68,22 @@ class DriverProfilePage extends Component {
 				   {/*<Edit className="edit-btn-container" onClick={this.editProfile}/>*/}
 				   <header>
 					   <div className="driver-profile-img-container ">
-						   <img src="http://lorempixel.com/500/500" className="round" alt={"driver avatar"}/>
+						   <img src={currentDriver.avatar} className="round" alt={"driver avatar"}/>
 					   </div>
-					   <h1>{this.props.currentDriver.username}</h1>
-					   <h3>Nawandala, Uganda</h3>
+					   <h1>{currentDriver.username}</h1>
+					   <h3>{currentDriver.city}</h3>
 				   </header>
 				   <div className="stats-container">
 					   <div>
-						   <h2>125</h2>
+						   <h2>{currentDriver.tripCompleted}</h2>
 						   <p>RIDES</p>
 					   </div>
 					   <div>
-						   <h2>150</h2>
-						   <p>PRICE</p>
+						   <h2>{currentDriver.rating}</h2>
+						   <p>RATING</p>
 					   </div>
 					   <div>
-						   <h2>{this.props.currentDriver.review && this.props.currentDriver.review.length}</h2>
+						   <h2>{currentDriver.review && currentDriver.review.length > 0 ? currentDriver.review.length : 0 }</h2>
 						   <p>REVIEWS</p>
 					   </div>
 				   </div>
@@ -96,8 +97,8 @@ class DriverProfilePage extends Component {
 							   <img src="http://lorempixel.com/100/100" alt={"driver avatar"}/>
 						   </div>
 						   <div className="title">
-							   <h2>{this.props.currentDriver.username}</h2>
-							   <h5>Driving for 2 years</h5>
+							   <h2>{currentDriver.username}</h2>
+							   <h5>Driving for {currentDriver.createdAt} years</h5>
 						   </div>
 					   </header>
 					   {this.state.isEditing
@@ -142,7 +143,7 @@ class DriverProfilePage extends Component {
 				   <div className="cars-container">
 					   <h3>MY AMBULANCE</h3>
 					   <div className="car-img-container">
-						   <img src="http://lorempixel.com/1400/1200" alt="car"/>
+						   <img src={currentDriver.vehicle} alt="car"/>
 					   </div>
 				   </div>
 			   </div>

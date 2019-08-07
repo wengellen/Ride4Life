@@ -5,8 +5,8 @@ import {
 	DRIVER_SIGNUP_FAILURE,
 	DRIVER_LOGIN_STARTED,
 	DRIVER_LOGIN_SUCCESS,
-	DRIVER_LOGIN_FAILURE,
-}from '../actions'
+	DRIVER_LOGIN_FAILURE, LOGOUT_USER,
+} from '../actions'
 
 
 const initialState = {
@@ -71,6 +71,12 @@ export const driverReducer = (state = initialState, action)=>{
 			return {...state,
 				driverLoginStarted:false,
 				serverMessage:action.payload.message,
+			}
+		
+		
+		case LOGOUT_USER:
+			return {...state,
+				user: null
 			}
 		default:
 			return {...state}

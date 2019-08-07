@@ -19,6 +19,7 @@ import Header from './components/Header/Header'
 import RiderTripPage from './views/rider/RiderTripPage'
 import './App.css'
 import SelectRolePanel from './views/SelectRolePanel'
+import {logoutUser} from "./actions";
 
 class App extends React.Component {
 	constructor() {
@@ -41,9 +42,22 @@ class App extends React.Component {
 		})
 	}
 	logout = () => {
-		this.setState({
-			user: null,
-		})
+		// localStorage.removeItem('token')
+		// localStorage.removeItem('user')
+		// this.setState({
+		// 	user: null,
+		// })
+		
+		this.props.signup_rider(this.state.profile)
+		
+		.then((res) => {
+			console.log('res', res)
+			if(!res.error){
+				this.props.history.push('/rider-login');
+				
+			}
+		});
+		
 	}
 	render() {
 		const { showSlidingPanel, slidingPanelComponent } = this.state
@@ -51,7 +65,7 @@ class App extends React.Component {
 		console.log('user', user)
 		return (
 			<div className="App">
-				<Header openPanel={this.openPanel} onlogout={this.logout} user={user}/>
+				<Header openPanel={this.openPanel} logoutUser={this.logout} user={user}/>
 				<SelectRolePanel
 					show={showSlidingPanel}
 					type={slidingPanelComponent}
@@ -84,4 +98,5 @@ const mapStateToProps = ({ riderReducer, driverReducer }) => {
 
 export default connect(
 	mapStateToProps,
+	{ logoutUser }
 )(withRouter(App))

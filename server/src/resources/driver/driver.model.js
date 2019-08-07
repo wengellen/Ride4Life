@@ -13,7 +13,10 @@ const geoSchema = new mongoose.Schema({
 });
 const driverSchema = new mongoose.Schema(
   {
-    vehicles: [{ type: String }],
+    vehicle: {
+        type:String,
+        default:"https://i.pravatar.cc/60"
+    },
     location: {
         type: {
             type: String,
@@ -40,7 +43,8 @@ const driverSchema = new mongoose.Schema(
         type: Date
     },
     tripCompleted: {
-        type: Number
+        type: Number,
+        default:0
     },
     rating: {
         type: Number,
