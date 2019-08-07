@@ -115,7 +115,7 @@ export const signin = async (req, res) => {
     
     const user = await doc
       .findOne({ username: req.body.username })
-      .select("_id, username password role")
+      // .select("_id, username password role avatar")
       .exec();
 
     if (!user) {
@@ -153,9 +153,11 @@ export const protect = async (req, res, next) => {
   const token = bearer.split("Bearer ")[1].trim();
 
   let payload;
-  console.log("payload", payload)
+  console.log(" req.headers.authorization",  req.headers.authorization)
   try {
     payload = await verifyToken(token);
+    console.log("payload", payload)
+  
   } catch (e) {
     return res
       .status(401)

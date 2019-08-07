@@ -22,6 +22,7 @@ class DirectionMap extends React.Component {
             location: [-122.431297, 37.7749],
             startLocation: [-122.431297, 37.7749],
             endLocation: [0,0],
+            endLocationAddress:null,
             distance: 0,
             longitude: 0,
             searchResultLayer: null,
@@ -92,14 +93,17 @@ class DirectionMap extends React.Component {
         this.directions.on('destination', e => {
             this.setState({
                 endLocation: e.feature.geometry.coordinates,
-                duration: e.feature.duration,
-                distance: e.feature.distance,
-                address: e.feature['place_name'],
             })
         })
     
-        this.directions.on('route', function(e) {
+        this.directions.on('route', e => {
             console.log(e.route) // Logs the current route shown in the interface.
+            const {distance, legs, duration} = e.route[0]
+            this.setState({
+                endLocationAddress: legs[0].summary,
+                duration: duration,
+                distance: distance,
+            })
         })
     
         this.geolocate = new mapboxgl.GeolocateControl({
@@ -159,7 +163,6 @@ class DirectionMap extends React.Component {
                 showEstimate: true,
                 requestDetails: data
             }) //Save request details
-            
             console.log(
                 'A driver has accepted your trip \n' +
                 JSON.stringify(data)

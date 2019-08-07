@@ -76,7 +76,7 @@ class Header extends React.Component {
                     {user ? (
                         <div className="login-container">
                             <IconButton className={`classes.titleNoUnder `}>
-                                <Avatar />
+                                <Avatar src={user.avatar} alt={"avatar"} />
                             </IconButton>
                         </div>
                     ) : (
@@ -120,7 +120,7 @@ class Header extends React.Component {
                             <Close />
                         </IconButton>
                         <div className="nav-drawer">
-                            <Link to={"/"} onClick={()=>this.logout()}>Logout</Link>
+                            <Link to={"/"}  onClick={()=>this.logout()}>Logout</Link>
                         </div>
                     </Drawer>
                 </div>

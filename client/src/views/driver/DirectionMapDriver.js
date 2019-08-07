@@ -8,7 +8,6 @@ import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import {
     updateDriverLocation,
-    findDriversNearby
 } from '../../actions'
 import socketIOClient from 'socket.io-client'
 
@@ -48,16 +47,16 @@ class DirectionMapDriver extends React.Component {
                 username: driver.username,
                 driver: driver,
               },
-                this.props
-                .findDriversNearby({
-                    coordinates: [
-                        position.coords.longitude,
-                        position.coords.latitude,
-                    ],
-                })
-                .then(res => {
-                    console.log('findDriversNearby res', res)
-                })
+                // this.props
+                // .findDriversNearby({
+                //     coordinates: [
+                //         position.coords.longitude,
+                //         position.coords.latitude,
+                //     ],
+                // })
+                // .then(res => {
+                //     console.log('findDriversNearby res', res)
+                // })
             )
             
             this.socket.on('REQUEST_TRIP', data => {
@@ -180,5 +179,5 @@ const mapStateToProps = ({ riderReducer, tripReducer }) => ({})
 
 export default connect(
     mapStateToProps,
-    { updateDriverLocation,findDriversNearby }
+    { updateDriverLocation }
 )(DirectionMapDriver)

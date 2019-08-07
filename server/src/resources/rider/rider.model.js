@@ -24,7 +24,10 @@ const riderSchema = new mongoose.Schema(
       default: "true"
     },
       // Profile info
-      avatar: { type: String },
+      avatar: {
+        type: String,
+        default:"https://i.pravatar.cc/60"
+      },
       memberSince: { type: Date },
       tripCompleted: {type: Number},
       rating: {type: Number},

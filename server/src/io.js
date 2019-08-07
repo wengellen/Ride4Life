@@ -19,7 +19,15 @@ export const initialize = function(server) {
     socketIo = sio(server)
     socketIo.on('connection', socket => {
         logger.debug(`A user connected with ${socket.id}`)
-
+        
+        socket.on('disconnect', (reason) => {
+            if (reason === 'io server disconnect') {
+                // the disconnection was initiated by the server, you need to reconnect manually
+                socket.connect();
+            }
+            console.log('reason', reason)
+            // else the socket will automatically try to reconnect
+        });
         socket.on('join', function(data) {
             console.log('data',data)
             //Listen to any join event from connected users

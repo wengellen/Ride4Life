@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import "./RiderHomePage.css"
 import DirectionMap from "../map/DirectionMap";
-import PinkButton from "../../components/Button/PinkButton";
 
 class RiderHomePage extends Component {
 	state = {
@@ -44,8 +42,5 @@ const mapStateToProps = ({riderReducer, tripReducer}) => (
 
 export default connect(
 	mapStateToProps,
-	{ findDriversNearby,
-	  sendTripRequest,
-	  getDriversById,
-	  }
+	{}
 )(RiderHomePage);

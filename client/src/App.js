@@ -42,21 +42,8 @@ class App extends React.Component {
 		})
 	}
 	logout = () => {
-		// localStorage.removeItem('token')
-		// localStorage.removeItem('user')
-		// this.setState({
-		// 	user: null,
-		// })
 		
-		this.props.signup_rider(this.state.profile)
-		
-		.then((res) => {
-			console.log('res', res)
-			if(!res.error){
-				this.props.history.push('/rider-login');
-				
-			}
-		});
+		this.props.logoutUser()
 		
 	}
 	render() {
@@ -90,7 +77,6 @@ class App extends React.Component {
 
 const mapStateToProps = ({ riderReducer, driverReducer }) => {
 	console.log('riderReducer.loggedInUser', riderReducer)
-	console.log('driverReducer.loggedInUser', driverReducer)
 	return {
 		user: riderReducer.user || driverReducer.user,
 	}
