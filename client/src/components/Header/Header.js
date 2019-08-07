@@ -7,20 +7,14 @@ import PropTypes from 'prop-types'
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
 import IconButton from '@material-ui/core/IconButton'
-import Hidden from '@material-ui/core/Hidden'
 import Drawer from '@material-ui/core/Drawer'
-import Face from '@material-ui/icons/Face'
 // @material-ui/icons
 import Menu from '@material-ui/icons/Menu'
 import Close from '@material-ui/icons/Close'
-import ChildCare from '@material-ui/icons/ChildCare'
-import TimeToLeave from '@material-ui/icons/TimeToLeave'
 // core components
 import headerStyle from 'assets/jss/material-kit-pro-react/components/headerStyle.jsx'
 import logo from 'assets/img/safe_logo.png'
-import { logoutUser } from '../../actions'
-import SelectRolePanel from '../../views/SelectRolePanel'
-import Button from '../CustomButtons/Button'
+// import { user } from '../../actions'
 import { Avatar } from '@material-ui/core'
 
 class Header extends React.Component {
@@ -31,6 +25,7 @@ class Header extends React.Component {
     }
     state = {
         mobileOpen: false,
+        menuIsOpen:false
     }
 
     handleDrawerToggle() {
@@ -68,7 +63,7 @@ class Header extends React.Component {
     }
     render() {
         console.log('this.props', this.props)
-        const { classes, color, links, fixed, absolute, openPanel } = this.props
+        const { classes, color, links, fixed, absolute, openPanel, user } = this.props
         const appBarClasses = classNames({
             [classes.appBar]: true,
             [classes[color]]: color,
@@ -83,14 +78,14 @@ class Header extends React.Component {
                     </div>
                 </Link>
                 <div className="icon-navbar">
-                    {this.props.loggedInUser ? (
+                    {user ? (
                         <div className="login-container">
                             <IconButton className={`classes.titleNoUnder `}>
                                 <Avatar />
                             </IconButton>
                         </div>
                     ) : (
-                        <div className="login-container">
+                        <div className={`login-container ${!user ? "hide" : "show"}`}>
                             <button
                                 className={classes.titleNoUnder}
                                 display={{ xs: 'none', sm: 'block' }}
@@ -108,6 +103,7 @@ class Header extends React.Component {
                         </div>
                     )}
                     <IconButton
+                        className={`menuButton ${!user ? "hide" : "show"}`}
                         color="inherit"
                         aria-label="open drawer"
                         onClick={this.handleDrawerToggle}
@@ -184,14 +180,5 @@ Header.propTypes = {
     }),
 }
 
-const mapStateToProps = ({ riderReducer }) => {
-    console.log('riderReducer.loggedInUser', riderReducer)
-    return {
-        loggedInUser: riderReducer.loggedInUser,
-    }
-}
 
-export default connect(
-    mapStateToProps,
-    { logoutUser }
-)(withStyles(headerStyle)(withRouter(Header)))
+export default withStyles(headerStyle)(Header)

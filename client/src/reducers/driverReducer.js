@@ -10,6 +10,7 @@ import {
 
 
 const initialState = {
+	user:null,
 	driverSignupStarted: false,
 	driverLoginStarted: false,
 	serverMessage:'',
@@ -59,7 +60,9 @@ export const driverReducer = (state = initialState, action)=>{
 				serverMessage: 'Logging in...'
 			}
 		case DRIVER_LOGIN_SUCCESS:
+			console.log('action.payload', action.payload)
 			return {...state,
+				user: action.payload.user,
 				driverLoginStarted:false,
 				serverMessage: 'Login Success'
 			}

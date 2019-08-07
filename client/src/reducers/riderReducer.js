@@ -32,8 +32,8 @@ const initialState = {
 	submitDriverReviewSuccessMessage:'',
 	currentDriver:{},
 	activeTrip:{},
-		driversNearby:[],
-	loggedInUser:null,
+    driversNearby:[],
+	user:null,
 	serverMessage:''
 }
 
@@ -65,7 +65,7 @@ export const riderReducer = (state = initialState, action)=>{
 		case RIDER_LOGIN_SUCCESS:
 			return {...state,
 				riderLoginStarted:false,
-				loggedInUser: action.payload,
+				user: action.payload,
 				serverMessage: 'Login Success'
 			}
 		case RIDER_LOGIN_FAILURE:
@@ -107,7 +107,7 @@ export const riderReducer = (state = initialState, action)=>{
 			
 		case LOGOUT_USER:
 			return {...state,
-				loggedInUser: null
+				user: null
 			}
 			
 		case SEND_TRIP_REQUEST_STARTED:
