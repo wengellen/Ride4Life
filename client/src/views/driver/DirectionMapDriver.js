@@ -26,7 +26,7 @@ class DirectionMapDriver extends React.Component {
             searchResultLayer: null,
             loadingMap: true,
             response: false,
-            endpoint: 'http://127.0.0.1:7000',
+            endpoint:  process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`,
         }
         this.socket = socketIOClient(this.state.endpoint)
     }
