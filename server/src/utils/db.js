@@ -3,6 +3,7 @@ import options from '../config'
 import { Driver } from "../resources/driver/driver.model";
 
 export const connect = (url = options.dbUrl, opts = {}) => {
+	console.log('options.dbUrl',options.dbUrl)
 	return mongoose.connect(
 		url,
 		{ ...opts,

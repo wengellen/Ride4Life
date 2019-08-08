@@ -7,7 +7,9 @@ exports.default = void 0;
 
 var _lodash = require("lodash");
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'production'; //'development'
+
+console.log('env', env);
 const baseConfig = {
   env,
   isDev: env === 'development',
@@ -21,7 +23,7 @@ const baseConfig = {
 let envConfig = {};
 
 switch (env) {
-  case 'dev':
+  case 'production':
     envConfig = require('./prod').config;
     break;
 
