@@ -98,6 +98,7 @@ class DirectionMap extends React.Component {
     
         this.directions.on('route', e => {
             console.log(e.route) // Logs the current route shown in the interface.
+            if (!e.route) return
             const {distance, legs, duration} = e.route[0]
             this.setState({
                 endLocationAddress: legs[0].summary,
