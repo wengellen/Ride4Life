@@ -95,6 +95,7 @@ export const initialize = function(server) {
         socket.on('REQUEST_TRIP', async data => {
             const { username, _id } = data.rider
             let trip
+            let tripfound
             logger.debug(`REQUEST_TRIP triggered for ${username}`)
             console.log(`REQUEST_TRIP data${data}`, data)
             console.log(`:data.rider.id`, data.rider._id)
@@ -112,22 +113,19 @@ export const initialize = function(server) {
             const nearbyOnlineDrivers = await fetchNearestCops(
                 data.location.coordinates
             )
-            
-            try {
-                trip = await Trip.findOneAndUpdate({ rider:data.rider._id}).exec()
-            } catch (e) {
-            
-            }
 
-            if (trip) return
-            
             try {
-                trip = await Trip.create({...data})
-                console.log('trip',trip)
+                trip = await Trip.findOne({ rider:data.rider._id}).exec()
+                
+                if (!trip){
+                    trip = await Trip.create({...data})
+                    console.log('trip',trip)
+                }
             }
             catch(e){
                 console.log('there has been an error',e)
             }
+       
 
             for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
                 console.log(
@@ -163,10 +161,7 @@ export const initialize = function(server) {
             }
             console.log('res',trip)
             socket.join(trip._id)
-            // console.log('socketIo.sockets.in(trip.rider.username)',socketIo.sockets.in(trip.rider.username))
             socketIo.sockets.to(trip.rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
-    
-            // socketIo.sockets.in(trip.rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
         })
     
     
@@ -174,7 +169,7 @@ export const initialize = function(server) {
         socket.on('CONFIRM_TRIP', async data => {
             const { driver, rider } = data
             let trip
-            // socket.join(rider.username)
+            socket.join(rider.username)
             try {
                 trip =  await Trip.findOneAndUpdate(
                     rider,
@@ -185,11 +180,11 @@ export const initialize = function(server) {
                 .populate('driver')
                 .exec()
                 console.log(trip)
-                socketIo.sockets.in(trip.driver.username).emit('CONFIRM_TRIP', data)
             }
             catch(e){
                 console.log('there has been an error',e)
             }
+            socketIo.sockets.in(trip.driver.username).emit('CONFIRM_TRIP', data)
         })
     })
 
