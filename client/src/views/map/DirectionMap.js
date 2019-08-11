@@ -102,8 +102,8 @@ class DirectionMap extends React.Component {
             const {distance, legs, duration} = e.route[0]
             this.setState({
                 endLocationAddress: legs[0].summary,
-                duration: duration,
-                distance: distance,
+                duration: duration || 0,
+                distance: distance || 0,
             })
         })
     
@@ -160,6 +160,7 @@ class DirectionMap extends React.Component {
         })
     
         this.socket.on('ACCEPT_TRIP', data => {
+            console.log('ACCEPT_TRIP data',data)
             this.setState({
                 showEstimate: true,
                 requestDetails: data
