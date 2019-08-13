@@ -43,8 +43,7 @@ export const initialize = function(server) {
         });
         socket.on('join', function(data) {
             ids.set(socket.id, data);
-            //Listen to any join event from connected users
-            socket.join(data.username) //User joins a unique room/channel that's named after the userId
+            socket.join(data.username) //User joins a uniquyarn deve room/channel that's named after the userId
             console.log('User joined room: ' + data.username)
         })
 
@@ -97,12 +96,6 @@ export const initialize = function(server) {
             let trip
             let tripfound
             logger.debug(`REQUEST_TRIP triggered for ${username}`)
-            console.log(`REQUEST_TRIP data${data}`, data)
-            console.log(`:data.rider.id`, data.rider._id)
-            //A trip is in progress
-            // if (trips.get(username).socketId !== socket.id){
-            //    console.log('trips.get(username).socketId', trips.get(username).socketId)
-            // }
             
             trips.set(username, {
                 socketId: socket.id,
@@ -125,7 +118,6 @@ export const initialize = function(server) {
             catch(e){
                 console.log('there has been an error',e)
             }
-       
 
             for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
                 console.log(

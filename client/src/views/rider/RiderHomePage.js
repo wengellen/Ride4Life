@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import "./RiderHomePage.css"
 import DirectionMap from "../map/DirectionMap";
+import StatusPanel from "../../components/Panel/StatusPanel";
 
 class RiderHomePage extends Component {
 	state = {
@@ -27,6 +28,7 @@ class RiderHomePage extends Component {
 				<div className="map-container">
 					 <DirectionMap history={this.props.history}/>
 				</div>
+				<StatusPanel/>
 			</div>
 		);
 	}

@@ -17,6 +17,7 @@ import DriverHomePage from './views/driver/DriverHomePage'
 import DriverProfilePage from './views/driver/DriverProfilePage'
 import Header from './components/Header/Header'
 import RiderTripPage from './views/rider/RiderTripPage'
+import StatusPanel from './components/Panel/StatusPanel'
 import './App.css'
 import SelectRolePanel from './views/SelectRolePanel'
 import {logoutUser} from "./actions";
@@ -58,6 +59,7 @@ class App extends React.Component {
 					type={slidingPanelComponent}
 					closePanel={this.closePanel}
 				/>
+				
 				<Switch>
 					<Route exact path="/" component={HomePage} />
 					<Route path="/rider-login" component={RiderLoginPage} />
