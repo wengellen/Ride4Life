@@ -19,6 +19,7 @@ import {
 	SUBMIT_REVIEW_STARTED,
 	SUBMIT_REVIEW_SUCCESS,
 	SUBMIT_REVIEW_FAILURE,
+	CANCEL_TRIP_REQUEST,
 } from '../actions'
 
 
@@ -27,6 +28,7 @@ const initialState = {
 	riderLoginStarted: false,
 	findNearbyDriverStarted: false,
 	findDriverByIdStarted: false,
+	findNearbyDriverMessage: 'Welcome back',
 	sendTripRequestStarted:false,
 	submitDriverReviewStarted:false,
 	submitDriverReviewSuccessMessage:'',
@@ -34,7 +36,7 @@ const initialState = {
 	activeTrip:{},
     driversNearby:[],
 	user:null,
-	serverMessage:''
+	serverMessage:'',
 }
 
 export const riderReducer = (state = initialState, action)=>{
@@ -77,11 +79,13 @@ export const riderReducer = (state = initialState, action)=>{
 			}
 		case FIND_DRIVERS_NEARBY_STARTED:
 			return {...state,
-				findNearbyDriverStarted:true
+				findNearbyDriverStarted:true,
+				findNearbyDriverMessage:"Finding Rides for you"
 			}
 		case FIND_DRIVERS_NEARBY_SUCCESS:
 			return {...state,
 				findNearbyDriverStarted:false,
+				findNearbyDriverMessage:`We found ${action.payload.length} rides near you`,
 				driversNearby: action.payload
 			}
 		case FIND_DRIVERS_NEARBY_FAILURE:
@@ -103,6 +107,12 @@ export const riderReducer = (state = initialState, action)=>{
 		case FIND_DRIVER_BY_ID_FAILURE:
 			return {...state,
 				findDriverByIdStarted:false
+			}
+			
+		case CANCEL_TRIP_REQUEST:
+			return {...state,
+				findNearbyDriverMessage: 'Choose another destination',
+				driversNearby:[]
 			}
 			
 		case LOGOUT_USER:

@@ -28,7 +28,6 @@ class RiderHomePage extends Component {
 				<div className="map-container">
 					 <DirectionMap history={this.props.history}/>
 				</div>
-				<StatusPanel/>
 			</div>
 		);
 	}

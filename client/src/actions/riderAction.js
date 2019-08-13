@@ -31,6 +31,8 @@ export const SUBMIT_REVIEW_STARTED = 'SUBMIT_REVIEW_STARTED'
 export const SUBMIT_REVIEW_SUCCESS = 'SUBMIT_REVIEW_SUCCESS'
 export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
 
+export const CANCEL_TRIP_REQUEST = 'CANCEL_TRIP_REQUEST'
+
 
 // SEND_RIDE_REQUEST
 // Should return a list of drivers nearby
@@ -106,6 +108,8 @@ export const findDriversNearby = (location) => dispatch => {
 	)
 }
 
+
+
 // Find drivers nearby
 export const getDriversById = (driverId) => dispatch => {
 	dispatch({type: FIND_DRIVER_BY_ID_STARTED})
@@ -164,6 +168,12 @@ export const logoutUser = () => dispatch => {
 	localStorage.removeItem('token')
 	localStorage.removeItem('user')
 	dispatch({type: LOGOUT_USER})
+}
+
+// Find drivers nearby
+export const cancelTripRequest = () => dispatch => {
+	console.log('cancelTripRequest')
+	dispatch({type: CANCEL_TRIP_REQUEST})
 }
 
 

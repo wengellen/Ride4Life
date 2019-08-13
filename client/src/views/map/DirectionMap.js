@@ -11,8 +11,10 @@ import {
     getDriversById,
     sendTripRequest,
     updateRiderLocation,
+    cancelTripRequest,
 } from '../../actions'
 import socketIOClient from 'socket.io-client'
+import StatusPanel from '../../components/Panel/StatusPanel'
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMap extends React.Component {
@@ -21,25 +23,29 @@ class DirectionMap extends React.Component {
         this.state = {
             location: [-122.431297, 37.7749],
             startLocation: [-122.431297, 37.7749],
-            endLocation: [0,0],
-            endLocationAddress:null,
+            endLocation: [0, 0],
+            endLocationAddress: null,
             distance: 0,
             longitude: 0,
             searchResultLayer: null,
             loadingMap: true,
             response: false,
-            endpoint:  process.env.NODE_ENV !== "production" ? "http://localhost:7000" : "https://ride4lifer.herokuapp.com/",
-            showEstimate:false,
-            requestDetails:null
+            endpoint:
+                process.env.NODE_ENV !== 'production'
+                    ? 'http://localhost:7000'
+                    : 'https://ride4lifer.herokuapp.com/',
+            showEstimate: false,
+            requestDetails: null,
+            requestingRide: false,
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.map = null
         this.directions = null
         this.geolocate = null
-   }
-    
+    }
+
     mapContainer = React.createRef()
-    
+
     componentDidMount() {
         const rider = JSON.parse(localStorage.getItem('user'))
         navigator.geolocation.getCurrentPosition(position => {
@@ -53,17 +59,17 @@ class DirectionMap extends React.Component {
                 loadingMap: false,
             })
 
-            this.props
-                .findDriversNearby({
-                    coordinates: [
-                        position.coords.longitude,
-                        position.coords.latitude,
-                    ],
-                    rider: rider,
-                })
-                .then(res => {
-                    console.log('findDriversNearby res', res)
-                })
+            // this.props
+            //     .findDriversNearby({
+            //         coordinates: [
+            //             position.coords.longitude,
+            //             position.coords.latitude,
+            //         ],
+            //         rider: rider,
+            //     })
+            //     .then(res => {
+            //         console.log('findDriversNearby res', res)
+            //     })
 
             this.socket.emit('UPDATE_RIDER_LOCATION', {
                 coordinates: [
@@ -75,27 +81,27 @@ class DirectionMap extends React.Component {
                 rider: rider,
             })
         })
-    
+
         this.map = new mapboxgl.Map({
             container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
             style: 'mapbox://styles/mapbox/streets-v9',
             center: this.state.startLocation,
             zoom: 13,
         })
-    
+
         // Directions
         this.directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
             unit: 'imperial',
             profile: 'mapbox/driving',
         })
-    
+
         this.directions.on('destination', e => {
             this.setState({
                 endLocation: e.feature.geometry.coordinates,
             })
         })
-    
+
         this.directions.on('route', e => {
             console.log(e.route) // Logs the current route shown in the interface.
             // if (!e.route) return
@@ -106,34 +112,40 @@ class DirectionMap extends React.Component {
             //     distance: distance || 0,
             // })
         })
-    
+
         this.geolocate = new mapboxgl.GeolocateControl({
             positionOptions: {
                 enableHighAccuracy: true,
                 watchPosition: true,
             },
         })
-    
+
         this.map.addControl(this.directions, 'top-left')
         this.map.addControl(this.geolocate, 'top-right')
-    
+
         this.map.on('load', () => {
             this.directions.setOrigin(this.state.startLocation)
         })
     }
-    
+
     componentWillUnmount = () => {
-       console.log('this.map', this.map)
-       if (this.map){
-         setTimeout(() => this.map.remove())
-       }
+        console.log('this.map', this.map)
+        if (this.map) {
+            setTimeout(() => this.map.remove())
+        }
     }
-    
-    loadDriverProfile = (driver)=>{
+
+    loadDriverProfile = driver => {
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
-            this.props.history.push(`/drivers/${driver._id}`);
-        });
+            this.props.history.push(`/drivers/${driver._id}`)
+        })
+    }
+    handleCancelRideRequest = () => {
+        this.setState({
+            requestingRide: false,
+        })
+        this.props.cancelTripRequest()
     }
 
     handleRequestRide = () => {
@@ -154,26 +166,37 @@ class DirectionMap extends React.Component {
             duration: this.state.duration,
         }
 
+        this.setState({
+            requestingRide: true,
+        })
+
         this.socket.emit('REQUEST_TRIP', {
             rider: JSON.parse(localStorage.getItem('user')),
             ...tripRequest,
         })
-    
+
         this.socket.on('ACCEPT_TRIP', data => {
-            console.log('ACCEPT_TRIP data',data)
+            console.log('ACCEPT_TRIP data', data)
             this.setState({
                 showEstimate: true,
-                requestDetails: data
+                requestDetails: data,
             }) //Save request details
             console.log(
-                'A driver has accepted your trip \n' +
-                JSON.stringify(data)
+                'A driver has accepted your trip \n' + JSON.stringify(data)
             )
         })
+        this.props
+            .findDriversNearby({
+                coordinates: this.state.startLocation,
+                rider: JSON.parse(localStorage.getItem('user')),
+            })
+            .then(res => {
+                console.log('findDriversNearby res', res)
+            })
     }
-    
+
     handleConfirmRuquest = () => {
-        console.log('requestDetails',this.state.requestDetails)
+        console.log('requestDetails', this.state.requestDetails)
         this.socket.emit('CONFIRM_TRIP', {
             ...this.state.requestDetails,
         })
@@ -183,34 +206,49 @@ class DirectionMap extends React.Component {
     }
 
     render() {
+        const { findNearbyDriverMessage, driversNearby } = this.props
+        const { requestingRide } = this.state
         return (
-        // return this.state.loadingMap ? (
-        //     <div
-        //         style={{
-        //             width: '100%',
-        //             height: '100vh',
-        //             display: 'flex',
-        //             flexDirection: 'column',
-        //             justifyContent: 'center',
-        //             alignItems: 'center',
-        //             backgroundColor: 'rgba(0,0,0,0.9)',
-        //         }}
-        //     >
-        //         <Loader type="ThreeDots" color="white" height="50" width="50" />
-        //         <h3>Loading...</h3>
-        //     </div>
-        // ) : (
+            // return this.state.loadingMap ? (
+            //     <div
+            //         style={{
+            //             width: '100%',
+            //             height: '100vh',
+            //             display: 'flex',
+            //             flexDirection: 'column',
+            //             justifyContent: 'center',
+            //             alignItems: 'center',
+            //             backgroundColor: 'rgba(0,0,0,0.9)',
+            //         }}
+            //     >
+            //         <Loader type="ThreeDots" color="white" height="50" width="50" />
+            //         <h3>Loading...</h3>
+            //     </div>
+            // ) : (
             <div
                 className="map-wrapper"
                 style={{ position: 'relative', display: 'flex' }}
             >
-                <main className={`trip-estimate-container ${this.state.showEstimate ? "show": ""}`} >
+                <main
+                    className={`trip-estimate-container ${
+                        this.state.showEstimate ? 'show' : ''
+                    }`}
+                >
                     <div className="trip-estimate-content">
                         <p>Estimated Pickup Time: 4 Mins</p>
-                        <h2>${this.state.requestDetails && this.state.requestDetails.quote}</h2>
+                        <h2>
+                            $
+                            {this.state.requestDetails &&
+                                this.state.requestDetails.quote}
+                        </h2>
                         <h1>Fare Estimate</h1>
                     </div>
-                    <PinkButton className="brown-btn" onClick={this.handleConfirmRuquest}>Confirm Ride Request</PinkButton>
+                    <PinkButton
+                        className="brown-btn"
+                        onClick={this.handleConfirmRuquest}
+                    >
+                        Confirm Ride Request
+                    </PinkButton>
                 </main>
                 <PinkButton
                     type="button"
@@ -221,8 +259,8 @@ class DirectionMap extends React.Component {
                         display: 'block',
                         position: 'absolute',
                         margin: '0px auto',
-                        padding:0,
-                        lineHeight:'1.2rem',
+                        padding: 0,
+                        lineHeight: '1.2rem',
                         color: '#fff',
                         background: '#ee8a65',
                         borderRadius: '50px',
@@ -236,22 +274,34 @@ class DirectionMap extends React.Component {
                 >
                     Request
                 </PinkButton>
-                {/*<div className="drivers-nearby-container">*/}
-                {/*    {this.props.driversNearby && this.props.driversNearby.map((driver, idx) => {*/}
-                {/*        return <div className="driver-item-container" key={idx}*/}
-                {/*                    onClick={e => this.loadDriverProfile(driver)}>*/}
-                {/*            <div className="driver-item-content">*/}
-                {/*                <h2>{driver.username}</h2>*/}
-                {/*                <h3>2 mi*/}
-                {/*                    <span>{`, ${driver.rating} stars` }</span>*/}
-                {/*                </h3>*/}
-                {/*            </div>*/}
-                {/*            <div className="driver-img-container">*/}
-                {/*                <img src={driver.avatar} alt={"driver"}/>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    })}*/}
-                {/*</div>*/}
+                <div className="drivers-nearby-container">
+                    {this.props.driversNearby &&
+                        this.props.driversNearby.map((driver, idx) => {
+                            return (
+                                <div
+                                    className="driver-item-container"
+                                    key={idx}
+                                    onClick={e =>
+                                        this.loadDriverProfile(driver)
+                                    }
+                                >
+                                    <div className="driver-item-content">
+                                        <h2>{driver.username}</h2>
+                                        <h3>
+                                            2 mi
+                                            <span>{`, ${driver.rating} stars`}</span>
+                                        </h3>
+                                    </div>
+                                    <div className="driver-img-container">
+                                        <img
+                                            src={driver.avatar}
+                                            alt={'driver'}
+                                        />
+                                    </div>
+                                </div>
+                            )
+                        })}
+                </div>
                 <div
                     ref={el => (this.mapContainer = el)}
                     className="map"
@@ -260,20 +310,47 @@ class DirectionMap extends React.Component {
                         height: '100%',
                     }}
                 ></div>
-               
+                <div className={'status-panel'}>
+                    <h1>{findNearbyDriverMessage}</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur dolor sit amet,
+                        consectetur
+                    </p>
+                    {driversNearby.length > 0 ? (
+                        <button
+                            className={'request-ride-button'}
+                            onClick={this.handleCancelRideRequest}
+                        >
+                            CANCEL REQUEST
+                        </button>
+                    ) : (
+                        <button
+                            className={'request-ride-button'}
+                            onClick={this.handleRequestRide}
+                        >
+                            REQUEST RIDE
+                        </button>
+                    )}
+                </div>
             </div>
         )
     }
 }
-const mapStateToProps = ({riderReducer, tripReducer}) => (
-    {
-        findNearbyDriverStarted:riderReducer.findNearbyDriverStarted,
-        driversNearby: riderReducer.driversNearby,
-        submitDriverReviewSuccessMessage:riderReducer.submitDriverReviewSuccessMessage
-    }
-)
+const mapStateToProps = ({ riderReducer, tripReducer }) => ({
+    findNearbyDriverStarted: riderReducer.findNearbyDriverStarted,
+    driversNearby: riderReducer.driversNearby,
+    findNearbyDriverMessage: riderReducer.findNearbyDriverMessage,
+    submitDriverReviewSuccessMessage:
+        riderReducer.submitDriverReviewSuccessMessage,
+})
 
 export default connect(
     mapStateToProps,
-    { findDriversNearby, sendTripRequest, getDriversById, updateRiderLocation }
+    {
+        findDriversNearby,
+        sendTripRequest,
+        getDriversById,
+        updateRiderLocation,
+        cancelTripRequest,
+    }
 )(DirectionMap)
