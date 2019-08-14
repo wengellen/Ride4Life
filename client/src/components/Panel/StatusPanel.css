@@ -6,7 +6,7 @@ status-panel
     width:100%;
     text-align: center;
     padding-bottom:24px;
-    padding-top:24px;
+    /*padding-top:24px;*/
     position:absolute;
     bottom:54px;
     background-color: white;

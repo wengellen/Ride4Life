@@ -15,6 +15,7 @@ import {
 } from '../../actions'
 import socketIOClient from 'socket.io-client'
 import StatusPanel from '../../components/Panel/StatusPanel'
+import {Avatar} from "@material-ui/core";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMap extends React.Component {
@@ -274,34 +275,34 @@ class DirectionMap extends React.Component {
                 >
                     Request
                 </PinkButton>
-                <div className="drivers-nearby-container">
-                    {this.props.driversNearby &&
-                        this.props.driversNearby.map((driver, idx) => {
-                            return (
-                                <div
-                                    className="driver-item-container"
-                                    key={idx}
-                                    onClick={e =>
-                                        this.loadDriverProfile(driver)
-                                    }
-                                >
-                                    <div className="driver-item-content">
-                                        <h2>{driver.username}</h2>
-                                        <h3>
-                                            2 mi
-                                            <span>{`, ${driver.rating} stars`}</span>
-                                        </h3>
-                                    </div>
-                                    <div className="driver-img-container">
-                                        <img
-                                            src={driver.avatar}
-                                            alt={'driver'}
-                                        />
-                                    </div>
-                                </div>
-                            )
-                        })}
-                </div>
+                {/*<div className="drivers-nearby-container">*/}
+                {/*    {this.props.driversNearby &&*/}
+                {/*        this.props.driversNearby.map((driver, idx) => {*/}
+                {/*            return (*/}
+                {/*                <div*/}
+                {/*                    className="driver-item-container"*/}
+                {/*                    key={idx}*/}
+                {/*                    onClick={e =>*/}
+                {/*                        this.loadDriverProfile(driver)*/}
+                {/*                    }*/}
+                {/*                >*/}
+                {/*                    <div className="driver-item-content">*/}
+                {/*                        <h2>{driver.username}</h2>*/}
+                {/*                        <h3>*/}
+                {/*                            2 mi*/}
+                {/*                            <span>{`, ${driver.rating} stars`}</span>*/}
+                {/*                        </h3>*/}
+                {/*                    </div>*/}
+                {/*                    <div className="driver-img-container">*/}
+                {/*                        <img*/}
+                {/*                            src={driver.avatar}*/}
+                {/*                            alt={'driver'}*/}
+                {/*                        />*/}
+                {/*                    </div>*/}
+                {/*                </div>*/}
+                {/*            )*/}
+                {/*        })}*/}
+                {/*</div>*/}
                 <div
                     ref={el => (this.mapContainer = el)}
                     className="map"
@@ -311,11 +312,42 @@ class DirectionMap extends React.Component {
                     }}
                 ></div>
                 <div className={'status-panel'}>
-                    <h1>{findNearbyDriverMessage}</h1>
+                    <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                         consectetur
                     </p>
+                    <div className="drivers-nearby-container-list">
+                        {this.props.driversNearby &&
+                        this.props.driversNearby.map((driver, idx) => {
+                            return (
+                                <div
+                                    className="driver-item-container-list"
+                                    key={idx}
+                                    onClick={e =>
+                                        this.loadDriverProfile(driver)
+                                    }
+                                >
+                                    <div className="driver-img-container-list">
+                                        {/*<Avatar src={driver.avatar} sizes={100} alt={'driver'}/>*/}
+                                        <img
+                                            src={driver.avatar}
+                                            alt={'driver'}
+                                        />
+                                    </div>
+                                    <div className="driver-item-content-list">
+                                        <h2>{driver.username}</h2>
+                                        <h3>
+                                            2 miles away
+                                            <span>{`, ${driver.rating} stars`}</span>
+                                        </h3>
+                                    </div>
+                                   <div className={"driver-item-price"}>$20</div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                
                     {driversNearby.length > 0 ? (
                         <button
                             className={'request-ride-button'}
