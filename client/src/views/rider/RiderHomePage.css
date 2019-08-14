@@ -78,9 +78,11 @@
 .driver-item-container-list{
     display:flex;
     /*background-color: #0d47a1;*/
-    padding:20px;
+    padding:14px 20px;
     border-bottom: 1px solid #c2d1d9b3;
     position:relative;
+    justify-content: space-between;
+    align-items: center;
 }
 .driver-item-container-list:first-child{
     display:flex;
@@ -93,6 +95,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-left:20px;
 }
 .driver-img-container-list img{
     border-radius: 50%;
@@ -114,18 +117,60 @@
     padding-bottom: 4px;
 }
 
+/* Button bar  */
+.driver-item-buttons-list{
+    display:flex;
+    width:120px;
+    right:100px;
+    justify-self: flex-end;
+    padding-right:20px;
+}
+
 .driver-item-price{
+    display:flex;
+    align-items: center;
     font-size:1rem;
     font-weight: 500;
-    /*justify-content: flex-end;*/
-    /*align-items: center;*/
-    right:40px;
-    top:24px;
-    position:absolute;
-    background-color: #c2d1d9b3;
-    border-radius: 20px;
-    padding:4px 10px;
+    background-color: #c2d1d936;
+    border-radius: 15px;
+    height:30px;
+    margin-right: 5px;
+    padding: 2px 12px;
 }
+
+.driver-item-buttons-list .driver-item-accept-button{
+    align-items: center;
+    border:none;
+    border-radius: 10px;
+    margin-top: 0;
+    padding: 2px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    height:30px;
+    width:90px;
+}
+.driver-item-buttons-list .driver-item-accept-button:hover{
+   color:black;
+}
+
+
+.driver-item-container-list .right-arrow-button{
+    margin:0;
+    width:40px;
+    background-color: white;
+    color:black;
+}
+
+.request-ride-button{
+    outline:none;
+}
+
+.request-ride-button.bordered{
+    background-color: white;
+    border:1px solid lightgray;
+    color:gray;
+}
+
 
 /*  DRIVER CONTAINER  */
 .drivers-nearby-container{

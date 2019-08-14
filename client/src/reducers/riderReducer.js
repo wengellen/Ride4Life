@@ -85,7 +85,7 @@ export const riderReducer = (state = initialState, action)=>{
 		case FIND_DRIVERS_NEARBY_SUCCESS:
 			return {...state,
 				findNearbyDriverStarted:false,
-				findNearbyDriverMessage:`We found ${action.payload.length} rides near you`,
+				findNearbyDriverMessage:`${action.payload.length} drivers responded`,
 				driversNearby: action.payload
 			}
 		case FIND_DRIVERS_NEARBY_FAILURE:

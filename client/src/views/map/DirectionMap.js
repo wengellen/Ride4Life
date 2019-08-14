@@ -6,6 +6,7 @@ import './DirectionMap.css'
 import PinkButton from '../../components/Button/PinkButton' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
+import  RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
 import {
     findDriversNearby,
     getDriversById,
@@ -14,8 +15,7 @@ import {
     cancelTripRequest,
 } from '../../actions'
 import socketIOClient from 'socket.io-client'
-import StatusPanel from '../../components/Panel/StatusPanel'
-import {Avatar} from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMap extends React.Component {
@@ -195,8 +195,8 @@ class DirectionMap extends React.Component {
                 console.log('findDriversNearby res', res)
             })
     }
-
-    handleConfirmRuquest = () => {
+    
+    handleConfirmRequest = () => {
         console.log('requestDetails', this.state.requestDetails)
         this.socket.emit('CONFIRM_TRIP', {
             ...this.state.requestDetails,
@@ -324,12 +324,9 @@ class DirectionMap extends React.Component {
                                 <div
                                     className="driver-item-container-list"
                                     key={idx}
-                                    onClick={e =>
-                                        this.loadDriverProfile(driver)
-                                    }
+                                  
                                 >
                                     <div className="driver-img-container-list">
-                                        {/*<Avatar src={driver.avatar} sizes={100} alt={'driver'}/>*/}
                                         <img
                                             src={driver.avatar}
                                             alt={'driver'}
@@ -339,10 +336,20 @@ class DirectionMap extends React.Component {
                                         <h2>{driver.username}</h2>
                                         <h3>
                                             2 miles away
-                                            <span>{`, ${driver.rating} stars`}</span>
+                                            <span> {`, ${driver.rating} `}stars</span>
                                         </h3>
                                     </div>
-                                   <div className={"driver-item-price"}>$20</div>
+                                    <div className={"driver-item-buttons-list"}>
+                                        <div className={"driver-item-price"}><span>$20</span></div>
+                                        <IconButton className={"driver-item-accept-button"}
+                                                    onClick={this.handleConfirmRequest}>ACCEPT</IconButton>
+                                    </div>
+                                    <IconButton className={"right-arrow-button"}
+                                        onClick={e =>
+                                        this.loadDriverProfile(driver)
+                                    }>
+                                        <RightArrowIcon />
+                                    </IconButton>
                                 </div>
                             )
                         })}
@@ -350,7 +357,7 @@ class DirectionMap extends React.Component {
                 
                     {driversNearby.length > 0 ? (
                         <button
-                            className={'request-ride-button'}
+                            className={'request-ride-button bordered'}
                             onClick={this.handleCancelRideRequest}
                         >
                             CANCEL REQUEST
