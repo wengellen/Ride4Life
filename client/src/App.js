@@ -53,7 +53,7 @@ class App extends React.Component {
 		console.log('user', user)
 		return (
 			<div className="App">
-				<Header openPanel={this.openPanel} logoutUser={this.logout} user={user}/>
+				<Header openPanel={this.openPanel} logoutUser={this.logout} user={user} fixed/>
 				<SelectRolePanel
 					show={showSlidingPanel}
 					type={slidingPanelComponent}

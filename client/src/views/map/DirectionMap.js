@@ -7,6 +7,8 @@ import PinkButton from '../../components/Button/PinkButton' // Updating node mod
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import  RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
+import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
+import  PhoneIcon from '@material-ui/icons/Phone'
 import {
     findDriversNearby,
     getDriversById,
@@ -353,9 +355,24 @@ class DirectionMap extends React.Component {
                                         </h3>
                                     </div>
                                     <div className={"driver-item-buttons-list"}>
-                                        <div className={"driver-item-price"}><span>$20</span></div>
-                                        <IconButton className={"driver-item-accept-button"}
-                                                    onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
+                                        {
+                                            tripStatus === "requesting"
+                                            ? <>
+                                                    <div className={"driver-item-price"}><span>$20</span></div>
+                                                    <IconButton className={"driver-item-accept-button"}
+                                                                onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
+                                               </>
+                                           :
+                                            <div className={"action-icon-button-bar"}>
+                                                <IconButton className={"driver-item-icon-button"}>
+                                                     <ChatBubbleIcon />
+                                                </IconButton>
+                                                <IconButton className={"driver-item-icon-button"}>
+                                                      <PhoneIcon />
+                                                </IconButton>
+                                            </div>
+                                        }
+                                  
                                     </div>
                                     <IconButton className={"right-arrow-button"}
                                         onClick={e =>
