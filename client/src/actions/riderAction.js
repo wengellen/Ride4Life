@@ -33,6 +33,8 @@ export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
 
 export const CANCEL_TRIP_REQUEST = 'CANCEL_TRIP_REQUEST'
 
+export const CONFIRM_TRIP_REQUEST = 'CONFIRM_TRIP_REQUEST'
+
 
 // SEND_RIDE_REQUEST
 // Should return a list of drivers nearby
@@ -174,6 +176,13 @@ export const logoutUser = () => dispatch => {
 export const cancelTripRequest = () => dispatch => {
 	console.log('cancelTripRequest')
 	dispatch({type: CANCEL_TRIP_REQUEST})
+}
+
+
+// Find drivers nearby
+export const confirmTripRequest = (driver) => dispatch => {
+	console.log('confirmTripRequest')
+	dispatch({type: CONFIRM_TRIP_REQUEST, payload: driver})
 }
 
 

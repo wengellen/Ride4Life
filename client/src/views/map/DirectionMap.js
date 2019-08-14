@@ -13,9 +13,11 @@ import {
     sendTripRequest,
     updateRiderLocation,
     cancelTripRequest,
+    confirmTripRequest
 } from '../../actions'
 import socketIOClient from 'socket.io-client'
 import IconButton from "@material-ui/core/IconButton";
+import Button from "../../components/CustomButtons/Button";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMap extends React.Component {
@@ -196,19 +198,31 @@ class DirectionMap extends React.Component {
             })
     }
     
-    handleConfirmRequest = () => {
+    handleConfirmRequest = (driver) => {
         console.log('requestDetails', this.state.requestDetails)
         this.socket.emit('CONFIRM_TRIP', {
             ...this.state.requestDetails,
         })
+    
+        this.props.confirmTripRequest(driver)
+        
         this.setState({
             showEstimate: false,
         })
     }
 
     render() {
-        const { findNearbyDriverMessage, driversNearby } = this.props
+        const { findNearbyDriverMessage, driversNearby, tripStatus } = this.props
         const { requestingRide } = this.state
+        const returnButton = () => {
+            switch(tripStatus) {
+                case "standby": return (<Button className={'request-ride-button'} onClick={this.handleRequestRide}>REQUEST RIDE</Button>)
+                case "requesting": return (<Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>)
+                case "pickup": return (<Button className={'request-ride-button bordered'}>CANCEL TRIP</Button>)
+                default:      return <h1>No project match</h1>
+            }
+        }
+        
         return (
             // return this.state.loadingMap ? (
             //     <div
@@ -246,7 +260,7 @@ class DirectionMap extends React.Component {
                     </div>
                     <PinkButton
                         className="brown-btn"
-                        onClick={this.handleConfirmRuquest}
+                        onClick={this.handleConfirmRequest}
                     >
                         Confirm Ride Request
                     </PinkButton>
@@ -324,7 +338,6 @@ class DirectionMap extends React.Component {
                                 <div
                                     className="driver-item-container-list"
                                     key={idx}
-                                  
                                 >
                                     <div className="driver-img-container-list">
                                         <img
@@ -342,7 +355,7 @@ class DirectionMap extends React.Component {
                                     <div className={"driver-item-buttons-list"}>
                                         <div className={"driver-item-price"}><span>$20</span></div>
                                         <IconButton className={"driver-item-accept-button"}
-                                                    onClick={this.handleConfirmRequest}>ACCEPT</IconButton>
+                                                    onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
                                     </div>
                                     <IconButton className={"right-arrow-button"}
                                         onClick={e =>
@@ -355,21 +368,7 @@ class DirectionMap extends React.Component {
                         })}
                     </div>
                 
-                    {driversNearby.length > 0 ? (
-                        <button
-                            className={'request-ride-button bordered'}
-                            onClick={this.handleCancelRideRequest}
-                        >
-                            CANCEL REQUEST
-                        </button>
-                    ) : (
-                        <button
-                            className={'request-ride-button'}
-                            onClick={this.handleRequestRide}
-                        >
-                            REQUEST RIDE
-                        </button>
-                    )}
+                    {returnButton()}
                 </div>
             </div>
         )
@@ -379,6 +378,7 @@ const mapStateToProps = ({ riderReducer, tripReducer }) => ({
     findNearbyDriverStarted: riderReducer.findNearbyDriverStarted,
     driversNearby: riderReducer.driversNearby,
     findNearbyDriverMessage: riderReducer.findNearbyDriverMessage,
+    tripStatus:riderReducer.tripStatus,
     submitDriverReviewSuccessMessage:
         riderReducer.submitDriverReviewSuccessMessage,
 })
@@ -391,5 +391,6 @@ export default connect(
         getDriversById,
         updateRiderLocation,
         cancelTripRequest,
+        confirmTripRequest
     }
 )(DirectionMap)
