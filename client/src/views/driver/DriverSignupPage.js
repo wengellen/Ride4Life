@@ -70,24 +70,21 @@ class DriverSingupPage extends React.Component {
               <GridItem xs={12} sm={12} md={4}>
                 <Card>
                   <form className={classes.form} onSubmit={this.signupDriver}>
-                    <CardHeader
-                        color="info"
-                        signup
-                        className={classes.cardHeader}
-                    >
-                      <h2 className={classes.cardTitle}>Driver Sign Up</h2>
+                      <div className={classes.cardHeadline}>
+                          <h1 className={classes.cardTitle}>Driver</h1>
+                          <h2 className={classes.cardSubhead}>Sign Up</h2>
+                      </div>
                         <h4 className={classes.cardSubtitle}> Already Sign Up?
                             <Link
                                 to="/driver-login">
                                 Login
                             </Link>
                         </h4>
-                    </CardHeader>
                     <p
                         className={`${classes.description} ${classes.textCenter}`}
                     >
                     </p>
-                    <CardBody signup>
+                    <div>
                       <CustomInput
                           id="first"
                           formControlProps={{
@@ -178,16 +175,14 @@ class DriverSingupPage extends React.Component {
                             )
                           }}
                       />
-                    
-                    
-                    </CardBody>
+                    </div>
                     <div className={classes.textCenter}>
-                      <PinkButton type="submit" >
-                        {this.props.loggingIn
-                            ? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
-                            : "Sign up"
-                        }
-                      </PinkButton>
+                        <button className={classes.submitBtn} type="submit" >
+                            {this.props.loggingIn
+                                ? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
+                                : "Sign up"
+                            }
+                      </button>
                     </div>
                   </form>
                 </Card>
