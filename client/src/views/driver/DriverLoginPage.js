@@ -62,24 +62,21 @@ class DriverLoginPage extends React.Component {
 						<GridItem xs={12} sm={12} md={4}>
 							<Card>
 								<form className={classes.form} onSubmit={this.login}>
-									<CardHeader
-										color="info"
-										signup
-										className={classes.cardHeader}
-									>
-										<h2 className={classes.cardTitle}>Driver Login</h2>
+										<div className={classes.cardHeadline}>
+											<h1 className={classes.cardTitle}>Driver</h1>
+											<h2 className={classes.cardSubhead}>Login</h2>
+										</div>
 										<h4 className={classes.cardSubtitle}>No Account?
 											<Link
 												to="/driver-signup">
 												Sign Up
 											</Link>
 										</h4>
-									</CardHeader>
 									<p
 										className={`${classes.description} ${classes.textCenter}`}
 									>
 									</p>
-									<CardBody signup>
+									<div>
 										<CustomInput
 											id="username"
 											formControlProps={{
@@ -117,14 +114,14 @@ class DriverLoginPage extends React.Component {
 											}}
 										/>
 									
-									</CardBody>
+									</div>
 									<div className={classes.textCenter}>
-										<PinkButton type="submit" color="primary"  >
+										<button className={classes.submitBtn} type="submit" >
 											{this.props.loggingIn
 												? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
 												: "Log in"
 											}
-										</PinkButton>
+										</button>
 									</div>
 								</form>
 							</Card>
