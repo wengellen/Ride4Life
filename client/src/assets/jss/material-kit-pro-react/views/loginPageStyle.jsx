@@ -10,21 +10,47 @@ import {
 
 const signupPageStyle = theme => ({
   description,
+  cardHeadline:{
+    backgroundColor:"#EDECF0",
+    margin:"0 0 25px 0",
+    padding:"50px 35px 35px 35px",
+    display:"flex",
+    flexDirection:"column",
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:"14px"
+  },
   cardTitle: {
-    ...cardTitle,
-    color: whiteColor + "  !important"
+    color: "#444F63" + "  !important",
+    fontSize:"2.4rem",
+    marginBottom:"6px"
+  },
+  cardSubhead:{
+    color:"#383C52",
+    fontWeight:"500",
   },
   cardSubtitle: {
+    color: "#B8BACB",
+    backgroundColor:"#444F63",
+    margin:"0",
+    padding:"20px 24px",
+    borderRadius:"12px",
+    display:"flex",
+    justifyContent:"space-between",
+    fontSize:"1rem",
+    
     "& a":{
       marginLeft:`6px !important`,
-      color: "white"
+      textDecoration:"none",
+      color:"white",
+      fontWeight:"400",
     }
   },
   container: {
     ...container,
     zIndex: "4",
-    marginTop: "2rem",
-    
+    // marginTop: "2rem",
+    paddingTop:"130px",
     [theme.breakpoints.down("sm")]: {
       paddingBottom: "100px"
     }
@@ -54,7 +80,17 @@ const signupPageStyle = theme => ({
     }
   },
   form: {
-    margin: "0"
+    margin:"60px",
+  },
+  submitBtn: {
+    width:"90%",
+    color: "#444F63",
+    // backgroundColor:"#444F63",
+    margin:"14px 0 0 0",
+    padding:"20px 24px",
+    borderRadius:"20px",
+    fontSize:"1.1rem",
+    fontWeight:"700"
   },
   cardHeader: {
     width: "auto",

@@ -17,7 +17,6 @@ import DriverHomePage from './views/driver/DriverHomePage'
 import DriverProfilePage from './views/driver/DriverProfilePage'
 import Header from './components/Header/Header'
 import RiderTripPage from './views/rider/RiderTripPage'
-import StatusPanel from './components/Panel/StatusPanel'
 import './App.css'
 import SelectRolePanel from './views/SelectRolePanel'
 import {logoutUser} from "./actions";
@@ -78,7 +77,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = ({ riderReducer, driverReducer }) => {
-	console.log('riderReducer.loggedInUser', riderReducer)
+	// console.log('riderReducer.loggedInUser', riderReducer)
 	return {
 		user: riderReducer.user || driverReducer.user,
 	}

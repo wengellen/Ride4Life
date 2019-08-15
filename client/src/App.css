@@ -437,6 +437,7 @@ Review Container
       transform: translateY(-3000px);
       transition: all 0.5s ease-in-out;
       z-index:3;
+      margin-top:65px;
 }
 
 .sliding-panel h1{

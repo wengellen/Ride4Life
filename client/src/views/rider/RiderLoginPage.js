@@ -16,12 +16,11 @@ import Lock from "@material-ui/icons/Lock";
 import {Link} from "react-router-dom";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 // import SearchableMap from "../map/SearchableMap";
-
 class RiderLoginPage extends React.Component {
 	state = {
 		credentials: {
 			username: '',
-			password: ''
+			password: '',
 		},
 		isEditing: false,
 		user:null

@@ -36,6 +36,7 @@ const headerStyle = theme => ({
     justifyContent: "space-between",
     position: "relative",
     zIndex:4000,
+    height:"65px",
     "@media screen and (max-width: 600px)": {
       padding:"4px 0",
       boxShadow:
