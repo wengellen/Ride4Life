@@ -96,7 +96,7 @@ button.menuButton.hide{
   width:100%;
   background-image: linear-gradient(to right, rgba(255,255,255,1), #F7F7FA);
   line-height:1rem;
-  padding:1rem;
+  padding:90px 1rem;
   margin: 0 auto;
 }
 
@@ -333,7 +333,7 @@ Review Container
     padding: 2rem;
     border-radius: 16px;
     box-shadow: 0 2px 20px 0 rgba(0,0,0,0.18) ;
-    bottom:-200px;
+    bottom:-600px;
     position:absolute;
     /*display:none;*/
     /*position: absolute;*/
