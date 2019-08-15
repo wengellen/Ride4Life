@@ -291,34 +291,6 @@ class DirectionMap extends React.Component {
                 >
                     Request
                 </PinkButton>
-                {/*<div className="drivers-nearby-container">*/}
-                {/*    {this.props.driversNearby &&*/}
-                {/*        this.props.driversNearby.map((driver, idx) => {*/}
-                {/*            return (*/}
-                {/*                <div*/}
-                {/*                    className="driver-item-container"*/}
-                {/*                    key={idx}*/}
-                {/*                    onClick={e =>*/}
-                {/*                        this.loadDriverProfile(driver)*/}
-                {/*                    }*/}
-                {/*                >*/}
-                {/*                    <div className="driver-item-content">*/}
-                {/*                        <h2>{driver.username}</h2>*/}
-                {/*                        <h3>*/}
-                {/*                            2 mi*/}
-                {/*                            <span>{`, ${driver.rating} stars`}</span>*/}
-                {/*                        </h3>*/}
-                {/*                    </div>*/}
-                {/*                    <div className="driver-img-container">*/}
-                {/*                        <img*/}
-                {/*                            src={driver.avatar}*/}
-                {/*                            alt={'driver'}*/}
-                {/*                        />*/}
-                {/*                    </div>*/}
-                {/*                </div>*/}
-                {/*            )*/}
-                {/*        })}*/}
-                {/*</div>*/}
                 <div
                     ref={el => (this.mapContainer = el)}
                     className="map"

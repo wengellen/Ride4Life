@@ -157,7 +157,7 @@ class RiderSignupPage extends React.Component {
                                             ? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
                                             : "SIGN UP"
                                         }
-                                    </button>
+                          0          </button>
                                 </div>
                             </form>
                         </Card>

@@ -2,15 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner'
 import { login_driver } from '../../actions';
-import PinkButton from "../../components/Button/PinkButton";
 import GridContainer from "../../components/Grid/GridContainer";
 import Card from "../../components/Card/Card";
 import GridItem from "../../components/Grid/GridItem";
-import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Face from "@material-ui/icons/Face";
 import CustomInput from "../../components/CustomInput/CustomInput";
-import CardBody from "../../components/Card/CardBody";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Lock from "@material-ui/icons/Lock";
 import {Link} from "react-router-dom";
