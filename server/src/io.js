@@ -61,7 +61,7 @@ export const initialize = function(server) {
             try {
                 const driver = await Driver.findByIdAndUpdate(
                     data.driver._id,
-                    { location: { coordinates }, status:'standby' },
+                    { location: { coordinates }},
                     { new: true }
                 ).exec()
             } catch (e) {
@@ -70,7 +70,43 @@ export const initialize = function(server) {
             ids.set(socket.id, data)
             socket.join(data.username)
         })
-
+    
+        socket.on('DRIVER_GO_ONLINE', async data => {
+            logger.debug(
+                `DRIVER_GO_ONLINE triggered for ${data.driver.username}`
+            )
+            try {
+                const driver = await Driver.findByIdAndUpdate(
+                    data.driver._id,
+                    { status:'standby' },
+                    { new: true }
+                ).exec()
+    
+                socketIo.sockets.to(data.driver.username).emit('DRIVER_READY_TO_ACCEPT_TRIP')
+            } catch (e) {
+                console.log('error', e)
+            }
+        })
+    
+    
+        socket.on('DRIVER_GO_OFFLINE', async data => {
+            logger.debug(
+                `DRIVER_GO_OFFLINE triggered for ${data.driver.username}`
+            )
+            try {
+                const driver = await Driver.findByIdAndUpdate(
+                    data.driver._id,
+                    { status:'offline' },
+                    { new: true }
+                ).exec()
+            
+                socketIo.sockets.to(data.driver.username).emit('DRIVER_GONE_OFFLINE')
+            } catch (e) {
+                console.log('error', e)
+            }
+        })
+    
+    
         socket.on('UPDATE_RIDER_LOCATION', async data => {
             logger.debug(`UPDATE_RIDER_LOCATION triggered for ${data.username}`)
             riders.set(data.username, {

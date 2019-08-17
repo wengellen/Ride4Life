@@ -1,6 +1,7 @@
 
 // DRIVER
 import {API} from "../utils/axiosAuth";
+import {CONFIRM_TRIP_REQUEST} from "./riderAction";
 
 export const DRIVER_SIGNUP_STARTED = 'DRIVER_SIGNUP_STARTED'
 export const DRIVER_SIGNUP_SUCCESS = 'DRIVER_SIGNUP_SUCCESS'
@@ -84,4 +85,14 @@ export const login_driver= (driver) => dispatch =>{
 		})
 	)
 }
+
+
+
+// Find drivers nearby
+// export const setDriverOnline = (driver) => dispatch => {
+// 	console.log('setDriverOnline')
+// 	dispatch({type: CONFIRM_TRIP_REQUEST, payload: driver})
+// }
+//
+
 

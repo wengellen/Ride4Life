@@ -15,6 +15,7 @@ const initialState = {
 	driverLoginStarted: false,
 	serverMessage:'',
 	requestDetails:{},
+	tripStatus:"standby", // findingTrip | confirmed
 	driverDetails:[
 		{
 			"userId" : "01",
