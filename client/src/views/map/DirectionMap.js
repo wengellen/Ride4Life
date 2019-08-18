@@ -235,9 +235,12 @@ class DirectionMap extends React.Component {
         //     })
     }
     
-    handleConfirmRequest = (driver) => {
+    handleConfirmRequest = (idx) => {
+        const driver = this.state.acceptedDrivers[idx]
+        console.log('idx',idx)
+        console.log('driver',driver)
         this.socket.emit('CONFIRM_TRIP', {
-            driver:driver,
+            driver,
             ...this.state.requestDetails,
         })
     
@@ -246,7 +249,6 @@ class DirectionMap extends React.Component {
         this.setState({
             showEstimate: false,
         })
-        
         
     }
 
@@ -303,7 +305,7 @@ class DirectionMap extends React.Component {
                                                     ? <>
                                                         <div className={"driver-item-price"}><span>$20</span></div>
                                                         <IconButton className={"driver-item-accept-button"}
-                                                                    onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
+                                                                    onClick={()=> this.handleConfirmRequest(idx)}>ACCEPT</IconButton>
                                                     </>
                                                     :
                                                     <div className={"action-icon-button-bar"}>
@@ -360,7 +362,7 @@ class DirectionMap extends React.Component {
                                         </div>
                                         <div className={"driver-item-buttons-list"}>
                                                     <IconButton className={"driver-item-accept-button"}
-                                                                onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
+                                                                onClick={()=> this.handleConfirmRequest(idx)}>ACCEPT</IconButton>
                             
                                         </div>
                                         <IconButton className={"right-arrow-button"}

@@ -35,7 +35,7 @@ class DirectionMapDriver extends React.Component {
             driverStatus:"offline"
         }
         this.socket = socketIOClient(this.state.endpoint)
-        // this.driver=JSON.parse(localStorage.getItem('user'))
+        this.driver=JSON.parse(localStorage.getItem('user'))
     }
 
     componentDidMount() {
@@ -179,7 +179,7 @@ class DirectionMapDriver extends React.Component {
             switch(driverStatus) {
                 case "offline": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header`}>Ready to work?</h1>
+                        <h1 className={`drivers-nearby-header`}>Ready to drive? {this.driver.username}</h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
