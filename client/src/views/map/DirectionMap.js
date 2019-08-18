@@ -42,6 +42,9 @@ class DirectionMap extends React.Component {
             showEstimate: false,
             requestDetails: null,
             requestingRide: false,
+            tripStatus:"standby",
+            tripFare:0,
+            tripId:null
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.map = null
@@ -147,10 +150,29 @@ class DirectionMap extends React.Component {
         })
     }
     handleCancelRideRequest = () => {
+        const rider = JSON.parse(localStorage.getItem('user'))
+    
+        this.socket.emit('RIDER_CANCEL_REQUEST', {
+           rider: JSON.parse(localStorage.getItem('user')),
+           tripId:this.state.tripId
+        })
+        this.socket.on('RIDER_REQUEST_CANCELED', () => {
+            console.log(
+                'RIDER_REQUEST_CANCELED! \n'
+            )
+        })
         this.setState({
             requestingRide: false,
+            tripStatus:"standby"
         })
         this.props.cancelTripRequest()
+    
+    }
+    
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+        })
     }
 
     handleRequestRide = () => {
@@ -169,17 +191,27 @@ class DirectionMap extends React.Component {
             },
             distance: this.state.distance,
             duration: this.state.duration,
+            tripFare:this.state.tripFare,
         }
+        console.log('tripFare',this.state.tripFare)
 
         this.setState({
             requestingRide: true,
+            tripStatus:"requesting"
         })
 
         this.socket.emit('REQUEST_TRIP', {
             rider: JSON.parse(localStorage.getItem('user')),
             ...tripRequest,
         })
-
+    
+        this.socket.on('TRIP_REQUESTED', data => {
+            this.setState({tripId:data})
+            console.log(
+                'TRIP_ID \n' + JSON.stringify(data)
+            )
+        })
+        
         this.socket.on('ACCEPT_TRIP', data => {
             console.log('ACCEPT_TRIP data', data)
             this.setState({
@@ -190,14 +222,14 @@ class DirectionMap extends React.Component {
                 'A driver has accepted your trip \n' + JSON.stringify(data)
             )
         })
-        this.props
-            .findDriversNearby({
-                coordinates: this.state.startLocation,
-                rider: JSON.parse(localStorage.getItem('user')),
-            })
-            .then(res => {
-                console.log('findDriversNearby res', res)
-            })
+        // this.props
+        //     .findDriversNearby({
+        //         coordinates: this.state.startLocation,
+        //         rider: JSON.parse(localStorage.getItem('user')),
+        //     })
+        //     .then(res => {
+        //         console.log('findDriversNearby res', res)
+        //     })
     }
     
     handleConfirmRequest = (driver) => {
@@ -211,16 +243,100 @@ class DirectionMap extends React.Component {
         this.setState({
             showEstimate: false,
         })
+        
+        
     }
 
     render() {
-        const { findNearbyDriverMessage, driversNearby, tripStatus } = this.props
-        const { requestingRide } = this.state
-        const returnButton = () => {
+        const { findNearbyDriverMessage, driversNearby,  } = this.props
+        const { requestingRide, tripFare, tripStatus } = this.state
+        const statusPanel = () => {
             switch(tripStatus) {
-                case "standby": return (<Button className={'request-ride-button'} onClick={this.handleRequestRide}>REQUEST RIDE</Button>)
-                case "requesting": return (<Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>)
-                case "pickup": return (<Button className={'request-ride-button bordered'}>CANCEL TRIP</Button>)
+                case "standby": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
+                            consectetur
+                        </p>
+                        <div>
+                            $<input name={"tripFare"} type={"text"} placeholder={tripFare} onChange={this.handleChange}/>
+                            <Button className={'request-ride-button'} onClick={this.handleRequestRide}>REQUEST RIDE</Button>
+                        </div>
+                    </div>
+                  
+                )
+                case "requesting": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
+                            consectetur
+                        </p>
+                        <div className="drivers-nearby-container-list">
+                            {this.props.driversNearby &&
+                            this.props.driversNearby.map((driver, idx) => {
+                                return (
+                                    <div
+                                        className="driver-item-container-list"
+                                        key={idx}
+                                    >
+                                        <div className="driver-img-container-list">
+                                            <img
+                                                src={driver.avatar}
+                                                alt={'driver'}
+                                            />
+                                        </div>
+                                        <div className="driver-item-content-list">
+                                            <h2>{driver.username}</h2>
+                                            <h3>
+                                                2 miles away
+                                                <span> {`, ${driver.rating} `}stars</span>
+                                            </h3>
+                                        </div>
+                                        <div className={"driver-item-buttons-list"}>
+                                            {
+                                                tripStatus === "requesting"
+                                                    ? <>
+                                                        <div className={"driver-item-price"}><span>$20</span></div>
+                                                        <IconButton className={"driver-item-accept-button"}
+                                                                    onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
+                                                    </>
+                                                    :
+                                                    <div className={"action-icon-button-bar"}>
+                                                        <IconButton className={"driver-item-icon-button"}>
+                                                            <ChatBubbleIcon />
+                                                        </IconButton>
+                                                        <IconButton className={"driver-item-icon-button"}>
+                                                            <PhoneIcon />
+                                                        </IconButton>
+                                                    </div>
+                                            }
+                        
+                                        </div>
+                                        <IconButton className={"right-arrow-button"}
+                                                    onClick={e =>
+                                                        this.loadDriverProfile(driver)
+                                                    }>
+                                            <RightArrowIcon />
+                                        </IconButton>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
+                    </div>
+                    )
+                case "pickup": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
+                            consectetur
+                        </p>
+                        <Button className={'request-ride-button bordered'}>CANCEL TRIP</Button>
+                    </div>
+                   )
                 default:      return <h1>No project match</h1>
             }
         }
@@ -246,51 +362,51 @@ class DirectionMap extends React.Component {
                 className="map-wrapper"
                 style={{ position: 'relative', display: 'flex' }}
             >
-                <main
-                    className={`trip-estimate-container ${
-                        this.state.showEstimate ? 'show' : ''
-                    }`}
-                >
-                    <div className="trip-estimate-content">
-                        <p>Estimated Pickup Time: 4 Mins</p>
-                        <h2>
-                            $
-                            {this.state.requestDetails &&
-                                this.state.requestDetails.quote}
-                        </h2>
-                        <h1>Fare Estimate</h1>
-                    </div>
-                    <PinkButton
-                        className="brown-btn"
-                        onClick={this.handleConfirmRequest}
-                    >
-                        Confirm Ride Request
-                    </PinkButton>
-                </main>
-                <PinkButton
-                    type="button"
-                    onClick={() => this.handleRequestRide()}
-                    style={{
-                        zIndex: '1000',
-                        bottom: '75px',
-                        display: 'block',
-                        position: 'absolute',
-                        margin: '0px auto',
-                        padding: 0,
-                        lineHeight: '1.2rem',
-                        color: '#fff',
-                        background: '#ee8a65',
-                        borderRadius: '50px',
-                        width: '90px',
-                        height: '90px',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem',
-                        boxShadow: '1px 1px 0 8px rgba(255,255,255,0.2)',
-                        justifySelf: 'center',
-                    }}
-                >
-                    Request
-                </PinkButton>
+                {/*<main*/}
+                {/*    className={`trip-estimate-container ${*/}
+                {/*        this.state.showEstimate ? 'show' : ''*/}
+                {/*    }`}*/}
+                {/*>*/}
+                {/*    <div className="trip-estimate-content">*/}
+                {/*        <p>Estimated Pickup Time: 4 Mins</p>*/}
+                {/*        <h2>*/}
+                {/*            $*/}
+                {/*            {this.state.requestDetails &&*/}
+                {/*                this.state.requestDetails.quote}*/}
+                {/*        </h2>*/}
+                {/*        <h1>Fare Estimate</h1>*/}
+                {/*    </div>*/}
+                {/*    <PinkButton*/}
+                {/*        className="brown-btn"*/}
+                {/*        onClick={this.handleConfirmRequest}*/}
+                {/*    >*/}
+                {/*        Confirm Ride Request*/}
+                {/*    </PinkButton>*/}
+                {/*</main>*/}
+                {/*<PinkButton*/}
+                {/*    type="button"*/}
+                {/*    onClick={() => this.handleRequestRide()}*/}
+                {/*    style={{*/}
+                {/*        zIndex: '1000',*/}
+                {/*        bottom: '75px',*/}
+                {/*        display: 'block',*/}
+                {/*        position: 'absolute',*/}
+                {/*        margin: '0px auto',*/}
+                {/*        padding: 0,*/}
+                {/*        lineHeight: '1.2rem',*/}
+                {/*        color: '#fff',*/}
+                {/*        background: '#ee8a65',*/}
+                {/*        borderRadius: '50px',*/}
+                {/*        width: '90px',*/}
+                {/*        height: '90px',*/}
+                {/*        fontWeight: 'bold',*/}
+                {/*        fontSize: '0.9rem',*/}
+                {/*        boxShadow: '1px 1px 0 8px rgba(255,255,255,0.2)',*/}
+                {/*        justifySelf: 'center',*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    Request*/}
+                {/*</PinkButton>*/}
                 <div
                     ref={el => (this.mapContainer = el)}
                     className="map"
@@ -299,66 +415,67 @@ class DirectionMap extends React.Component {
                         height: '100%',
                     }}
                 ></div>
-                <div className={'status-panel'}>
-                    <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur dolor sit amet,
-                        consectetur
-                    </p>
-                    <div className="drivers-nearby-container-list">
-                        {this.props.driversNearby &&
-                        this.props.driversNearby.map((driver, idx) => {
-                            return (
-                                <div
-                                    className="driver-item-container-list"
-                                    key={idx}
-                                >
-                                    <div className="driver-img-container-list">
-                                        <img
-                                            src={driver.avatar}
-                                            alt={'driver'}
-                                        />
-                                    </div>
-                                    <div className="driver-item-content-list">
-                                        <h2>{driver.username}</h2>
-                                        <h3>
-                                            2 miles away
-                                            <span> {`, ${driver.rating} `}stars</span>
-                                        </h3>
-                                    </div>
-                                    <div className={"driver-item-buttons-list"}>
-                                        {
-                                            tripStatus === "requesting"
-                                            ? <>
-                                                    <div className={"driver-item-price"}><span>$20</span></div>
-                                                    <IconButton className={"driver-item-accept-button"}
-                                                                onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
-                                               </>
-                                           :
-                                            <div className={"action-icon-button-bar"}>
-                                                <IconButton className={"driver-item-icon-button"}>
-                                                     <ChatBubbleIcon />
-                                                </IconButton>
-                                                <IconButton className={"driver-item-icon-button"}>
-                                                      <PhoneIcon />
-                                                </IconButton>
-                                            </div>
-                                        }
-                                  
-                                    </div>
-                                    <IconButton className={"right-arrow-button"}
-                                        onClick={e =>
-                                        this.loadDriverProfile(driver)
-                                    }>
-                                        <RightArrowIcon />
-                                    </IconButton>
-                                </div>
-                            )
-                        })}
-                    </div>
+                {statusPanel()}
+                {/*<div className={'status-panel'}>*/}
+                {/*    <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>*/}
+                {/*    <p>*/}
+                {/*        Lorem ipsum dolor sit amet, consectetur dolor sit amet,*/}
+                {/*        consectetur*/}
+                {/*    </p>*/}
+                {/*    <div className="drivers-nearby-container-list">*/}
+                {/*        {this.props.driversNearby &&*/}
+                {/*        this.props.driversNearby.map((driver, idx) => {*/}
+                {/*            return (*/}
+                {/*                <div*/}
+                {/*                    className="driver-item-container-list"*/}
+                {/*                    key={idx}*/}
+                {/*                >*/}
+                {/*                    <div className="driver-img-container-list">*/}
+                {/*                        <img*/}
+                {/*                            src={driver.avatar}*/}
+                {/*                            alt={'driver'}*/}
+                {/*                        />*/}
+                {/*                    </div>*/}
+                {/*                    <div className="driver-item-content-list">*/}
+                {/*                        <h2>{driver.username}</h2>*/}
+                {/*                        <h3>*/}
+                {/*                            2 miles away*/}
+                {/*                            <span> {`, ${driver.rating} `}stars</span>*/}
+                {/*                        </h3>*/}
+                {/*                    </div>*/}
+                {/*                    <div className={"driver-item-buttons-list"}>*/}
+                {/*                        {*/}
+                {/*                            tripStatus === "requesting"*/}
+                {/*                            ? <>*/}
+                {/*                                    <div className={"driver-item-price"}><span>$20</span></div>*/}
+                {/*                                    <IconButton className={"driver-item-accept-button"}*/}
+                {/*                                                onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>*/}
+                {/*                               </>*/}
+                {/*                           :*/}
+                {/*                            <div className={"action-icon-button-bar"}>*/}
+                {/*                                <IconButton className={"driver-item-icon-button"}>*/}
+                {/*                                     <ChatBubbleIcon />*/}
+                {/*                                </IconButton>*/}
+                {/*                                <IconButton className={"driver-item-icon-button"}>*/}
+                {/*                                      <PhoneIcon />*/}
+                {/*                                </IconButton>*/}
+                {/*                            </div>*/}
+                {/*                        }*/}
+                {/*                  */}
+                {/*                    </div>*/}
+                {/*                    <IconButton className={"right-arrow-button"}*/}
+                {/*                        onClick={e =>*/}
+                {/*                        this.loadDriverProfile(driver)*/}
+                {/*                    }>*/}
+                {/*                        <RightArrowIcon />*/}
+                {/*                    </IconButton>*/}
+                {/*                </div>*/}
+                {/*            )*/}
+                {/*        })}*/}
+                {/*    </div>*/}
                 
-                    {returnButton()}
-                </div>
+                {/*    {returnButton()}*/}
+                {/*</div>*/}
             </div>
         )
     }
