@@ -74,6 +74,7 @@ class DirectionMapDriver extends React.Component {
                 this.setState({
                     driverStatus:"requestIncoming",
                     requestDetails: data,
+                    headerMessage:"You have 1 request. Accept?",
                      }) //Save request details
                 console.log(
                     'You have a new request! \n' +
@@ -82,9 +83,25 @@ class DirectionMapDriver extends React.Component {
                 
             })
             
+            this.socket.on('RIDER_REQUEST_CANCELED', () => {
+                this.setState({
+                    driverStatus:"standby",
+                    requestDetails: null,
+                    headerMessage:"Request cancelled. Finding another ride for you",
+                     }) //Save request details
+                console.log(
+                    'You have a new request! \n'
+                )
+                
+            })
+            
             this.socket.on('CONFIRM_TRIP', data => {
                 const requestDetails = data
-                this.setState({ requestDetails: data }) //Save request details
+                this.setState({
+                    driverStatus:"confirmed",
+                    requestDetails: data,
+                    headerMessage:"Drive to pickup location"
+                }) //Save request details
 
                 console.log(
                     'Rider has accept your service! \n' +
@@ -215,7 +232,7 @@ class DirectionMapDriver extends React.Component {
                     )
                 case "requestIncoming": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header`}>Finding Trip for you</h1>
+                        <h1 className={`drivers-nearby-header`}>{headerMessage}</h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
@@ -248,7 +265,7 @@ class DirectionMapDriver extends React.Component {
                 )
                 case "confirmed": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header show-bg`}>Drive to pickup locaiton</h1>
+                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
                         <div
                             className="driver-item-container-list"
                         >
