@@ -3,6 +3,8 @@ import mapboxgl from 'mapbox-gl'
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
 import './DirectionMap.css'
+import '../rider/RiderHomePage.css'
+
 import PinkButton from '../../components/Button/PinkButton' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
@@ -279,10 +281,11 @@ class DirectionMap extends React.Component {
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
                         </p>
-                        <div>
-                            $<input name={"tripFare"} type={"text"} placeholder={tripFare} onChange={this.handleChange}/>
-                            <Button className={'request-ride-button'} onClick={this.handleRequestRide}>REQUEST RIDE</Button>
-                        </div>
+                        <button className={"driver-name-your-fare-container"}>
+                            <span>NAME YOUR FARE</span>
+                            <input  name={"tripFare"} type={"text"} placeholder={tripFare} onChange={this.handleChange}/>
+                            <button className={"driver-item-accept-button"} onClick={(e)=> this.handleRequestRide(e)}>REQUEST RIDE</button>
+                        </button>
                     </div>
                   
                 )

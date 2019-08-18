@@ -257,20 +257,16 @@ class DirectionMapDriver extends React.Component {
                              </div>
                         <div className={"trip-destination-container"}>
                             <div className={"trip-destination-left"}>
-                                <h2>2398 Walters way, Concord</h2>
+                                <h2>requestDetails.rider.rating</h2>
                                 <span className={"tag orange"}>35 mins</span>
                                 <span className={"tag blue"}>21 mi</span>
                             </div>
-                            {/*<div className={"driver-item-price requesting"}>*/}
-                            {/*    <span>${requestDetails.tripFare}</span>*/}
-                                <button className={"driver-item-accept-button requesting"}
-                                            onClick={(e)=> this.handleAcceptTrip(e)}>
-                                    <h2>${requestDetails.tripFare}</h2>
-                                    <h3>OFFER</h3>
-                                </button>
-                            </div>
-                            {/*</div>*/}
-                            
+                            <button className={"driver-item-accept-button requesting"}
+                                        onClick={(e)=> this.handleAcceptTrip(e)}>
+                                <h2>${requestDetails.tripFare}</h2>
+                                <h3>OFFER</h3>
+                            </button>
+                        </div>
                         <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
                 )
@@ -303,8 +299,6 @@ class DirectionMapDriver extends React.Component {
                             <button className={"driver-item-accept-button requesting"}
                                      disabled>
                                 <Loader/>
-                                {/*<h2>${requestDetails.tripFare}</h2>*/}
-                                {/*<div>OFFER...</div>*/}
                             </button>
                         </div>
                         {/*</div>*/}
