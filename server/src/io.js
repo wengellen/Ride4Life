@@ -131,7 +131,7 @@ export const initialize = function(server) {
 
         socket.on('REQUEST_TRIP', async data => {
             const { username, _id } = data.rider
-            let trip
+            let newTrip, trip
             let tripfound
             logger.debug(`REQUEST_TRIP triggered for ${username}`)
             
@@ -146,13 +146,18 @@ export const initialize = function(server) {
             )
 
             try {
-                trip = await Trip.findOne({ rider:data.rider._id, status:{$ne:"ended"}})
+                // trip = await Trip.findOne({ rider:data.rider._id, status:{$ne:"ended"}})
+                //     .populate('rider').exec()
+                // console.log('trip EXIST',trip)
+                //
+                // if (!trip){
+                    newTrip = await Trip.create({...data, status:"requesting"})
+                    trip = await Trip.findOne({ _id:newTrip._id})
                     .populate('rider').exec()
-                
-                if (!trip){
-                    trip = await Trip.create({...data, status:"requesting"})
-                    console.log('trip',trip)
-                }
+                    
+                   console.log('trip EXIST',trip)
+    
+                // Send back to rider
                 socketIo.sockets.to(username).emit('TRIP_REQUESTED', trip._id)
             }
             catch(e){
@@ -193,45 +198,49 @@ export const initialize = function(server) {
                 socketId: socket.id,
                 ...data,
             })
-            try {
-                trip =  await Trip.findOneAndUpdate(
-                                        {rider},
-                                        { driver: driver._id, status: 'accepted' },
-                                        { new: true }
-                                    )
-                                    .populate('rider')
-                                    .populate('driver')
-                                    .exec()
-            }
-            catch(e){
-                console.log('there has been an error',e)
-            }
-            console.log('res',trip)
-            socket.join(trip._id)
-            socketIo.sockets.to(trip.rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
+            // try {
+            //     trip =  await Trip.findOneAndUpdate(
+            //                             {rider},
+            //                             { driver: driver._id, status: 'accepted' },
+            //                             { new: true }
+            //                         )
+            //                         .populate('rider')
+            //                         .populate('driver')
+            //                         .exec()
+            // }
+            // catch(e){
+            //     console.log('there has been an error',e)
+            // }
+            // console.log('res',trip)
+            // socket.join(trip._id)
+            // socketIo.sockets.to(trip.rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
+            socketIo.sockets.to(rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
+    
         })
     
     
         // Rider can confirm trip
         socket.on('CONFIRM_TRIP', async data => {
             const { driver, rider } = data
+            console.log('CONFIRM_TRIP data',driver)
+            // console.log('CONFIRM_TRIP data',data)
             let trip
             socket.join(rider.username)
             try {
                 trip =  await Trip.findOneAndUpdate(
                     rider,
-                    {status: 'pickingUp' },
+                    { driver: driver._id, status: 'pickingUp' },
                     { new: true }
                 )
                 .populate('rider')
                 .populate('driver')
                 .exec()
-                console.log(trip)
+                console.log('trip',trip)
             }
             catch(e){
                 console.log('there has been an error',e)
             }
-            socketIo.sockets.in(trip.driver.username).emit('CONFIRM_TRIP', data)
+            socketIo.sockets.in(driver.username).emit('CONFIRM_TRIP', data)
         })
     })
 

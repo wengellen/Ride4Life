@@ -68,10 +68,12 @@ class DirectionMapDriver extends React.Component {
             
             this.socket.on('REQUEST_TRIP', data => {
                 const requestDetails = data
+                console.log('data',data)
+    
                 this.setState({
+                    driverStatus:"requestIncoming",
                     requestDetails: data,
-                    driverStatus:"requestIncoming" }) //Save request details
-
+                     }) //Save request details
                 console.log(
                     'You have a new request! \n' +
                         JSON.stringify(requestDetails)
@@ -202,28 +204,29 @@ class DirectionMapDriver extends React.Component {
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
                         </p>
-                        <div
-                            className="driver-item-container-list"
-                        >
-                            <div className="driver-img-container-list">
-                                <img
-                                    src={requestDetails.rider.avatar}
-                                    alt={'driver'}
-                                />
-                            </div>
-                            <div className="driver-item-content-list">
-                                <h2>{requestDetails.rider.username}</h2>
-                                <h3>
-                                    2 miles away
-                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                                </h3>
-                            </div>
-                            <div className={"driver-item-buttons-list"}>
-                                        <div className={"driver-item-price"}><span>$20</span></div>
-                                        <IconButton className={"driver-item-accept-button"}
-                                                    onClick={()=> this.handleAcceptTrip()}>ACCEPT</IconButton>
-                            </div>
-                        </div>
+                        {!this.state.requestDetails.rider
+                            ? (<Loader/>)
+                            :
+                               (<div className="driver-item-container-list">
+                                <div className="driver-img-container-list">
+                                    <img
+                                        src={this.state.requestDetails.rider.avatar}
+                                        alt={'driver'}
+                                    />
+                                </div>
+                                <div className="driver-item-content-list">
+                                    <h2>{requestDetails.rider.username}</h2>
+                                    <h3>
+                                        2 miles away
+                                        <span> {`, ${requestDetails.rider.rating} `}stars</span>
+                                    </h3>
+                                </div>
+                                <div className={"driver-item-buttons-list"}>
+                                            <div className={"driver-item-price"}><span>${requestDetails.tripFare}</span></div>
+                                            <IconButton className={"driver-item-accept-button"}
+                                                        onClick={()=> this.handleAcceptTrip()}>ACCEPT</IconButton>
+                                </div>
+                            </div>)}
                         <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
                 )
