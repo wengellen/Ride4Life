@@ -51,6 +51,7 @@ class DirectionMap extends React.Component {
         this.map = null
         this.directions = null
         this.geolocate = null
+        this.rider = JSON.parse(localStorage.getItem('user'))
     }
 
     mapContainer = React.createRef()
@@ -240,11 +241,11 @@ class DirectionMap extends React.Component {
         console.log('idx',idx)
         console.log('driver',driver)
         this.socket.emit('CONFIRM_TRIP', {
-            driver,
+            driverId:driver._id,
+            driverUsername:driver.username,
             ...this.state.requestDetails,
         })
     
-        this.props.confirmTripRequest(driver)
         
         this.setState({
             showEstimate: false,
@@ -259,7 +260,7 @@ class DirectionMap extends React.Component {
             switch(tripStatus) {
                 case "standby": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
+                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>Ready to Ride?, </h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur

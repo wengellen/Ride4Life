@@ -221,15 +221,18 @@ export const initialize = function(server) {
     
         // Rider can confirm trip
         socket.on('CONFIRM_TRIP', async data => {
-            const { driver, rider } = data
-            console.log('CONFIRM_TRIP data',driver)
+            const { driver, rider, driverId,  driverUsername} = data
+            console.log('CONFIRM_TRIP rider',rider)
+            console.log('CONFIRM_TRIP driverUsername',driverUsername)
+            console.log('CONFIRM_TRIP driver',driver)
+            console.log('CONFIRM_TRIP driver.username',driver.username)
             // console.log('CONFIRM_TRIP data',data)
             let trip
             socket.join(rider.username)
             try {
                 trip =  await Trip.findOneAndUpdate(
-                    rider,
-                    { driver: driver._id, status: 'pickingUp' },
+                    {rider:rider._id},
+                    { driver: driverId, status: 'pickingUp' },
                     { new: true }
                 )
                 .populate('rider')
@@ -240,7 +243,7 @@ export const initialize = function(server) {
             catch(e){
                 console.log('there has been an error',e)
             }
-            socketIo.sockets.in(driver.username).emit('CONFIRM_TRIP', data)
+            socketIo.sockets.in(driverUsername).emit('CONFIRM_TRIP', data)
         })
     })
 
