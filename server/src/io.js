@@ -135,11 +135,11 @@ export const initialize = function(server) {
             let tripfound
             logger.debug(`REQUEST_TRIP triggered for ${username}`)
             
-            trips.set(username, {
-                socketId: socket.id,
-                ...data,
-            })
-            ids.set(socket.id, data)
+            // trips.set(username, {
+            //     socketId: socket.id,
+            //     ...data,
+            // })
+            // ids.set(socket.id, data)
            
             const nearbyOnlineDrivers = await fetchNearestCops(
                 data.location.coordinates
@@ -156,7 +156,7 @@ export const initialize = function(server) {
                     .populate('rider').exec()
                     
                    console.log('trip EXIST',trip)
-    
+                   socket.join(trip._id)
                 // Send back to rider
                 socketIo.sockets.to(username).emit('TRIP_REQUESTED', trip._id)
             }
@@ -183,21 +183,39 @@ export const initialize = function(server) {
                 const trip = await Trip.findOneAndRemove(
                     {_id:data.tripId}
                 ).exec()
-                
+                console.log('trip', trip)
+    
                 socketIo.sockets.to(data.rider.username).emit('RIDER_REQUEST_CANCELED')
             } catch (e) {
                 console.log('error', e)
             }
+        })
+    
+        socket.on('RIDER_CANCEL_TRIP', async data => {
+            logger.debug(
+                `RIDER_CANCEL_REQUEST triggered for tripId ${data.rider.username}`
+            )
+            try {
+                const trip = await Trip.findOneAndUpdate(
+                    {_id:data.tripId},
+                    {status:"cancelled"}
+                ).exec()
+                
+                socketIo.sockets.to(data.rider.username).emit('RIDER_TRIP_CANCELED')
+            } catch (e) {
+                console.log('error', e)
+            }
+            socketIo.to(data.tripId).emit('RIDER_TRIP_CANCELED', data);
         })
 
         // Driver can accept trip
         socket.on('ACCEPT_TRIP', async data => {
             const { driver, rider } = data
             let trip
-            trips.set(driver.username, {
-                socketId: socket.id,
-                ...data,
-            })
+            // trips.set(driver.username, {
+            //     socketId: socket.id,
+            //     ...data,
+            // })
             // try {
             //     trip =  await Trip.findOneAndUpdate(
             //                             {rider},
@@ -214,6 +232,7 @@ export const initialize = function(server) {
             // console.log('res',trip)
             // socket.join(trip._id)
             // socketIo.sockets.to(trip.rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
+            socket.join(data._id)
             socketIo.sockets.to(rider.username).emit('ACCEPT_TRIP', {...data, quote:20})
     
         })
@@ -222,10 +241,6 @@ export const initialize = function(server) {
         // Rider can confirm trip
         socket.on('CONFIRM_TRIP', async data => {
             const { driver, rider, driverId,  driverUsername} = data
-            console.log('CONFIRM_TRIP rider',rider)
-            console.log('CONFIRM_TRIP driverUsername',driverUsername)
-            console.log('CONFIRM_TRIP driver',driver)
-            console.log('CONFIRM_TRIP driver.username',driver.username)
             // console.log('CONFIRM_TRIP data',data)
             let trip
             socket.join(rider.username)
@@ -247,5 +262,5 @@ export const initialize = function(server) {
         })
     })
 
-    return socketIo
+     return socketIo
 }

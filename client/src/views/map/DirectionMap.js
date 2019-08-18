@@ -45,7 +45,8 @@ class DirectionMap extends React.Component {
             tripStatus:"standby",
             tripFare:0,
             tripId:null,
-            acceptedDrivers:[]
+            acceptedDrivers:[],
+            currentDriver:null
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.map = null
@@ -177,6 +178,22 @@ class DirectionMap extends React.Component {
             [e.target.name]: e.target.value,
         })
     }
+    
+    cancelTrip = () => {
+        this.socket.emit('RIDER_CANCEL_TRIP', {
+            rider: JSON.parse(localStorage.getItem('user')),
+            tripId:this.state.tripId
+        })
+        this.socket.on('RIDER_TRIP_CANCELED', () => {
+            console.log(
+                'RIDER_TRIP_CANCELED! \n'
+            )
+            this.setState({
+                tripStatus:"standby"
+                
+            })
+        })
+    }
 
     handleRequestRide = () => {
         const tripRequest = {
@@ -249,13 +266,15 @@ class DirectionMap extends React.Component {
         
         this.setState({
             showEstimate: false,
+            currentDriver:driver,
+            tripStatus:"confirmed"
         })
         
     }
 
     render() {
         const { findNearbyDriverMessage, driversNearby,  } = this.props
-        const { requestingRide, tripFare, tripStatus, acceptedDrivers } = this.state
+        const { requestingRide, tripFare, tripStatus, acceptedDrivers, currentDriver } = this.state
         const statusPanel = () => {
             switch(tripStatus) {
                 case "standby": return (
@@ -379,61 +398,51 @@ class DirectionMap extends React.Component {
                         <Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
                     </div>
                 )
-                case "pickup": return (
+                case "confirmed": return (
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
                         <div className="drivers-nearby-container-list">
-                            { acceptedDrivers &&
-                            this.props.driversNearby.map((driver, idx) => {
-                                return (
+                            { currentDriver &&
+                                (
                                     <div
                                         className="driver-item-container-list"
-                                        key={idx}
                                     >
                                         <div className="driver-img-container-list">
                                             <img
-                                                src={driver.avatar}
+                                                src={currentDriver.avatar}
                                                 alt={'driver'}
                                             />
                                         </div>
                                         <div className="driver-item-content-list">
-                                            <h2>{driver.username}</h2>
+                                            <h2>{currentDriver.username}</h2>
                                             <h3>
                                                 2 miles away
-                                                <span> {`, ${driver.rating} `}stars</span>
+                                                <span> {`, ${currentDriver.rating} `}stars</span>
                                             </h3>
                                         </div>
                                         <div className={"driver-item-buttons-list"}>
-                                            {
-                                                tripStatus === "requesting"
-                                                    ? <>
-                                                        <div className={"driver-item-price"}><span>$20</span></div>
-                                                        <IconButton className={"driver-item-accept-button"}
-                                                                    onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>
-                                                    </>
-                                                    :
-                                                    <div className={"action-icon-button-bar"}>
-                                                        <IconButton className={"driver-item-icon-button"}>
-                                                            <ChatBubbleIcon />
-                                                        </IconButton>
-                                                        <IconButton className={"driver-item-icon-button"}>
-                                                            <PhoneIcon />
-                                                        </IconButton>
-                                                    </div>
-                                            }
-                    
+                                                <div className={"action-icon-button-bar"}>
+                                                    <IconButton className={"driver-item-icon-button"}>
+                                                        <ChatBubbleIcon />
+                                                    </IconButton>
+                                                    <IconButton className={"driver-item-icon-button"}>
+                                                        <PhoneIcon />
+                                                    </IconButton>
+                                                </div>
                                         </div>
                                         <IconButton className={"right-arrow-button"}
                                                     onClick={e =>
-                                                        this.loadDriverProfile(driver)
+                                                        this.loadDriverProfile(currentDriver)
                                                     }>
                                             <RightArrowIcon />
                                         </IconButton>
                                     </div>
                                 )
-                            })}
+                            }
                         </div>
-                        <Button className={'request-ride-button bordered'}>CANCEL TRIP</Button>
+                        <Button className={'request-ride-button bordered'}
+                                onClick={e => this.cancelTrip()}>
+                                CANCEL TRIP</Button>
                     </div>
                    )
                 default:      return <h1>No project match</h1>

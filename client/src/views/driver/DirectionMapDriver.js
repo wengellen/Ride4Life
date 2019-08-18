@@ -32,7 +32,8 @@ class DirectionMapDriver extends React.Component {
             response: false,
             requestDetails:{},
             endpoint:  process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`,
-            driverStatus:"offline"
+            driverStatus:"offline",
+            headerMessage:''
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.driver=JSON.parse(localStorage.getItem('user'))
@@ -88,6 +89,18 @@ class DirectionMapDriver extends React.Component {
                 console.log(
                     'Rider has accept your service! \n' +
                         JSON.stringify(requestDetails)
+                )
+            })
+            
+            this.socket.on('RIDER_TRIP_CANCELED', () => {
+                this.setState({
+                    driverStatus:"standby",
+                    headerMessage:"Your Driver has cancelled the trip",
+                    requestDetails: null
+                }) //Save request details
+
+                console.log(
+                    'RIDER_TRIP_CANCELED! \n'
                 )
             })
 
@@ -151,7 +164,10 @@ class DirectionMapDriver extends React.Component {
             console.log(
                 'DRIVER_READY_TO_ACCEPT_TRIP! \n'
             )
-            this.setState({driverStatus:"standby"})
+            this.setState({
+                driverStatus:"standby",
+                headerMessage:"Finding Trip for you..."
+                })
         })
         this.socket.emit('DRIVER_GO_ONLINE', {
             driver: JSON.parse(localStorage.getItem('user'))
@@ -174,7 +190,7 @@ class DirectionMapDriver extends React.Component {
     
     
     render() {
-        const { driverStatus, requestDetails } = this.state
+        const { driverStatus, requestDetails, headerMessage } = this.state
         const statusPanel = () => {
             switch(driverStatus) {
                 case "offline": return (
@@ -189,7 +205,7 @@ class DirectionMapDriver extends React.Component {
                   )
                 case "standby": return (
                         <div className={'status-panel'}>
-                            <h1 className={`drivers-nearby-header`}>Finding Trip for you</h1>
+                            <h1 className={`drivers-nearby-header`}>{headerMessage}</h1>
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                                 consectetur

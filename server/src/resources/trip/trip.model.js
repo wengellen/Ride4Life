@@ -19,7 +19,7 @@ const tripSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["requesting", "accepted", "pickingUp", "enRoute", "ended"],
+      enum: ["requesting", "cancelled", "accepted", "pickingUp", "enRoute", "ended"],
       default: "requesting"
     },
     rider:{
