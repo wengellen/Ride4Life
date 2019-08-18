@@ -26,7 +26,7 @@ const riderSchema = new mongoose.Schema(
       },
       memberSince: { type: Date },
       tripCompleted: {type: Number},
-      rating: {type: Number},
+      rating: {type: Number, default:0},
       numRiderRated:{type:Number},
       // Account info
       username:{

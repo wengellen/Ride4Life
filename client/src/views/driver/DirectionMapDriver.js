@@ -2,7 +2,7 @@ import React from 'react'
 import mapboxgl from 'mapbox-gl'
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
-import './DirectionMapDriver.css'
+import './DriverHomePage.css' // Updating node module will keep css up to date.
 import PinkButton from '../../components/Button/PinkButton' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
@@ -74,7 +74,7 @@ class DirectionMapDriver extends React.Component {
                 this.setState({
                     driverStatus:"requestIncoming",
                     requestDetails: data,
-                    headerMessage:"You have 1 request. Accept?",
+                    headerMessage:"You have 1 request. Offer ride?",
                      }) //Save request details
                 console.log(
                     'You have a new request! \n' +
@@ -112,7 +112,7 @@ class DirectionMapDriver extends React.Component {
             this.socket.on('RIDER_TRIP_CANCELED', () => {
                 this.setState({
                     driverStatus:"standby",
-                    headerMessage:"Your Driver has cancelled the trip",
+                    headerMessage:"The trip has been cancelled",
                     requestDetails: null
                 }) //Save request details
 
@@ -166,11 +166,17 @@ class DirectionMapDriver extends React.Component {
         })
     }
 
-    handleAcceptTrip = () => {
+    handleAcceptTrip = (e) => {
+        // e.currentTarget.style = "display:none"
         console.log('ACCEPT_TRIP', )
         this.socket.emit('ACCEPT_TRIP', {
             driver: JSON.parse(localStorage.getItem('user')),
             ...this.state.requestDetails,
+        })
+        
+        this.setState({
+            driverStatus:"waitingForConfirmation",
+            headerMessage:"Waiting for rider confirmation."
         })
         
     }
@@ -222,25 +228,19 @@ class DirectionMapDriver extends React.Component {
                   )
                 case "standby": return (
                         <div className={'status-panel'}>
-                            <h1 className={`drivers-nearby-header`}>{headerMessage}</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur dolor sit amet,
-                                consectetur
-                            </p>
+                            <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                            <Loader/>
+                            {/*<p>*/}
+                            {/*    Lorem ipsum dolor sit amet, consectetur dolor sit amet,*/}
+                            {/*    consectetur*/}
+                            {/*</p>*/}
                             <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                         </div>
                     )
                 case "requestIncoming": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header`}>{headerMessage}</h1>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
-                            consectetur
-                        </p>
-                        {!this.state.requestDetails.rider
-                            ? (<Loader/>)
-                            :
-                               (<div className="driver-item-container-list">
+                             <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
+                             <div className="driver-item-container-list requesting">
                                 <div className="driver-img-container-list">
                                     <img
                                         src={this.state.requestDetails.rider.avatar}
@@ -254,12 +254,61 @@ class DirectionMapDriver extends React.Component {
                                         <span> {`, ${requestDetails.rider.rating} `}stars</span>
                                     </h3>
                                 </div>
-                                <div className={"driver-item-buttons-list"}>
-                                            <div className={"driver-item-price"}><span>${requestDetails.tripFare}</span></div>
-                                            <IconButton className={"driver-item-accept-button"}
-                                                        onClick={()=> this.handleAcceptTrip()}>ACCEPT</IconButton>
-                                </div>
-                            </div>)}
+                             </div>
+                        <div className={"trip-destination-container"}>
+                            <div className={"trip-destination-left"}>
+                                <h2>2398 Walters way, Concord</h2>
+                                <span className={"tag orange"}>35 mins</span>
+                                <span className={"tag blue"}>21 mi</span>
+                            </div>
+                            {/*<div className={"driver-item-price requesting"}>*/}
+                            {/*    <span>${requestDetails.tripFare}</span>*/}
+                                <button className={"driver-item-accept-button requesting"}
+                                            onClick={(e)=> this.handleAcceptTrip(e)}>
+                                    <h2>${requestDetails.tripFare}</h2>
+                                    <h3>OFFER</h3>
+                                </button>
+                            </div>
+                            {/*</div>*/}
+                            
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                    </div>
+                )
+    
+                case "waitingForConfirmation": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
+                        <div className="driver-item-container-list requesting">
+                            <div className="driver-img-container-list">
+                                <img
+                                    src={this.state.requestDetails.rider.avatar}
+                                    alt={'driver'}
+                                />
+                            </div>
+                            <div className="driver-item-content-list">
+                                <h2>{requestDetails.rider.username}</h2>
+                                <h3>
+                                    2 miles away
+                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
+                                </h3>
+                            </div>
+                        </div>
+                        <div className={"trip-destination-container"}>
+                            <div className={"trip-destination-left"}>
+                                <h2>2398 Walters way, Concord</h2>
+                                <span className={"tag orange"}>35 mins</span>
+                                <span className={"tag blue"}>21 mi</span>
+                            </div>
+                            
+                            <button className={"driver-item-accept-button requesting"}
+                                     disabled>
+                                <Loader/>
+                                {/*<h2>${requestDetails.tripFare}</h2>*/}
+                                {/*<div>OFFER...</div>*/}
+                            </button>
+                        </div>
+                        {/*</div>*/}
+            
                         <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
                 )

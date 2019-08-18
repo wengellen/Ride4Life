@@ -1,0 +1,69 @@
+.trip-destination-container{
+    background-color: #F2F5F7;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin:1.2rem;
+    border-radius:12px ;
+    padding:1.2rem;
+    line-height: 1.2rem;
+}
+
+.driver-item-container-list.requesting {
+    border-bottom: none;
+    padding:6px 0 0 0;
+}
+
+.driver-item-accept-button.requesting{
+    width:93px;
+    border-radius: 16px;
+    display:flex;
+    flex-flow:column wrap;
+    font-size:0.7rem;
+    font-weight: 500;
+    margin-top:0;
+    line-height: 1.4rem;
+    outline: none;
+    margin-left:1rem;
+}
+
+.driver-item-accept-button.requesting div{
+
+}
+
+.trip-destination-left{
+    flex-basis: 80%;
+    text-align: left;
+}
+
+.trip-destination-left > h2{
+    font-size: 0.9rem;
+    color:#4A4A4A;
+    font-weight: 500;
+}
+.trip-destination-left > span{
+    float:left;
+    margin-top: 14px;
+    margin-right:0.5rem;
+}
+.tag{
+    padding:0px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    left:0;
+}
+.tag.blue{
+    background-color: #ADE6EE;
+}
+.tag.orange{
+    background-color: white;
+}
+
+.driver-item-price.requesting{
+    background-color: white;
+}
+
+.driver-item-container-list.requesting .driver-item-content-list{
+    /*border-bottom: 1px solid red;*/
+}

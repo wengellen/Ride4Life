@@ -46,7 +46,8 @@ class DirectionMap extends React.Component {
             tripFare:0,
             tripId:null,
             acceptedDrivers:[],
-            currentDriver:null
+            currentDriver:null,
+            headerMessage:''
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.map = null
@@ -167,6 +168,7 @@ class DirectionMap extends React.Component {
         this.setState({
             requestingRide: false,
             tripStatus:"standby",
+            headerMessage:"Start a new ride",
             acceptedDrivers:[]
         })
         this.props.cancelTripRequest()
@@ -189,8 +191,8 @@ class DirectionMap extends React.Component {
                 'RIDER_TRIP_CANCELED! \n'
             )
             this.setState({
-                tripStatus:"standby"
-                
+                tripStatus:"standby",
+                headerMessage:"Start a new ride",
             })
         })
     }
@@ -216,7 +218,8 @@ class DirectionMap extends React.Component {
 
         this.setState({
             requestingRide: true,
-            tripStatus:"requesting"
+            tripStatus:"requesting",
+            headerMessage:"Contacting Drivers for you...",
         })
 
         this.socket.emit('REQUEST_TRIP', {
@@ -237,20 +240,13 @@ class DirectionMap extends React.Component {
                 showEstimate: true,
                 requestDetails: data,
                 tripStatus:"driversFound",
+                headerMessage:`Drivers found would.`,
                 acceptedDrivers:[...this.state.acceptedDrivers, data.driver]
             }) //Save request details
             console.log(
                 'A driver has accepted your trip \n' + JSON.stringify(data)
             )
         })
-        // this.props
-        //     .findDriversNearby({
-        //         coordinates: this.state.startLocation,
-        //         rider: JSON.parse(localStorage.getItem('user')),
-        //     })
-        //     .then(res => {
-        //         console.log('findDriversNearby res', res)
-        //     })
     }
     
     handleConfirmRequest = (idx) => {
@@ -269,17 +265,16 @@ class DirectionMap extends React.Component {
             currentDriver:driver,
             tripStatus:"confirmed"
         })
-        
     }
 
     render() {
         const { findNearbyDriverMessage, driversNearby,  } = this.props
-        const { requestingRide, tripFare, tripStatus, acceptedDrivers, currentDriver } = this.state
+        const { requestingRide, tripFare, tripStatus, acceptedDrivers, currentDriver, headerMessage } = this.state
         const statusPanel = () => {
             switch(tripStatus) {
                 case "standby": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>Ready to Ride?, </h1>
+                        <h1 className={`drivers-nearby-header ${acceptedDrivers.length > 0 && 'show-bg' }`}>Ready to Ride?, </h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
@@ -293,68 +288,17 @@ class DirectionMap extends React.Component {
                 )
                 case "requesting": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
+                        <h1 className={`drivers-nearby-header ${acceptedDrivers.length > 0 && 'show-bg' }`}>{headerMessage}</h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
                         </p>
-                        <div className="drivers-nearby-container-list">
-                            {this.props.driversNearby &&
-                            this.props.driversNearby.map((driver, idx) => {
-                                return (
-                                    <div
-                                        className="driver-item-container-list"
-                                        key={idx}
-                                    >
-                                        <div className="driver-img-container-list">
-                                            <img
-                                                src={driver.avatar}
-                                                alt={'driver'}
-                                            />
-                                        </div>
-                                        <div className="driver-item-content-list">
-                                            <h2>{driver.username}</h2>
-                                            <h3>
-                                                2 miles away
-                                                <span> {`, ${driver.rating} `}stars</span>
-                                            </h3>
-                                        </div>
-                                        <div className={"driver-item-buttons-list"}>
-                                            {
-                                                tripStatus === "requesting"
-                                                    ? <>
-                                                        <div className={"driver-item-price"}><span>$20</span></div>
-                                                        <IconButton className={"driver-item-accept-button"}
-                                                                    onClick={()=> this.handleConfirmRequest(idx)}>ACCEPT</IconButton>
-                                                    </>
-                                                    :
-                                                    <div className={"action-icon-button-bar"}>
-                                                        <IconButton className={"driver-item-icon-button"}>
-                                                            <ChatBubbleIcon />
-                                                        </IconButton>
-                                                        <IconButton className={"driver-item-icon-button"}>
-                                                            <PhoneIcon />
-                                                        </IconButton>
-                                                    </div>
-                                            }
-                        
-                                        </div>
-                                        <IconButton className={"right-arrow-button"}
-                                                    onClick={e =>
-                                                        this.loadDriverProfile(driver)
-                                                    }>
-                                            <RightArrowIcon />
-                                        </IconButton>
-                                    </div>
-                                )
-                            })}
-                        </div>
                         <Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
                     </div>
                     )
                 case "driversFound": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header`}></h1>
+                        <h1 className={`drivers-nearby-header`}>{headerMessage}</h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
@@ -400,7 +344,7 @@ class DirectionMap extends React.Component {
                 )
                 case "confirmed": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>
+                        <h1 className={`drivers-nearby-header ${acceptedDrivers.length > 0 && 'show-bg' }`}>{headerMessage}</h1>
                         <div className="drivers-nearby-container-list">
                             { currentDriver &&
                                 (
