@@ -24,7 +24,7 @@ const driverSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["offline", "standby", "waiting", "enRoute"],
+      enum: ["offline", "standby", "offered", "enRoute"],
       default: "offline"
     },
     active: {

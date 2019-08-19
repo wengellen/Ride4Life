@@ -15,6 +15,7 @@ export const connect = (url = options.dbUrl, opts = {}) => {
 export const fetchNearestCops = async (coordinates) => {
 	try {
 		const drivers = await Driver.find({status:"standby"}).lean().exec()
+		
 		return  drivers
 	 }catch(e){
 			console.log(e)

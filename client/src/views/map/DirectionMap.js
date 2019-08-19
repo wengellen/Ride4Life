@@ -73,18 +73,6 @@ class DirectionMap extends React.Component {
                 loadingMap: false,
             })
 
-            // this.props
-            //     .findDriversNearby({
-            //         coordinates: [
-            //             position.coords.longitude,
-            //             position.coords.latitude,
-            //         ],
-            //         rider: rider,
-            //     })
-            //     .then(res => {
-            //         console.log('findDriversNearby res', res)
-            //     })
-
             this.socket.emit('UPDATE_RIDER_LOCATION', {
                 coordinates: [
                     position.coords.longitude,
@@ -95,6 +83,41 @@ class DirectionMap extends React.Component {
                 rider: rider,
             })
         })
+    
+        this.socket.on('ACCEPT_TRIP', data => {
+            console.log('ACCEPT_TRIP data', data)
+            this.setState({
+                showEstimate: true,
+                requestDetails: data,
+                tripStatus:"driversFound",
+                headerMessage:`Drivers found. Accept offer?`,
+                acceptedDrivers:[...this.state.acceptedDrivers, data.driver]
+            }) //Save request details
+            console.log(
+                'A driver has accepted your trip \n' + JSON.stringify(data)
+            )
+        })
+    
+        this.socket.on('RIDER_TRIP_CANCELED', () => {
+            console.log(
+                'RIDER_TRIP_CANCELED! \n'
+            )
+            this.setState({
+                tripStatus:"standby",
+                headerMessage:"Start a new ride",
+            })
+        })
+    
+        this.socket.on('DRIVER_TRIP_CANCELED', () => {
+            console.log(
+                'DRIVER_TRIP_CANCELED! \n'
+            )
+            this.setState({
+                tripStatus:"standby",
+                headerMessage:"Send a new request",
+            })
+        })
+    
 
         this.map = new mapboxgl.Map({
             container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
@@ -188,16 +211,8 @@ class DirectionMap extends React.Component {
             rider: JSON.parse(localStorage.getItem('user')),
             tripId:this.state.tripId
         })
-        this.socket.on('RIDER_TRIP_CANCELED', () => {
-            console.log(
-                'RIDER_TRIP_CANCELED! \n'
-            )
-            this.setState({
-                tripStatus:"standby",
-                headerMessage:"Start a new ride",
-            })
-        })
     }
+    
 
     handleRequestRide = () => {
         const tripRequest = {
@@ -221,35 +236,26 @@ class DirectionMap extends React.Component {
         this.setState({
             requestingRide: true,
             tripStatus:"requesting",
-            headerMessage:"Contacting Drivers for you...",
-        })
-
-        this.socket.emit('REQUEST_TRIP', {
-            rider: JSON.parse(localStorage.getItem('user')),
-            ...tripRequest,
+            headerMessage:"Quote Submitted to Drivers",
         })
     
+    
+       // setInterval(
+            this.socket.emit('REQUEST_TRIP', {
+                rider: JSON.parse(localStorage.getItem('user')),
+                ...tripRequest,
+            })
+            // ,3000)
+        //
         this.socket.on('TRIP_REQUESTED', data => {
             this.setState({tripId:data})
             console.log(
                 'TRIP_ID \n' + JSON.stringify(data)
             )
         })
-        
-        this.socket.on('ACCEPT_TRIP', data => {
-            console.log('ACCEPT_TRIP data', data)
-            this.setState({
-                showEstimate: true,
-                requestDetails: data,
-                tripStatus:"driversFound",
-                headerMessage:`Drivers found would.`,
-                acceptedDrivers:[...this.state.acceptedDrivers, data.driver]
-            }) //Save request details
-            console.log(
-                'A driver has accepted your trip \n' + JSON.stringify(data)
-            )
-        })
     }
+
+    
     
     handleConfirmRequest = (idx) => {
         const driver = this.state.acceptedDrivers[idx]
@@ -276,7 +282,7 @@ class DirectionMap extends React.Component {
             switch(tripStatus) {
                 case "standby": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header ${acceptedDrivers.length > 0 && 'show-bg' }`}>Ready to Ride?, </h1>
+                        <h1 className={`drivers-nearby-header  }`}>Ready to Ride?, </h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
@@ -291,17 +297,14 @@ class DirectionMap extends React.Component {
                 )
                 case "requesting": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header ${acceptedDrivers.length > 0 && 'show-bg' }`}>{headerMessage}</h1>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
-                            consectetur
-                        </p>
+                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                        <Loader/>
                         <Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
                     </div>
                     )
                 case "driversFound": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header`}>{headerMessage}</h1>
+                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
@@ -347,7 +350,7 @@ class DirectionMap extends React.Component {
                 )
                 case "confirmed": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header ${acceptedDrivers.length > 0 && 'show-bg' }`}>{headerMessage}</h1>
+                        <h1 className={`drivers-nearby-header show-bg `}>{headerMessage}</h1>
                         <div className="drivers-nearby-container-list">
                             { currentDriver &&
                                 (

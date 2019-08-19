@@ -33,7 +33,8 @@ class DirectionMapDriver extends React.Component {
             requestDetails:{},
             endpoint:  process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`,
             driverStatus:"offline",
-            headerMessage:''
+            headerMessage:'',
+            tripId:null
         }
         this.socket = socketIOClient(this.state.endpoint)
         this.driver=JSON.parse(localStorage.getItem('user'))
@@ -55,21 +56,15 @@ class DirectionMapDriver extends React.Component {
                 username: driver.username,
                 driver: driver,
               },
-                // this.props
-                // .findDriversNearby({
-                //     coordinates: [
-                //         position.coords.longitude,
-                //         position.coords.latitude,
-                //     ],
-                // })
-                // .then(res => {
-                //     console.log('findDriversNearby res', res)
-                // })
             )
             
             this.socket.on('REQUEST_TRIP', data => {
                 const requestDetails = data
                 console.log('data',data)
+    
+                if (this.state.driverStatus === 'requestIncoming') {
+                    return;
+                }
     
                 this.setState({
                     driverStatus:"requestIncoming",
@@ -100,7 +95,8 @@ class DirectionMapDriver extends React.Component {
                 this.setState({
                     driverStatus:"confirmed",
                     requestDetails: data,
-                    headerMessage:"Drive to pickup location"
+                    headerMessage:"Drive to pickup location",
+                    tripId:data._id
                 }) //Save request details
 
                 console.log(
@@ -120,7 +116,18 @@ class DirectionMapDriver extends React.Component {
                     'RIDER_TRIP_CANCELED! \n'
                 )
             })
-
+    
+            this.socket.on('DRIVER_TRIP_CANCELED', () => {
+                console.log(
+                    'DRIVER_TRIP_CANCELED! \n'
+                )
+                this.setState({
+                    driverStatus:"standby",
+                    headerMessage:"Finding trip for you",
+                    requestDetails: null
+                })
+            })
+    
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],
             })
@@ -165,7 +172,13 @@ class DirectionMapDriver extends React.Component {
             })
         })
     }
-
+    
+    cancelTrip = () => {
+        this.socket.emit('DRIVER_CANCEL_TRIP', {
+            driver: JSON.parse(localStorage.getItem('user')),
+            tripId:this.state.tripId
+        })
+    }
     handleAcceptTrip = (e) => {
         // e.currentTarget.style = "display:none"
         console.log('ACCEPT_TRIP', )
@@ -338,7 +351,7 @@ class DirectionMapDriver extends React.Component {
                                 }
                             </div>
                         </div>
-                        <Button className={'request-ride-button bordered'}>CANCEL TRIP</Button>
+                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
                     </div>
                 )
                 default:      return <h1>No project match</h1>
