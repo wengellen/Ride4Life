@@ -2,6 +2,7 @@ import React from 'react'
 import mapboxgl from 'mapbox-gl'
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
+// import './DirectionMapDriver.css' // Updating node module will keep css up to date.
 import './DriverHomePage.css' // Updating node module will keep css up to date.
 import PinkButton from '../../components/Button/PinkButton' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
@@ -377,13 +378,14 @@ class DirectionMapDriver extends React.Component {
     
         return (
          <div
-                className="map-wrapper"
+                className="map-wrapper driver"
                 style={{ position: 'relative', display: 'flex' }}
             >
                 
                 <div
                     ref={el => (this.mapContainer = el)}
-                    className="driver-map"
+                    className={`driver-map ${driverStatus!== "confirmed" &&  "hide-direction"}`}
+                    // className={`driver-map hide-direction`}
                     style={{
                         width: '100%',
                         height: '100%',

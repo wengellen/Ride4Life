@@ -1,6 +1,11 @@
-.map-wrapper{
-    padding:33px 0;
-    height:calc(100vh - 33px);
+.map-wrapper.driver{
+    padding:0 0;
+    height:calc(100vh - 66px);
+    overflow: hidden;
+}
+
+.driver-map.hide-direction .mapboxgl-ctrl-top-left{
+    display:none;
 }
 
 .trip-destination-container{

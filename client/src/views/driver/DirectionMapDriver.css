@@ -20,11 +20,16 @@
 }
 
 
+
 .driver-map > .mapbox-directions-origin .mapboxgl-ctrl-geocoder {
     border-radius:0 3px 0 0;
     background-color: #00b0ff;
 }
 
+.driver-map > .mapbox-directions-origin .mapboxgl-ctrl-geocoder {
+    border-radius:0 3px 0 0;
+    background-color: #00b0ff;
+}
 
 
 .mapboxgl-ctrl-geocoder input[type='text'] {
