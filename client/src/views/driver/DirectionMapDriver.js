@@ -37,13 +37,15 @@ class DirectionMapDriver extends React.Component {
             tripId:null
         }
         this.socket = socketIOClient(this.state.endpoint)
+       
         this.driver=JSON.parse(localStorage.getItem('user'))
     }
-
+    
+    
     componentDidMount() {
         let map, directions, geolocate
         const driver = JSON.parse(localStorage.getItem('user'))
-        
+        let requestTimer
         navigator.geolocation.getCurrentPosition(position => {
             const coordinates = [
                 position.coords.longitude,
@@ -58,75 +60,6 @@ class DirectionMapDriver extends React.Component {
               },
             )
             
-            this.socket.on('REQUEST_TRIP', data => {
-                const requestDetails = data
-                console.log('data',data)
-    
-                if (this.state.driverStatus === 'requestIncoming') {
-                    return;
-                }
-    
-                this.setState({
-                    driverStatus:"requestIncoming",
-                    requestDetails: data,
-                    headerMessage:"You have 1 request. Offer ride?",
-                     }) //Save request details
-                console.log(
-                    'You have a new request! \n' +
-                        JSON.stringify(requestDetails)
-                )
-                
-            })
-            
-            this.socket.on('RIDER_REQUEST_CANCELED', () => {
-                this.setState({
-                    driverStatus:"standby",
-                    requestDetails: null,
-                    headerMessage:"Request cancelled. Finding another ride for you",
-                     }) //Save request details
-                console.log(
-                    'You have a new request! \n'
-                )
-                
-            })
-            
-            this.socket.on('CONFIRM_TRIP', data => {
-                const requestDetails = data
-                this.setState({
-                    driverStatus:"confirmed",
-                    requestDetails: data,
-                    headerMessage:"Drive to pickup location",
-                    tripId:data._id
-                }) //Save request details
-
-                console.log(
-                    'Rider has accept your service! \n' +
-                        JSON.stringify(requestDetails)
-                )
-            })
-            
-            this.socket.on('RIDER_TRIP_CANCELED', () => {
-                this.setState({
-                    driverStatus:"standby",
-                    headerMessage:"The trip has been cancelled",
-                    requestDetails: null
-                }) //Save request details
-
-                console.log(
-                    'RIDER_TRIP_CANCELED! \n'
-                )
-            })
-    
-            this.socket.on('DRIVER_TRIP_CANCELED', () => {
-                console.log(
-                    'DRIVER_TRIP_CANCELED! \n'
-                )
-                this.setState({
-                    driverStatus:"standby",
-                    headerMessage:"Finding trip for you",
-                    requestDetails: null
-                })
-            })
     
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],
@@ -170,9 +103,93 @@ class DirectionMapDriver extends React.Component {
                 //     position.coords.latitude,
                 // ])
             })
+    
+            this.socket.on('REQUEST_TRIP', data => {
+                const requestDetails = data
+                console.log('data',data)
+                if (this.state.driverStatus === 'requestIncoming') {
+                    return;
+                }
+        
+                this.setState({
+                    driverStatus:"requestIncoming",
+                    requestDetails: data,
+                    headerMessage:"You have 1 request. Offer ride?",
+                })
+                console.log(
+                    'You have a new request! \n' +
+                    JSON.stringify(requestDetails)
+                )
+                //
+                // requestTimer = setTimeout(() => {
+                //     this.setState({
+                //         requestDetails: null,
+                //         driverStatus:"standby",
+                //         headerMessage:"Finding rides for you",
+                //     })
+                //
+                //     this.socket.emit('DENY_TRIP_REQUEST',  {
+                //         driver: JSON.parse(localStorage.getItem('user')),
+                //         tripId:this.state.tripId
+                //     })
+                // }, 20000)
+            })
+    
+    
+            this.socket.on('RIDER_REQUEST_CANCELED', () => {
+                this.setState({
+                    driverStatus:"standby",
+                    requestDetails: null,
+                    headerMessage:"Request cancelled. Finding another ride for you",
+                }) //Save request details
+                console.log(
+                    'You have a new request! \n'
+                )
+        
+            })
+    
+            this.socket.on('CONFIRM_TRIP', data => {
+                clearTimeout(requestTimer)
+                const requestDetails = data
+                this.setState({
+                    driverStatus:"confirmed",
+                    requestDetails: data,
+                    headerMessage:"Drive to pickup location",
+                    tripId:data._id
+                }) //Save request details
+        
+                console.log(
+                    'Rider has accept your service! \n' +
+                    JSON.stringify(requestDetails)
+                )
+            })
+    
+            this.socket.on('RIDER_TRIP_CANCELED', () => {
+                this.setState({
+                    driverStatus:"standby",
+                    headerMessage:"The trip has been cancelled",
+                    requestDetails: null
+                }) //Save request details
+        
+                console.log(
+                    'RIDER_TRIP_CANCELED! \n'
+                )
+            })
+    
+            this.socket.on('DRIVER_TRIP_CANCELED', () => {
+                console.log(
+                    'DRIVER_TRIP_CANCELED! \n'
+                )
+                this.setState({
+                    driverStatus:"standby",
+                    headerMessage:"Finding trip for you",
+                    requestDetails: null
+                })
+            })
         })
     }
     
+   
     cancelTrip = () => {
         this.socket.emit('DRIVER_CANCEL_TRIP', {
             driver: JSON.parse(localStorage.getItem('user')),

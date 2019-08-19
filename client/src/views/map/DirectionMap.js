@@ -118,6 +118,21 @@ class DirectionMap extends React.Component {
             })
         })
     
+    
+        this.socket.on('DRIVER_GO_OFFLINE', (data) => {
+            console.log(
+                'DRIVER_GO_OFFLINE! \n'
+            )
+            
+            const newArr = this.state.acceptedDrivers.filter(driver => driver.username !== data.driver.username)
+            
+            this.setState({
+                acceptedDrivers: newArr,
+                tripStatus:"requesting",
+                headerMessage:"Finding drivers for you",
+            })
+            
+        })
 
         this.map = new mapboxgl.Map({
             container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
@@ -240,12 +255,10 @@ class DirectionMap extends React.Component {
         })
     
     
-       // setInterval(
-            this.socket.emit('REQUEST_TRIP', {
-                rider: JSON.parse(localStorage.getItem('user')),
-                ...tripRequest,
-            })
-            // ,3000)
+        this.socket.emit('REQUEST_TRIP', {
+            rider: JSON.parse(localStorage.getItem('user')),
+            ...tripRequest,
+        })
         //
         this.socket.on('TRIP_REQUESTED', data => {
             this.setState({tripId:data})
