@@ -25,10 +25,7 @@ export const initialize = function(server) {
 
         socket.on('disconnect', async reason => {
             const user = ids.get(socket.id)
-            logger.debug('ids ' + ids)
             const trip = trips.get(user.username)
-            console.log('!!!trip', trip)
-
             logger.debug('USER DISCONNECTED ' + user.username)
 
             if (!user) return
@@ -43,7 +40,6 @@ export const initialize = function(server) {
                                     { new: true }
                                 )
                                 .exec()
-                    console.log('res', res)
                 } catch (e) {
                     console.log('error', e)
                 }
@@ -56,7 +52,6 @@ export const initialize = function(server) {
                         { new: true }
                     )
                     .exec()
-                    console.log('res', res)
                 } catch (e) {
                     console.log('error', e)
                 }
