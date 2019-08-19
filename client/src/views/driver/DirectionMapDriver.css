@@ -25,6 +25,8 @@
     background-color: #00b0ff;
 }
 
+
+
 .mapboxgl-ctrl-geocoder input[type='text'] {
     font-size:14px;
     border:0;
@@ -76,6 +78,22 @@
 .mapboxgl-ctrl-geocoder,
 .mapboxgl-ctrl-geocoder ul {
     box-shadow:none;
+}
+
+/* Start and End Inputs */
+.mapboxgl-ctrl-directions.mapboxgl-ctrl{
+    margin:0;
+}
+
+.map .mapboxgl-ctrl-to-left{
+    width:100%;
+    margin:0 ;
+    padding: 0 40px;
+    top:30px;
+}
+
+.map.hide-direction .mapboxgl-ctrl-bottom-left{
+    display:none;
 }
 
 /* Suggestions */

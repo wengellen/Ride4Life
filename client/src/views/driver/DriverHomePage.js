@@ -18,25 +18,6 @@ class DriverHomePage extends Component {
   
   }
 
-  handleChange = e => {
-    this.setState({
-      [e.currentTarget.name]: {
-        address: e.currentTarget.value
-      }
-    });
-  };
-
-  loadDriverProfile = driver => {
-    // console.log('login clicked')
-    this.props.getDriversById(driver.driver_id).then(() => {
-      this.props.history.push(`/drivers/${driver.driver_id}`);
-    });
-  };
-
-  cancelTrip = () => {
-    console.log("cancelling trips");
-  };
-
   render() {
     return (
       <div className="map-wrapper ">
