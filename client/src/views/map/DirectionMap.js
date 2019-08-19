@@ -292,6 +292,7 @@ class DirectionMap extends React.Component {
         this.setState({
             showEstimate: false,
             currentDriver:driver,
+            headerMessage:"Your driver is on his way",
             tripStatus:"confirmed"
         })
     }
