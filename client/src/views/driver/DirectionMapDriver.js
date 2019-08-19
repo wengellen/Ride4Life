@@ -288,17 +288,17 @@ class DirectionMapDriver extends React.Component {
                              </div>
                         <div className={"trip-destination-container"}>
                             <div className={"trip-destination-left"}>
-                                <h2>requestDetails.rider.rating</h2>
+                                <h2>2398 Walters way, Concord</h2>
                                 <span className={"tag orange"}>35 mins</span>
                                 <span className={"tag blue"}>21 mi</span>
                             </div>
-                            <button className={"driver-item-accept-button requesting"}
+                            <button className={"driver-item-accept-button requesting main"}
                                         onClick={(e)=> this.handleAcceptTrip(e)}>
                                 <h2>${requestDetails.tripFare}</h2>
                                 <h3>OFFER</h3>
                             </button>
                         </div>
-                        <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
                 )
     
@@ -334,7 +334,7 @@ class DirectionMapDriver extends React.Component {
                         </div>
                         {/*</div>*/}
             
-                        <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
                 )
                 case "confirmed": return (
@@ -379,8 +379,7 @@ class DirectionMapDriver extends React.Component {
         return (
          <div
                 className="map-wrapper driver"
-                style={{ position: 'relative', display: 'flex' }}
-            >
+                style={{ position: 'relative', display: 'flex' }}>
                 
                 <div
                     ref={el => (this.mapContainer = el)}

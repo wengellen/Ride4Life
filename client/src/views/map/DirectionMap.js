@@ -413,7 +413,7 @@ class DirectionMap extends React.Component {
                                 )
                             }
                         </div>
-                        <Button className={'request-ride-button bordered'}
+                        <Button className={'request-ride-button bordered main'}
                                 onClick={e => this.cancelTrip()}>
                                 CANCEL TRIP</Button>
                     </div>
