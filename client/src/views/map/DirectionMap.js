@@ -215,7 +215,15 @@ class DirectionMap extends React.Component {
     
     }
     
+    handleKeyPress = (e) => {
+        if (e.which < 48 || e.which > 57)
+        {
+            e.preventDefault();
+        }
+    }
+    
     handleChange = (e) => {
+       
         this.setState({
             [e.target.name]: e.target.value,
         })
@@ -301,7 +309,9 @@ class DirectionMap extends React.Component {
                         </p>
                         <div className={"driver-name-your-fare-container"}>
                             <h2>$</h2>
-                            <input  name={"tripFare"} type={"text"} placeholder={"Name your fare"} onChange={this.handleChange}/>
+                            <input pattern="[0-9]" name={"tripFare"} type={"text"} placeholder={"Name your fare"}
+                                    onChange={this.handleChange}
+                                    onKeyPress={this.handleKeyPress}/>
                         </div>
                         <button className={"driver-item-accept-button main full"} onClick={(e)=> this.handleRequestRide(e)}>REQUEST RIDE</button>
                     </div>
