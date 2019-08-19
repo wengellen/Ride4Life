@@ -78,10 +78,11 @@ export const login_driver= (driver) => dispatch =>{
 		})
 		.catch(err =>{
 			console.log('err', err)
-			if (err.response.status === 401) {
+			if (err.response && err.response.status === 401) {
 				dispatch({type: DRIVER_LOGIN_FAILURE, payload: err.response.data})
 			}
-			return  err.response.data
+
+			return  err.response
 		})
 	)
 }

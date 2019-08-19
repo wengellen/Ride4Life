@@ -1,5 +1,6 @@
 // RIDER
 import {API} from "../utils/axiosAuth";
+import {DRIVER_LOGIN_SUCCESS} from "./driverAction";
 
 export const RIDER_SIGNUP_STARTED = 'RIDER_SIGNUP_STARTED'
 export const RIDER_SIGNUP_SUCCESS = 'RIDER_SIGNUP_SUCCESS'
@@ -159,9 +160,11 @@ export const login_rider = (rider) => dispatch => {
 			return res.data
 		})
 		.catch(err =>{
-			if (err.response.status === 401) {
+			if (err.response && err.response.status === 401) {
 				dispatch({type: RIDER_LOGIN_FAILURE, payload: err.response.data.message})
 			}
+			
+			// dispatch({type: RIDER_LOGIN_FAILURE, payload: err.response})
 			return err.response
 		})
 	)

@@ -34,7 +34,7 @@ status-panel
 }
 
 .status-panel h1{
-    font-size:18px;
+    font-size:1.4rem;
     color:#505D68;
     margin-bottom:12px;
 }
@@ -54,7 +54,6 @@ status-panel
     background-color:#424B5A;
     color:white;
 }
-
 
 .status-panel button:disabled{
    background-color:#C2D1D9;

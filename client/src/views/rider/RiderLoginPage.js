@@ -44,8 +44,10 @@ class RiderLoginPage extends React.Component {
 		})
 		this.props.login_rider(this.state.credentials)
 		.then(res => {
-			if(res.message){
+			if(res && res.message){
 				this.props.history.push('/rider-home');
+			}else{
+				console.log('SERVER ERROR, PLEASE COME BACK LATER')
 			}
 		})}
 	
