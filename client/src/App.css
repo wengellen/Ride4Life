@@ -499,8 +499,6 @@ Button.sliding-panel-button a{
     top:140px;
 }
 
-
-
 /* At the top level of your code */
 @media screen and (min-width: 600px) {
     .pink-btn{
@@ -518,7 +516,6 @@ Button.sliding-panel-button a{
         position: absolute;
         z-index:100;
         transition: all 1s cubic-bezier(0, 1, 0.5, 1);
-        /*bottom:0;*/
         transform: translateY(0);
     }
 
@@ -528,8 +525,8 @@ Button.sliding-panel-button a{
         width: 90%;
         transform: translateY(-200px);
     }
-    .login-container{
-        display:none;
-    }
+    /*.login-container{*/
+    /*    display:none;*/
+    /*}*/
 }
 
