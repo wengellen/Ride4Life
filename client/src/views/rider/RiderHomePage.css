@@ -150,7 +150,7 @@
     font-size: 0.8rem;
     font-weight: 500;
     height:30px;
-    width:90px;
+    width:100%;
     background-color: #00b8d4;
 }
 
@@ -161,13 +161,15 @@
 }
 
 .driver-name-your-fare-container input{
-    border-radius: 6px;
+    border-radius: 30px;
     width:100%;
     margin-top: 1rem;
     padding: 0.8rem 1rem;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
-    background-color: #ADE6EE;
+    background-color: #F2F5F7;
+    border:none;
+    outline:none;
 }
 
 .driver-item-buttons-list .driver-item-accept-button:hover{

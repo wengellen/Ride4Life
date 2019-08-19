@@ -253,7 +253,7 @@ class DirectionMapDriver extends React.Component {
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
                         </p>
-                        <Button className={'request-ride-button'} onClick={this.handleDriverGoOnline}>GO ONLINE</Button>
+                        <Button className={'request-ride-button main'} onClick={this.handleDriverGoOnline}>GO ONLINE</Button>
                     </div>
                   )
                 case "standby": return (
@@ -264,7 +264,7 @@ class DirectionMapDriver extends React.Component {
                             {/*    Lorem ipsum dolor sit amet, consectetur dolor sit amet,*/}
                             {/*    consectetur*/}
                             {/*</p>*/}
-                            <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                            <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                         </div>
                     )
                 case "requestIncoming": return (
@@ -297,7 +297,7 @@ class DirectionMapDriver extends React.Component {
                                 <h3>OFFER</h3>
                             </button>
                         </div>
-                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                        <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
                 )
     
@@ -326,14 +326,14 @@ class DirectionMapDriver extends React.Component {
                                 <span className={"tag blue"}>21 mi</span>
                             </div>
                             
-                            <button className={"driver-item-accept-button requesting"}
+                            <button className={"driver-item-accept-button requesting main"}
                                      disabled>
                                 <Loader/>
                             </button>
                         </div>
                         {/*</div>*/}
             
-                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                        <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
                 )
                 case "confirmed": return (
@@ -368,7 +368,7 @@ class DirectionMapDriver extends React.Component {
                                 }
                             </div>
                         </div>
-                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <Button className={'request-ride-button bordered main'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
                     </div>
                 )
                 default:      return <h1>No project match</h1>
@@ -390,67 +390,6 @@ class DirectionMapDriver extends React.Component {
                     }}
                 ></div>
              {statusPanel()}
-             
-             {/*<div className="drivers-nearby-container-list">*/}
-             {/*    {this.state.requestDetails &&*/}
-             {/*    this.state.requestDetails.map((trip, idx) => {*/}
-             {/*        return (*/}
-             {/*            <div*/}
-             {/*                className="driver-item-container-list"*/}
-             {/*                key={idx}*/}
-             {/*            >*/}
-             {/*                <div className="driver-img-container-list">*/}
-             {/*                    <img*/}
-             {/*                        src={driver.avatar}*/}
-             {/*                        alt={'driver'}*/}
-             {/*                    />*/}
-             {/*                </div>*/}
-             {/*                <div className="driver-item-content-list">*/}
-             {/*                    <h2>{driver.username}</h2>*/}
-             {/*                    <h3>*/}
-             {/*                        2 miles away*/}
-             {/*                        <span> {`, ${driver.rating} `}stars</span>*/}
-             {/*                    </h3>*/}
-             {/*                </div>*/}
-             {/*                <div className={"driver-item-buttons-list"}>*/}
-             {/*                    {*/}
-             {/*                        driverStatus === "requesting"*/}
-             {/*                            ? <>*/}
-             {/*                                <div className={"driver-item-price"}><span>$20</span></div>*/}
-             {/*                                <IconButton className={"driver-item-accept-button"}*/}
-             {/*                                            onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>*/}
-             {/*                            </>*/}
-             {/*                            :*/}
-             {/*                            <div className={"action-icon-button-bar"}>*/}
-             {/*                                <IconButton className={"driver-item-icon-button"}>*/}
-             {/*                                    <ChatBubbleIcon />*/}
-             {/*                                </IconButton>*/}
-             {/*                                <IconButton className={"driver-item-icon-button"}>*/}
-             {/*                                    <PhoneIcon />*/}
-             {/*                                </IconButton>*/}
-             {/*                            </div>*/}
-             {/*                    }*/}
-             {/*       */}
-             {/*                </div>*/}
-             {/*                <IconButton className={"right-arrow-button"}*/}
-             {/*                            onClick={e =>*/}
-             {/*                                this.loadDriverProfile(driver)*/}
-             {/*                            }>*/}
-             {/*                    <RightArrowIcon />*/}
-             {/*                </IconButton>*/}
-             {/*            </div>*/}
-             {/*        )*/}
-             {/*    })}*/}
-             {/*</div>*/}
-             {/*<div className={'status-panel'}>*/}
-             {/*    <h1 className={`drivers-nearby-header`}>{"Ready for work"}</h1>*/}
-             {/*    <p>*/}
-             {/*        Lorem ipsum dolor sit amet, consectetur dolor sit amet,*/}
-             {/*        consectetur*/}
-             {/*    </p>*/}
-             
-             {/*    {returnButton()}*/}
-             {/*</div>*/}
             </div>
         )
     }

@@ -172,7 +172,7 @@ class DirectionMap extends React.Component {
             },
         })
 
-        this.map.addControl(this.directions, 'top-left')
+        this.map.addControl(this.directions, 'bottom-left')
         this.map.addControl(this.geolocate, 'top-right')
 
         this.map.on('load', () => {
@@ -294,17 +294,16 @@ class DirectionMap extends React.Component {
         const statusPanel = () => {
             switch(tripStatus) {
                 case "standby": return (
-                    <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header  }`}>Ready to Ride?, </h1>
+                    <div className={'status-panel standby'}>
+                        <h1 className={`drivers-nearby-header}`}>Request a Ride?</h1>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
-                            consectetur
+                            Enter destination, name your fare and request!
                         </p>
-                        <button className={"driver-name-your-fare-container"}>
-                            <span>NAME YOUR FARE</span>
-                            <input  name={"tripFare"} type={"text"} placeholder={tripFare} onChange={this.handleChange}/>
-                            <button className={"driver-item-accept-button"} onClick={(e)=> this.handleRequestRide(e)}>REQUEST RIDE</button>
-                        </button>
+                        <div className={"driver-name-your-fare-container"}>
+                            <h2>$</h2>
+                            <input  name={"tripFare"} type={"text"} placeholder={"Name your fare"} onChange={this.handleChange}/>
+                        </div>
+                        <button className={"driver-item-accept-button main full"} onClick={(e)=> this.handleRequestRide(e)}>REQUEST RIDE</button>
                     </div>
                   
                 )
@@ -312,7 +311,7 @@ class DirectionMap extends React.Component {
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
                         <Loader/>
-                        <Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
+                        <Button  className={'request-ride-button bordered main'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
                     </div>
                     )
                 case "driversFound": return (
@@ -344,11 +343,11 @@ class DirectionMap extends React.Component {
                                             </h3>
                                         </div>
                                         <div className={"driver-item-buttons-list"}>
-                                                    <IconButton className={"driver-item-accept-button"}
+                                                    <IconButton className={"driver-item-accept-button main"}
                                                                 onClick={()=> this.handleConfirmRequest(idx)}>ACCEPT</IconButton>
                             
                                         </div>
-                                        <IconButton className={"right-arrow-button"}
+                                        <IconButton className={"right-arrow-button "}
                                                     onClick={e =>
                                                         this.loadDriverProfile(driver)
                                                     }>
@@ -393,7 +392,7 @@ class DirectionMap extends React.Component {
                                                     </IconButton>
                                                 </div>
                                         </div>
-                                        <IconButton className={"right-arrow-button"}
+                                        <IconButton className={"right-arrow-button "}
                                                     onClick={e =>
                                                         this.loadDriverProfile(currentDriver)
                                                     }>
@@ -429,124 +428,19 @@ class DirectionMap extends React.Component {
             //         <h3>Loading...</h3>
             //     </div>
             // ) : (
-            <div
-                className="map-wrapper"
-                style={{ position: 'relative', display: 'flex' }}
-            >
-                {/*<main*/}
-                {/*    className={`trip-estimate-container ${*/}
-                {/*        this.state.showEstimate ? 'show' : ''*/}
-                {/*    }`}*/}
-                {/*>*/}
-                {/*    <div className="trip-estimate-content">*/}
-                {/*        <p>Estimated Pickup Time: 4 Mins</p>*/}
-                {/*        <h2>*/}
-                {/*            $*/}
-                {/*            {this.state.requestDetails &&*/}
-                {/*                this.state.requestDetails.quote}*/}
-                {/*        </h2>*/}
-                {/*        <h1>Fare Estimate</h1>*/}
-                {/*    </div>*/}
-                {/*    <PinkButton*/}
-                {/*        className="brown-btn"*/}
-                {/*        onClick={this.handleConfirmRequest}*/}
-                {/*    >*/}
-                {/*        Confirm Ride Request*/}
-                {/*    </PinkButton>*/}
-                {/*</main>*/}
-                {/*<PinkButton*/}
-                {/*    type="button"*/}
-                {/*    onClick={() => this.handleRequestRide()}*/}
-                {/*    style={{*/}
-                {/*        zIndex: '1000',*/}
-                {/*        bottom: '75px',*/}
-                {/*        display: 'block',*/}
-                {/*        position: 'absolute',*/}
-                {/*        margin: '0px auto',*/}
-                {/*        padding: 0,*/}
-                {/*        lineHeight: '1.2rem',*/}
-                {/*        color: '#fff',*/}
-                {/*        background: '#ee8a65',*/}
-                {/*        borderRadius: '50px',*/}
-                {/*        width: '90px',*/}
-                {/*        height: '90px',*/}
-                {/*        fontWeight: 'bold',*/}
-                {/*        fontSize: '0.9rem',*/}
-                {/*        boxShadow: '1px 1px 0 8px rgba(255,255,255,0.2)',*/}
-                {/*        justifySelf: 'center',*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    Request*/}
-                {/*</PinkButton>*/}
                 <div
-                    ref={el => (this.mapContainer = el)}
-                    className="map"
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                    }}
-                ></div>
-                {statusPanel()}
-                {/*<div className={'status-panel'}>*/}
-                {/*    <h1 className={`drivers-nearby-header ${this.props.driversNearby.length > 0 && 'show-bg' }`}>{findNearbyDriverMessage}</h1>*/}
-                {/*    <p>*/}
-                {/*        Lorem ipsum dolor sit amet, consectetur dolor sit amet,*/}
-                {/*        consectetur*/}
-                {/*    </p>*/}
-                {/*    <div className="drivers-nearby-container-list">*/}
-                {/*        {this.props.driversNearby &&*/}
-                {/*        this.props.driversNearby.map((driver, idx) => {*/}
-                {/*            return (*/}
-                {/*                <div*/}
-                {/*                    className="driver-item-container-list"*/}
-                {/*                    key={idx}*/}
-                {/*                >*/}
-                {/*                    <div className="driver-img-container-list">*/}
-                {/*                        <img*/}
-                {/*                            src={driver.avatar}*/}
-                {/*                            alt={'driver'}*/}
-                {/*                        />*/}
-                {/*                    </div>*/}
-                {/*                    <div className="driver-item-content-list">*/}
-                {/*                        <h2>{driver.username}</h2>*/}
-                {/*                        <h3>*/}
-                {/*                            2 miles away*/}
-                {/*                            <span> {`, ${driver.rating} `}stars</span>*/}
-                {/*                        </h3>*/}
-                {/*                    </div>*/}
-                {/*                    <div className={"driver-item-buttons-list"}>*/}
-                {/*                        {*/}
-                {/*                            tripStatus === "requesting"*/}
-                {/*                            ? <>*/}
-                {/*                                    <div className={"driver-item-price"}><span>$20</span></div>*/}
-                {/*                                    <IconButton className={"driver-item-accept-button"}*/}
-                {/*                                                onClick={()=> this.handleConfirmRequest(driver)}>ACCEPT</IconButton>*/}
-                {/*                               </>*/}
-                {/*                           :*/}
-                {/*                            <div className={"action-icon-button-bar"}>*/}
-                {/*                                <IconButton className={"driver-item-icon-button"}>*/}
-                {/*                                     <ChatBubbleIcon />*/}
-                {/*                                </IconButton>*/}
-                {/*                                <IconButton className={"driver-item-icon-button"}>*/}
-                {/*                                      <PhoneIcon />*/}
-                {/*                                </IconButton>*/}
-                {/*                            </div>*/}
-                {/*                        }*/}
-                {/*                  */}
-                {/*                    </div>*/}
-                {/*                    <IconButton className={"right-arrow-button"}*/}
-                {/*                        onClick={e =>*/}
-                {/*                        this.loadDriverProfile(driver)*/}
-                {/*                    }>*/}
-                {/*                        <RightArrowIcon />*/}
-                {/*                    </IconButton>*/}
-                {/*                </div>*/}
-                {/*            )*/}
-                {/*        })}*/}
-                {/*    </div>*/}
-                
-                {/*    {returnButton()}*/}
-                {/*</div>*/}
+                    className="map-wrapper "
+                    style={{ position: 'relative', display: 'flex' }}
+                >
+                    <div
+                        ref={el => (this.mapContainer = el)}
+                        className={`map ${tripStatus!== "standby" &&  "hide-direction"}`}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                        }}
+                    ></div>
+                    {statusPanel()}
             </div>
         )
     }
