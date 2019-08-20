@@ -43,8 +43,16 @@ exports.app = app;
 const httpServer = _http.default.Server(app);
 
 const globalSocket = (0, _io.initialize)(httpServer);
+let corsOptions = {};
+
+if (process.env.NODE_ENV === 'production') {
+  corsOptions = {
+    origin: 'https://reverent-wozniak-c1db03.netlify.com/'
+  };
+}
+
 app.disable('x-powered-by');
-app.use((0, _cors.default)());
+app.use((0, _cors.default)(corsOptions));
 app.use((0, _bodyParser.json)());
 app.use((0, _bodyParser.urlencoded)({
   extended: true

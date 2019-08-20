@@ -16,8 +16,12 @@ import userRouter from './resources/user/user.router'
 export const app = express()
 const httpServer = http.Server(app);
 const globalSocket = initialize(httpServer)
-const corsOptions = {
-	origin: 'https://reverent-wozniak-c1db03.netlify.com/'
+let corsOptions = {}
+
+if (process.env.NODE_ENV==='production') {
+	corsOptions = {
+		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
+	}
 }
 app.disable('x-powered-by')
 app.use(cors(corsOptions))

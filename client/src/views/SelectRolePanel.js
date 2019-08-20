@@ -5,41 +5,36 @@ import {Link} from "react-router-dom";
 import Lock from "@material-ui/icons/Lock";
 
 class SelectRolePanel extends Component {
+	
+	handleClick = (linkUrl) => {
+		this.props.history.push(linkUrl)
+		this.props.closePanel()
+	}
 	render() {
 		const {type, show, closePanel} =  this.props
+		
 		return (
 			<div className={`sliding-panel ${show && "show"}`}>
 				<div className={"sliding-panel-bg"}/>
 				{type === 'signup'
 				? (	<>
-						 {/*<h1>Welcome</h1>*/}
-						<IconButton className="sliding-panel-button" onClick={closePanel}>
-							<Link
-								  display="none"
-								  to="/driver-signup">Sign Up to Drive</Link>
+						<IconButton className="sliding-panel-button" onClick={()=> this.handleClick('/driver-signup')}>
+							Sign Up to Drive
 						</IconButton>
-						<IconButton className="sliding-panel-button" onClick={closePanel}>
-							<Link
-								  display="none"
-								  to="/rider-signup">Sign Up to Ride</Link>
+						<IconButton className="sliding-panel-button" onClick={()=> this.handleClick('/rider-signup')}>
+							Sign Up to Ride
 						</IconButton>
 					 </>
 			        )
 				:   (
 					<>
-						{/*<h1>Welcome Back</h1>*/}
-						<IconButton className="sliding-panel-button" onClick={closePanel}>
+						<IconButton className="sliding-panel-button" onClick={()=> this.handleClick('/rider-login')}>
 							<Lock className="sliding-panel-icon"/>
-							<Link
-								  display="none"
-								  to="/driver-login">Driver Sign In</Link>
-						
+							Driver Sign In
 						</IconButton>
-						<IconButton className="sliding-panel-button" onClick={closePanel}>
+						<IconButton className="sliding-panel-button" onClick={()=> this.handleClick('/rider-login')}>
 							<Lock className="sliding-panel-icon"/>
-							<Link
-								  display="none"
-								  to="/rider-login">Rider Sign In</Link>
+							Rider Sign In
 						</IconButton></>
 					) }
 				<IconButton className="sliding-panel-close-button" onClick={closePanel}>

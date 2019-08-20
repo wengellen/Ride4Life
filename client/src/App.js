@@ -29,6 +29,7 @@ class App extends React.Component {
 			showSlidingPanel: false,
 			slidingPanelComponent: null,
 		}
+
 	}
 	openPanel = type => {
 		this.setState({
@@ -49,14 +50,15 @@ class App extends React.Component {
 	render() {
 		const { showSlidingPanel, slidingPanelComponent } = this.state
 		const { user } = this.props
-		console.log('user', user)
+		console.log('this.props', this.props)
 		return (
 			<div className="App">
-				<Header openPanel={this.openPanel} logoutUser={this.logout} user={user} fixed/>
+				<Header openPanel={this.openPanel} logoutUser={this.logout} user={user} fixed />
 				<SelectRolePanel
 					show={showSlidingPanel}
 					type={slidingPanelComponent}
 					closePanel={this.closePanel}
+					history={this.props.history}
 				/>
 				
 				<Switch>
