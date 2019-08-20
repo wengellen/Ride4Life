@@ -58,8 +58,10 @@ export const signup_driver= (driver) => dispatch =>{
 		})
 		.catch(err => {
 			console.log(err)
-			dispatch({type: DRIVER_SIGNUP_FAILURE, payload: err.response.data})
-			return err.response.data
+			if(err.response){
+				dispatch({type: DRIVER_SIGNUP_FAILURE, payload: err.response.data})
+			}
+			return err.response
 		})
 	)
 }
