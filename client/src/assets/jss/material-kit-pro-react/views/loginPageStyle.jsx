@@ -50,7 +50,7 @@ const signupPageStyle = theme => ({
     ...container,
     zIndex: "4",
     // marginTop: "2rem",
-    paddingTop:"130px",
+    paddingTop:"60px",
     [theme.breakpoints.down("sm")]: {
       paddingBottom: "100px"
     }
