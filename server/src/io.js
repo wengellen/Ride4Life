@@ -114,7 +114,6 @@ export const initialize = function(server) {
             )
     
             const tripId = nearbyOnlineDriversMap.get(data.driver.username)
-            console.log('nearbyOnlineDriversMap', nearbyOnlineDriversMap)
             try {
                 const driver = await Driver.findOneAndUpdate(
                     {_id: data.driver._id},
