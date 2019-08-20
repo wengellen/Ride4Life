@@ -28,7 +28,7 @@ class SelectRolePanel extends Component {
 			        )
 				:   (
 					<>
-						<IconButton className="sliding-panel-button" onClick={()=> this.handleClick('/rider-login')}>
+						<IconButton className="sliding-panel-button" onClick={()=> this.handleClick('/driver-login')}>
 							<Lock className="sliding-panel-icon"/>
 							Driver Sign In
 						</IconButton>
