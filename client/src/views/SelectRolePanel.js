@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {Link} from "react-router-dom";
 import Lock from "@material-ui/icons/Lock";
 
 class SelectRolePanel extends Component {
