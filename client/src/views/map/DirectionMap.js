@@ -38,7 +38,7 @@ class DirectionMap extends React.Component {
             loadingMap: true,
             response: false,
             endpoint:
-                process.env.NODE_ENV !== 'production'
+                process.env.NODE_ENV !== 'PRODUCTION'
                     ? 'http://localhost:7000'
                     : 'https://ride4lifer.herokuapp.com/',
             showEstimate: false,
@@ -276,8 +276,6 @@ class DirectionMap extends React.Component {
         })
     }
 
-    
-    
     handleConfirmRequest = (idx) => {
         const driver = this.state.acceptedDrivers[idx]
         console.log('idx',idx)
@@ -306,7 +304,7 @@ class DirectionMap extends React.Component {
                     <div className={'status-panel standby'}>
                         <h1 className={`drivers-nearby-header}`}>Request a Ride?</h1>
                         <p>
-                            Enter destination, name your fare and request!
+                            Enter hospital and name your fare!
                         </p>
                         <div className={"driver-name-your-fare-container"}>
                             <h2>$</h2>

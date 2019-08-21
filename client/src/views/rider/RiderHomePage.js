@@ -25,9 +25,7 @@ class RiderHomePage extends Component {
 	render() {
 		return (
 			<div className="map-container ">
-				{/*<div className="map-container">*/}
 					 <DirectionMap history={this.props.history}/>
-				{/*</div>*/}
 			</div>
 		);
 	}

@@ -121,19 +121,6 @@ class DirectionMapDriver extends React.Component {
                     'You have a new request! \n' +
                     JSON.stringify(requestDetails)
                 )
-                //
-                // requestTimer = setTimeout(() => {
-                //     this.setState({
-                //         requestDetails: null,
-                //         driverStatus:"standby",
-                //         headerMessage:"Finding rides for you",
-                //     })
-                //
-                //     this.socket.emit('DENY_TRIP_REQUEST',  {
-                //         driver: JSON.parse(localStorage.getItem('user')),
-                //         tripId:this.state.tripId
-                //     })
-                // }, 20000)
             })
     
     
