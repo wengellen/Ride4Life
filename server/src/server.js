@@ -39,17 +39,6 @@ app.use('/api/trip', tripRouter)
 
 app.use('/api/user', userRouter)
 
-//
-// setInterval(function () {
-// 	globalSocket.emit('PULSE', heartbeat())
-// }, 1000);
-//
-// function heartbeat() {
-// 	// Retun a random number between 60 (inc) and max (exc)
-// 	const pulse = Math.ceil(Math.random() * (160 - 60) + 60);
-// 	console.log(`Heartbeat ${pulse}`);
-// 	return pulse;
-// }
 
 
 export const start = async () => {

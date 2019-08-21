@@ -1,5 +1,5 @@
 import { merge } from 'lodash'
-const env = process.env.NODE_ENV || 'production';//'development'
+const env = process.env.NODE_ENV || 'development'
 console.log('env',env)
 const baseConfig = {
   env,
@@ -15,7 +15,8 @@ const baseConfig = {
 let envConfig = {}
 
 switch (env) {
-  case 'production':
+  case 'PRODUCTION':
+    console.log('production envConfig',envConfig)
     envConfig = require('./prod').config
     break
   case 'development':
