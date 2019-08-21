@@ -249,7 +249,7 @@ class DirectionMapDriver extends React.Component {
             switch(driverStatus) {
                 case "offline": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header`}>Ready to drive? {this.driver.username}</h1>
+                        <h1 className={`drivers-nearby-header`}>Ready to drive?</h1>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur dolor sit amet,
                             consectetur
