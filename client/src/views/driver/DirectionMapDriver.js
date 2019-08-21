@@ -242,7 +242,6 @@ class DirectionMapDriver extends React.Component {
         })
     }
     
-    
     render() {
         const { driverStatus, requestDetails, headerMessage } = this.state
         const statusPanel = () => {
@@ -261,10 +260,6 @@ class DirectionMapDriver extends React.Component {
                         <div className={'status-panel'}>
                             <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
                             <Loader/>
-                            {/*<p>*/}
-                            {/*    Lorem ipsum dolor sit amet, consectetur dolor sit amet,*/}
-                            {/*    consectetur*/}
-                            {/*</p>*/}
                             <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                         </div>
                     )

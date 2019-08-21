@@ -52,7 +52,7 @@ const signupPageStyle = theme => ({
     // marginTop: "2rem",
     paddingTop:"60px",
     [theme.breakpoints.down("sm")]: {
-      paddingBottom: "100px"
+      // paddingBottom: "100px"
     }
   },
   pageHeader: {

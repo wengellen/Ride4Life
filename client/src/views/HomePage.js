@@ -15,7 +15,6 @@ class HomePage extends Component {
             </div>
             <main className={"app-content"}>
                 <h1>Welcome to Ride for life</h1>
-                {/*<h4>A RideSharing service for soon-to-be mothers</h4>*/}
                 <p>A RideSharing service for soon-to-be mothers <br/><em>Quote, Choose, and Ride</em></p>
                 <button onClick={()=> this.onRequestRide()}>Request Ride</button>
             </main>
