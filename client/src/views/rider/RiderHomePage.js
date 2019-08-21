@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import "./RiderHomePage.css"
-import DirectionMap from "../map/DirectionMap";
-import StatusPanel from "../../components/Panel/StatusPanel";
+import DirectionMap from "./DirectionMap";
 
 class RiderHomePage extends Component {
 	state = {

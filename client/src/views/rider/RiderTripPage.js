@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
-import DirectionMap from "../map/DirectionMap";
+import DirectionMap from "./DirectionMap";
 
 class RiderTripPage extends Component {
 	constructor(){

@@ -33,7 +33,6 @@ class DriverProfilePage extends Component {
 		})
 	}
 	
-	
 	getFareEstimate = (e)=>{
 		e.preventDefault()
 	   this.setState({showEstimate: !this.state.showEstimate})
@@ -65,7 +64,6 @@ class DriverProfilePage extends Component {
 	   }else{
 		   return (
 			   <div className="driver-profile-container">
-				   {/*<Edit className="edit-btn-container" onClick={this.editProfile}/>*/}
 				   <header>
 					   <div className="driver-profile-img-container ">
 						   <img src={currentDriver.avatar} className="round" alt={"driver avatar"}/>
@@ -87,7 +85,6 @@ class DriverProfilePage extends Component {
 						   <p>REVIEWS</p>
 					   </div>
 				   </div>
-				   {/*<button className="brown-btn" onClick={this.getFareEstimate}>Get Price Estimate</button>*/}
 				
 				   <main className="driver-profile-main">
 					   <Edit className="edit-btn-container"

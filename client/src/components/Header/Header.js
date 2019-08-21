@@ -83,15 +83,16 @@ class Header extends React.Component {
                     ) : (
                         <div className={`login-container ${!user ? "hide" : "show"}`}>
                             <button
+                                className={"login"}
                                 onClick={() => openPanel('login')}
                             >
-                                Sign in
+                                Sign In
                             </button>
                             <button
                                 className={"signup"}
                                 onClick={() => openPanel('signup')}
                             >
-                                Sign up
+                                Sign Up
                             </button>
                         </div>
                     )}

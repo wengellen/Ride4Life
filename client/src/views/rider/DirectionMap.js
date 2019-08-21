@@ -5,7 +5,6 @@ import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up t
 import './DirectionMap.css'
 import '../rider/RiderHomePage.css'
 
-import PinkButton from '../../components/Button/PinkButton' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import  RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
@@ -437,6 +436,7 @@ class DirectionMap extends React.Component {
             //         <h3>Loading...</h3>
             //     </div>
             // ) : (
+            
                 <div
                     className="map-wrapper "
                     style={{ position: 'relative', display: 'flex' }}

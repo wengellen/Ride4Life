@@ -58,21 +58,28 @@ button.menuButton.hide{
  .login-container{
     display:flex;
     width: 100%;
+    padding-right:6px;
  }
 
 .login-container button{
     font-weight: bold;
+    font-size: 0.8rem;
+    outline:none;
+    border:none;
+    border-radius: 10px;
+    color: white;
+    padding:10px 16px;
+    margin-right:12px;
 }
 
 
 .login-container .signup{
      background-color:#78849E;
-     outline:none;
-     border:none;
-     border-radius: 10px;
-     color: white;
-     padding:4px 10px;
-     margin-right:10px;
+ }
+
+ .login-container .login{
+     border:1px solid #78849E;
+     color: #78849E;
  }
 
 
