@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
-import * as HomeImage from 'assets/img/homepage-2.jpg'
+import * as HomeImage from '../assets/img/homepage-2.jpg'
 
 class HomePage extends Component {
     onRequestRide = () => {
