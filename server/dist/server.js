@@ -64,17 +64,7 @@ app.use('/api', _auth.protect);
 app.use('/api/rider', _rider.default);
 app.use('/api/driver', _driver.default);
 app.use('/api/trip', _trip.default);
-app.use('/api/user', _user.default); //
-// setInterval(function () {
-// 	globalSocket.emit('PULSE', heartbeat())
-// }, 1000);
-//
-// function heartbeat() {
-// 	// Retun a random number between 60 (inc) and max (exc)
-// 	const pulse = Math.ceil(Math.random() * (160 - 60) + 60);
-// 	console.log(`Heartbeat ${pulse}`);
-// 	return pulse;
-// }
+app.use('/api/user', _user.default);
 
 const start = async () => {
   try {

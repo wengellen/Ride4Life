@@ -499,6 +499,11 @@ Button.sliding-panel-button a{
     top:140px;
 }
 
+.home-page-image-holder{
+    height:70%;
+}
+
+
 /* At the top level of your code */
 @media screen and (min-width: 600px) {
     .pink-btn{

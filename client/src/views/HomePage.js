@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
-import * as HomeImage from 'assets/img/homepage.jpg'
+import * as HomeImage from 'assets/img/homepage-2.jpg'
 
 class HomePage extends Component {
     onRequestRide = () => {
@@ -9,13 +9,14 @@ class HomePage extends Component {
     
     render() {
     return (
-      <div className="App">
-            <div style={{width:"100%"}}>
-             <img src={HomeImage} style={{minWidth:"100%"}}/>
+      <div>
+            <div className={"home-page-image-holder"}>
+              <img src={HomeImage} style={{maxWidth:"100%"}}/>
             </div>
             <main className={"app-content"}>
                 <h1>Welcome to Ride for life</h1>
-                <p>If you're offered a seat on a rocket ship, <br/> don't ask what seat, Just get on.</p>
+                {/*<h4>A RideSharing service for soon-to-be mothers</h4>*/}
+                <p>A RideSharing service for soon-to-be mothers <br/><em>Quote, Choose, and Ride</em></p>
                 <button onClick={()=> this.onRequestRide()}>Request Ride</button>
             </main>
       </div>
