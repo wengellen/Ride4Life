@@ -37,7 +37,7 @@ class SelectRolePanel extends Component {
 						</IconButton></>
 					) }
 				<IconButton className="sliding-panel-close-button" onClick={closePanel}>
-					<CloseIcon />
+					<CloseIcon color="#353A50" />
 				</IconButton>
 				
 			</div>

@@ -46,10 +46,12 @@ class DriverLoginPage extends React.Component {
 		this.props.login_driver(this.state.credentials)
 		.then((res) => {
 			console.log('res', res)
-			if(res && !res.error){
+			if(!res){
+				return console.log('SERVER ERROR, PLEASE COME BACK LATER')
+			}
+			
+			if (!res.error){
 				this.props.history.push('/driver-home');
-			}else{
-			    console.log('SERVER ERROR, PLEASE COME BACK LATER')
 			}
 		});
 	};

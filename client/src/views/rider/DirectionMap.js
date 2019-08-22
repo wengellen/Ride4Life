@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl'
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
 import './DirectionMap.css'
-import '../rider/RiderHomePage.css'
+import './RiderHomePage.css'
 
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
@@ -318,7 +318,7 @@ class DirectionMap extends React.Component {
                 case "requesting": return (
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                        <Loader/>
+                        <Loader type="Rings" color="#424B5A" height={100} width={100} />
                         <Button  className={'request-ride-button bordered main'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
                     </div>
                     )

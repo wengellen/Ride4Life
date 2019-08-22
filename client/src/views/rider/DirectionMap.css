@@ -482,7 +482,7 @@
 /*  where you are button*/
 div.mapboxgl-ctrl-top-right{
     display:none;
-    background-color: red;
+    /*background-color: red;*/
 }
 
 div.mapboxgl-ctrl-top-left{

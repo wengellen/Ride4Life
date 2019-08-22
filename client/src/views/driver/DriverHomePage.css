@@ -15,17 +15,18 @@
     align-items: center;
     margin:1.2rem;
     border-radius:12px ;
-    padding:1.2rem;
+    padding:0.6rem 1.2rem;
     line-height: 1.2rem;
 }
 
 .driver-item-container-list.requesting {
     border-bottom: none;
-    padding:6px 0 0 0;
+    justify-content: flex-start;
+    padding: 0.5rem 1rem;
+    border-bottom: none;
 }
 
 .driver-item-accept-button.requesting{
-    width:93px;
     border-radius: 16px;
     display:flex;
     flex-flow:column wrap;
@@ -72,8 +73,4 @@
 
 .driver-item-price.requesting{
     background-color: white;
-}
-
-.driver-item-container-list.requesting .driver-item-content-list{
-    /*border-bottom: 1px solid red;*/
 }

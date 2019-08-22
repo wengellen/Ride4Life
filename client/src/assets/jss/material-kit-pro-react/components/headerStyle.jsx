@@ -82,16 +82,16 @@ const headerStyle = theme => ({
     }
   },
     logoContainer:{
-      width:"70px",
-      height:"70px",
+      width:"60px",
+      height:"60px",
       marginLeft: "20px",
       "& img":{
         maxWidth: "100%",
       },
       // some jss/css to make the cards look a bit better on Internet Explorer
       "@media screen and (max-width: 600px)": {
-        width: "45px",
-        height:"45px",
+        width: "55px",
+        height:"55px",
         marginLeft:"10px"
       }
     },
@@ -267,6 +267,7 @@ const headerStyle = theme => ({
     alignItems: "center"
   },
   closeButtonDrawer: {
+    // background:"#353A50",
     position: "absolute",
     right: "8px",
     top: "9px",

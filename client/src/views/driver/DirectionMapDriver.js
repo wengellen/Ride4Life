@@ -4,7 +4,6 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
 // import './DirectionMapDriver.css' // Updating node module will keep css up to date.
 import './DriverHomePage.css' // Updating node module will keep css up to date.
-import PinkButton from '../../components/Button/PinkButton' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import {
@@ -12,7 +11,6 @@ import {
 } from '../../actions'
 import socketIOClient from 'socket.io-client'
 import IconButton from "@material-ui/core/IconButton";
-import  RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
 import Button from "../../components/CustomButtons/Button";
@@ -46,6 +44,7 @@ class DirectionMapDriver extends React.Component {
     componentDidMount() {
         let map, directions, geolocate
         const driver = JSON.parse(localStorage.getItem('user'))
+        console.log('driver', driver)
         let requestTimer
         navigator.geolocation.getCurrentPosition(position => {
             const coordinates = [
@@ -60,7 +59,6 @@ class DirectionMapDriver extends React.Component {
                 driver: driver,
               },
             )
-            
     
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],
@@ -237,8 +235,6 @@ class DirectionMapDriver extends React.Component {
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header`}>Ready to drive?</h1>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
-                            consectetur
                         </p>
                         <Button className={'request-ride-button main'} onClick={this.handleDriverGoOnline}>GO ONLINE</Button>
                     </div>
@@ -246,7 +242,7 @@ class DirectionMapDriver extends React.Component {
                 case "standby": return (
                         <div className={'status-panel'}>
                             <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                            <Loader/>
+                            <Loader type="Rings" color="#424B5A" height={100} width={100} />
                             <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                         </div>
                     )
@@ -311,7 +307,7 @@ class DirectionMapDriver extends React.Component {
                             
                             <button className={"driver-item-accept-button requesting main"}
                                      disabled>
-                                <Loader/>
+                                <Loader type="ThreeDots" color="#424B5A" height={40} width={40} />
                             </button>
                         </div>
                         {/*</div>*/}
