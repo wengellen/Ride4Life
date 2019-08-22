@@ -38,7 +38,6 @@ class DriverLoginPage extends React.Component {
 	};
 	
 	login = e => {
-		// console.log('login clicked')
 		e.preventDefault();
 		this.setState({
 			isEditing:false,

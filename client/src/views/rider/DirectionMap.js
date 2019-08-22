@@ -146,22 +146,32 @@ class DirectionMap extends React.Component {
             unit: 'imperial',
             profile: 'mapbox/driving',
         })
+        
 
         this.directions.on('destination', e => {
             this.setState({
                 endLocation: e.feature.geometry.coordinates,
             })
+            let destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
+            let startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
+            console.log('value', destInput.value)
+            console.log('StartValue', startInput.value)
+            
+            this.setState({'endLocationAddress': destInput.value})
+            // console.log('e',document.querySelectorAll(".mapbox-directions-origin input"))
         })
 
         this.directions.on('route', e => {
-            console.log(e.route) // Logs the current route shown in the interface.
-            // if (!e.route) return
-            // const {distance, legs, duration} = e.route[0]
-            // this.setState({
-            //     endLocationAddress: legs[0].summary,
-            //     duration: duration || 0,
-            //     distance: distance || 0,
-            // })
+          // Logs the current route shown in the interface.
+            console.log('e',e)
+            if ( !e.route && !e.route.length) return
+            // console.log(e.route)
+            const {distance, legs, duration} = e.route[0]
+            this.setState({
+                endLocationAddress: legs[0].summary,
+                duration: duration || 0,
+                distance: distance || 0,
+            })
         })
 
         this.geolocate = new mapboxgl.GeolocateControl({
@@ -170,6 +180,7 @@ class DirectionMap extends React.Component {
                 watchPosition: true,
             },
         })
+        
 
         this.map.addControl(this.directions, 'bottom-left')
         this.map.addControl(this.geolocate, 'top-right')
@@ -250,6 +261,7 @@ class DirectionMap extends React.Component {
                 coordinates: this.state.location,
                 type: 'Point',
             },
+            endLocationAddress:this.state.endLocationAddress,
             distance: this.state.distance,
             duration: this.state.duration,
             tripFare:this.state.tripFare,

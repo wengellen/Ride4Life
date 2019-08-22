@@ -40,7 +40,6 @@ class DirectionMapDriver extends React.Component {
         this.driver=JSON.parse(localStorage.getItem('user'))
     }
     
-    
     componentDidMount() {
         let map, directions, geolocate
         const driver = JSON.parse(localStorage.getItem('user'))
@@ -95,7 +94,6 @@ class DirectionMapDriver extends React.Component {
             map.addControl(directions, 'top-left')
             map.addControl(geolocate, 'top-right')
     
-    
             map.on('load', () => {
                 // directions.setOrigin([
                 //     position.coords.longitude,
@@ -120,7 +118,6 @@ class DirectionMapDriver extends React.Component {
                     JSON.stringify(requestDetails)
                 )
             })
-    
     
             this.socket.on('RIDER_REQUEST_CANCELED', () => {
                 this.setState({
@@ -213,7 +210,6 @@ class DirectionMapDriver extends React.Component {
         })
     }
     
-    
     handleDriverGoOffline = () => {
         console.log('DRIVER_GO_OFFLINE', )
         this.socket.emit('DRIVER_GO_OFFLINE', {
@@ -266,9 +262,9 @@ class DirectionMapDriver extends React.Component {
                              </div>
                         <div className={"trip-destination-container"}>
                             <div className={"trip-destination-left"}>
-                                <h2>2398 Walters way, Concord</h2>
-                                <span className={"tag orange"}>35 mins</span>
-                                <span className={"tag blue"}>21 mi</span>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                <span className={"tag orange"}>{requestDetails.duration} mins</span>
+                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
                             </div>
                             <button className={"driver-item-accept-button requesting main"}
                                         onClick={(e)=> this.handleAcceptTrip(e)}>
@@ -300,9 +296,9 @@ class DirectionMapDriver extends React.Component {
                         </div>
                         <div className={"trip-destination-container"}>
                             <div className={"trip-destination-left"}>
-                                <h2>2398 Walters way, Concord</h2>
-                                <span className={"tag orange"}>35 mins</span>
-                                <span className={"tag blue"}>21 mi</span>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                <span className={"tag orange"}>{requestDetails.duration} mins</span>
+                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
                             </div>
                             
                             <button className={"driver-item-accept-button requesting main"}

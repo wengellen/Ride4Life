@@ -12,8 +12,8 @@ const tripSchema = new mongoose.Schema(
           address: {type:String},
           coordinates: []
       },
-
-    address: {
+      
+      endLocationAddress: {
         type: String,
     },
     status: {
