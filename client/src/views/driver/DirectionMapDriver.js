@@ -14,6 +14,7 @@ import IconButton from "@material-ui/core/IconButton";
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
 import Button from "../../components/CustomButtons/Button";
+import {withRouter} from "react-router";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMapDriver extends React.Component {
@@ -42,10 +43,10 @@ class DirectionMapDriver extends React.Component {
         this.driver=JSON.parse(localStorage.getItem('user'))
     }
     
-    
     componentDidMount() {
         let map, directions, geolocate
         const driver = JSON.parse(localStorage.getItem('user'))
+        
         console.log('driver', driver)
         let requestTimer
         navigator.geolocation.getCurrentPosition(position => {
@@ -99,10 +100,6 @@ class DirectionMapDriver extends React.Component {
             map.addControl(geolocate, 'top-right')
     
             map.on('load', () => {
-                // directions.setOrigin([
-                //     position.coords.longitude,
-                //     position.coords.latitude,
-                // ])
                 this.startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
                 this.destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
             })
@@ -123,6 +120,7 @@ class DirectionMapDriver extends React.Component {
                     'You have a new request! \n' +
                     JSON.stringify(requestDetails)
                 )
+                this.props.history.push('/driver-home/requestIncoming')
             })
     
     
@@ -135,7 +133,8 @@ class DirectionMapDriver extends React.Component {
                 console.log(
                     'You have a new request! \n'
                 )
-        
+                this.props.history.push('/driver-home/standby')
+    
             })
     
             this.socket.on('CONFIRM_TRIP', data => {
@@ -152,6 +151,8 @@ class DirectionMapDriver extends React.Component {
                     'Rider has accept your service! \n' +
                     JSON.stringify(requestDetails)
                 )
+    
+                this.props.history.push('/driver-home/confirmed')
             })
     
             this.socket.on('RIDER_TRIP_CANCELED', () => {
@@ -164,6 +165,8 @@ class DirectionMapDriver extends React.Component {
                 console.log(
                     'RIDER_TRIP_CANCELED! \n'
                 )
+    
+                this.props.history.push('/driver-home/standby')
             })
     
             this.socket.on('DRIVER_TRIP_CANCELED', () => {
@@ -175,6 +178,7 @@ class DirectionMapDriver extends React.Component {
                     headerMessage:"Finding trip for you",
                     requestDetails: null
                 })
+                this.props.history.push('/driver-home/standby')
             })
         })
     }
@@ -198,7 +202,6 @@ class DirectionMapDriver extends React.Component {
     }
     
     handleAcceptTrip = (e) => {
-        // e.currentTarget.style = "display:none"
         console.log('ACCEPT_TRIP', )
         this.socket.emit('ACCEPT_TRIP', {
             driver: JSON.parse(localStorage.getItem('user')),
@@ -209,7 +212,9 @@ class DirectionMapDriver extends React.Component {
             driverStatus:"waitingForConfirmation",
             headerMessage:"Waiting for rider confirmation."
         })
-        
+    
+        this.props.history.push('/driver-home/waitingForConfirmation')
+    
     }
     
     handleDriverGoOnline = () => {
@@ -226,6 +231,8 @@ class DirectionMapDriver extends React.Component {
         this.socket.emit('DRIVER_GO_ONLINE', {
             driver: JSON.parse(localStorage.getItem('user'))
         })
+    
+        this.props.history.push('/driver-home/standby')
     }
     
     handleDriverGoOffline = () => {
@@ -239,12 +246,18 @@ class DirectionMapDriver extends React.Component {
             )
             this.setState({driverStatus:"offline"})
         })
+        this.props.history.push('/driver-home/offline')
+    }
+    
+    getStatePath = (path) => {
+    	return path.split('/driver-home/')[1]
     }
     
     render() {
         const { driverStatus, requestDetails, headerMessage } = this.state
+        const path = this.getStatePath(this.props.location.pathname)
         const statusPanel = () => {
-            switch(driverStatus) {
+            switch(path) {
                 case "offline": return (
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header`}>Ready to drive?</h1>
@@ -332,7 +345,7 @@ class DirectionMapDriver extends React.Component {
                 case "confirmed": return (
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                        <button onClick={this.handleDriveToUser}>GO</button>
+                        <button className="main" onClick={this.handleDriveToUser}>GO</button>
                         <div
                             className="driver-item-container-list"
                         >
@@ -365,7 +378,7 @@ class DirectionMapDriver extends React.Component {
                         <Button className={'request-ride-button bordered main'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
                     </div>
                 )
-                default:      return <h1>No project match</h1>
+                default:      return <h1>No match</h1>
             }
         }
     
@@ -388,10 +401,10 @@ class DirectionMapDriver extends React.Component {
         )
     }
 }
-const mapStateToProps = ({ driverReducer, tripReducer }) => ({
+const mapStateToProps = ({ driverReducer, tripReducer }, ownProps) => ({
     tripStatus:driverReducer.tripStatus,
 })
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     { updateDriverLocation }
-)(DirectionMapDriver)
+)(DirectionMapDriver))

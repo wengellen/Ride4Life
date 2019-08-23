@@ -50,7 +50,7 @@ class DriverLoginPage extends React.Component {
 			}
 			
 			if (!res.error){
-				this.props.history.push('/driver-home');
+				this.props.history.push('/driver-home/offline');
 			}
 		});
 	};

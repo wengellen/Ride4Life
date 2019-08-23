@@ -67,9 +67,15 @@ class App extends React.Component {
 					<Route path="/rider-signup" component={RiderSignupPage} />
 					<Route path="/driver-login" component={DriverLoginPage} />
 					<Route path="/driver-signup" component={DriverSignupPage} />
+					
 					<Route path="/rider-home" component={RiderHomePage} />
 					<Route path="/rider/:id/trip" component={RiderTripPage} />
-					<Route path="/driver-home" component={DriverHomePage} />
+					
+					<Route path="/driver-home/offline" component={DriverHomePage} />
+					<Route path="/driver-home/standby" component={DriverHomePage} />
+					<Route path="/driver-home/requestIncoming" component={DriverHomePage} />
+					<Route path="/driver-home/waitingForConfirmation" component={DriverHomePage} />
+					<Route path="/driver-home/confirmed" component={DriverHomePage} />
 					<Route path="/drivers/:id" component={DriverProfilePage} />
 					<Route path="/driver/review" component={DriverReviewPage} />
 				</Switch>

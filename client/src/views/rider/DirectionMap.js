@@ -130,7 +130,6 @@ class DirectionMap extends React.Component {
                 tripStatus:"requesting",
                 headerMessage:"Finding drivers for you",
             })
-            
         })
 
         this.map = new mapboxgl.Map({
