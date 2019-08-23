@@ -186,20 +186,15 @@ class DirectionMapDriver extends React.Component {
             tripId:this.state.tripId
         })
         
-        this.startInput.value = null
-        this.destInput.value = null
+        this.startInput.value = ""
+        this.destInput.value = ""
     }
     
     handleDriveToUser = (e) => {
         this.directions.setOrigin(this.state.location)
         this.directions.setDestination(this.state.requestDetails.endLocationAddress)
-        console.log('this.state.location', this.state.location)
-        console.log(' this.state.requestDetails.startLocationAddress', this.state.requestDetails.startLocationAddress)
-        console.log(' this.state.requestDetails.endLocationAddress', this.state.requestDetails.endLocationAddress)
-        //
-        //
         this.startInput.value = "Your Location"
-        // this.destInput.value = this.state.requestDetails.endLocationAddress
+        document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
     }
     
     handleAcceptTrip = (e) => {
@@ -381,7 +376,7 @@ class DirectionMapDriver extends React.Component {
                 
                 <div
                     ref={el => (this.mapContainer = el)}
-                    className={`driver-map ${driverStatus!== "confirmed" &&  "hide-direction"}`}
+                    className={"driver-map hide-direction"}
                     // className={`driver-map hide-direction`}
                     style={{
                         width: '100%',
