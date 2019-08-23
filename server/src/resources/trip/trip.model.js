@@ -13,9 +13,13 @@ const tripSchema = new mongoose.Schema(
           coordinates: []
       },
       
-      endLocationAddress: {
+      startLocationAddress: {
         type: String,
-    },
+     },
+    
+      endLocationAddress: {
+          type: String,
+      },
     status: {
       type: String,
       required: true,

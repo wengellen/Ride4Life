@@ -30,6 +30,7 @@ class DirectionMap extends React.Component {
             location: [-122.431297, 37.7749],
             startLocation: [-122.431297, 37.7749],
             endLocation: [0, 0],
+            startLocationAddress:null,
             endLocationAddress: null,
             distance: 0,
             longitude: 0,
@@ -124,7 +125,6 @@ class DirectionMap extends React.Component {
             )
             
             const newArr = this.state.acceptedDrivers.filter(driver => driver.username !== data.driver.username)
-            
             this.setState({
                 acceptedDrivers: newArr,
                 tripStatus:"requesting",
@@ -146,32 +146,38 @@ class DirectionMap extends React.Component {
             unit: 'imperial',
             profile: 'mapbox/driving',
         })
-        
+    
+        this.directions.on('origin', e => {
+            let startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
+            this.setState({
+                startLocation: e.feature.geometry.coordinates,
+                startLocationAddress:startInput.value
+            })
+    
+            startInput.value = "Your Location"
+        })
 
         this.directions.on('destination', e => {
+            let destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
             this.setState({
                 endLocation: e.feature.geometry.coordinates,
+                endLocationAddress:destInput.value
             })
-            let destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
-            let startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
-            console.log('value', destInput.value)
-            console.log('StartValue', startInput.value)
-            
-            this.setState({'endLocationAddress': destInput.value})
-            // console.log('e',document.querySelectorAll(".mapbox-directions-origin input"))
         })
+        
 
         this.directions.on('route', e => {
           // Logs the current route shown in the interface.
             console.log('e',e)
-            if ( !e.route && !e.route.length) return
-            // console.log(e.route)
-            const {distance, legs, duration} = e.route[0]
-            this.setState({
-                endLocationAddress: legs[0].summary,
-                duration: duration || 0,
-                distance: distance || 0,
-            })
+            if ( e.route && e.route.length){
+                // console.log(e.route)
+                const {distance, legs, duration} = e.route[0]
+                this.setState({
+                    endLocationAddress: legs[0].summary,
+                    duration: duration || 0,
+                    distance: distance || 0,
+                })
+            }
         })
 
         this.geolocate = new mapboxgl.GeolocateControl({
@@ -184,7 +190,12 @@ class DirectionMap extends React.Component {
 
         this.map.addControl(this.directions, 'bottom-left')
         this.map.addControl(this.geolocate, 'top-right')
-
+        // this.map.fitBounds([
+        //    this.state.startLocation,
+        //    [
+        //         -122.43130,37.7749
+        //     ]
+        // ])
         this.map.on('load', () => {
             this.directions.setOrigin(this.state.startLocation)
         })
@@ -261,6 +272,7 @@ class DirectionMap extends React.Component {
                 coordinates: this.state.location,
                 type: 'Point',
             },
+            startLocationAddress:this.state.startLocationAddress,
             endLocationAddress:this.state.endLocationAddress,
             distance: this.state.distance,
             duration: this.state.duration,
@@ -272,7 +284,6 @@ class DirectionMap extends React.Component {
             tripStatus:"requesting",
             headerMessage:"Quote Submitted to Drivers",
         })
-    
     
         this.socket.emit('REQUEST_TRIP', {
             rider: JSON.parse(localStorage.getItem('user')),
