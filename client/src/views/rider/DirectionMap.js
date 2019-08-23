@@ -21,6 +21,7 @@ import {
 import socketIOClient from 'socket.io-client'
 import IconButton from "@material-ui/core/IconButton";
 import Button from "../../components/CustomButtons/Button";
+import {withRouter} from "react-router";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMap extends React.Component {
@@ -96,6 +97,7 @@ class DirectionMap extends React.Component {
             console.log(
                 'A driver has accepted your trip \n' + JSON.stringify(data)
             )
+            this.props.history.push('/rider-home/driversFound')
         })
     
         this.socket.on('RIDER_TRIP_CANCELED', () => {
@@ -106,6 +108,8 @@ class DirectionMap extends React.Component {
                 tripStatus:"standby",
                 headerMessage:"Start a new ride",
             })
+            this.props.history.push('/rider-home/standby')
+    
         })
     
         this.socket.on('DRIVER_TRIP_CANCELED', () => {
@@ -116,6 +120,8 @@ class DirectionMap extends React.Component {
                 tripStatus:"standby",
                 headerMessage:"Send a new request",
             })
+            this.props.history.push('/rider-home/standby')
+    
         })
     
     
@@ -185,16 +191,9 @@ class DirectionMap extends React.Component {
                 watchPosition: true,
             },
         })
-        
 
         this.map.addControl(this.directions, 'bottom-left')
         this.map.addControl(this.geolocate, 'top-right')
-        // this.map.fitBounds([
-        //    this.state.startLocation,
-        //    [
-        //         -122.43130,37.7749
-        //     ]
-        // ])
         this.map.on('load', () => {
             this.directions.setOrigin(this.state.startLocation)
         })
@@ -210,9 +209,10 @@ class DirectionMap extends React.Component {
     loadDriverProfile = driver => {
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
-            this.props.history.push(`/drivers/${driver._id}`)
+            this.props.history.push(`/rider-home/driver/${driver._id}`)
         })
     }
+    
     handleCancelRideRequest = () => {
         const rider = JSON.parse(localStorage.getItem('user'))
     
@@ -232,7 +232,7 @@ class DirectionMap extends React.Component {
             acceptedDrivers:[]
         })
         this.props.cancelTripRequest()
-    
+        this.props.history.push('/rider-home/standby')
     }
     
     handleKeyPress = (e) => {
@@ -243,7 +243,6 @@ class DirectionMap extends React.Component {
     }
     
     handleChange = (e) => {
-       
         this.setState({
             [e.target.name]: e.target.value,
         })
@@ -254,6 +253,7 @@ class DirectionMap extends React.Component {
             rider: JSON.parse(localStorage.getItem('user')),
             tripId:this.state.tripId
         })
+        this.props.history.push('/rider-home/standby')
     }
     
 
@@ -295,6 +295,7 @@ class DirectionMap extends React.Component {
                 'TRIP_ID \n' + JSON.stringify(data)
             )
         })
+        this.props.history.push('/rider-home/requesting')
     }
 
     handleConfirmRequest = (idx) => {
@@ -314,13 +315,20 @@ class DirectionMap extends React.Component {
             headerMessage:"Your driver is on his way",
             tripStatus:"confirmed"
         })
+        
+        this.props.history.push('/rider-home/confirmed')
+    }
+    
+    getStatePath = (path) => {
+        return path.split('/rider-home/')[1]
     }
 
     render() {
         const { findNearbyDriverMessage, driversNearby,  } = this.props
         const { requestingRide, tripFare, tripStatus, acceptedDrivers, currentDriver, headerMessage } = this.state
+        const path = this.getStatePath(this.props.location.pathname)
         const statusPanel = () => {
-            switch(tripStatus) {
+            switch(path) {
                 case "standby": return (
                     <div className={'status-panel standby'}>
                         <h1 className={`drivers-nearby-header}`}>Request a Ride?</h1>
@@ -335,7 +343,6 @@ class DirectionMap extends React.Component {
                         </div>
                         <button className={"driver-item-accept-button main full"} onClick={(e)=> this.handleRequestRide(e)}>REQUEST RIDE</button>
                     </div>
-                  
                 )
                 case "requesting": return (
                     <div className={'status-panel'}>
@@ -485,7 +492,7 @@ const mapStateToProps = ({ riderReducer, tripReducer }) => ({
         riderReducer.submitDriverReviewSuccessMessage,
 })
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     {
         findDriversNearby,
@@ -495,4 +502,4 @@ export default connect(
         cancelTripRequest,
         confirmTripRequest
     }
-)(DirectionMap)
+)(DirectionMap))
