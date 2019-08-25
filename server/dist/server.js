@@ -15,6 +15,8 @@ var _io = require("./io");
 
 var _bodyParser = require("body-parser");
 
+var _expressFormData = _interopRequireDefault(require("express-form-data"));
+
 var _morgan = _interopRequireDefault(require("morgan"));
 
 var _config = _interopRequireDefault(require("./config"));
@@ -37,6 +39,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+require('dotenv').config();
+
 const app = (0, _express.default)();
 exports.app = app;
 
@@ -49,11 +53,16 @@ if (process.env.NODE_ENV === 'production') {
   corsOptions = {
     origin: 'https://reverent-wozniak-c1db03.netlify.com/'
   };
+} else {
+  corsOptions = {
+    origin: 'http://localhost:3001'
+  };
 }
 
 app.disable('x-powered-by');
 app.use((0, _cors.default)(corsOptions));
 app.use((0, _bodyParser.json)());
+app.use(_expressFormData.default.parse());
 app.use((0, _bodyParser.urlencoded)({
   extended: true
 }));
@@ -64,7 +73,15 @@ app.use('/api', _auth.protect);
 app.use('/api/rider', _rider.default);
 app.use('/api/driver', _driver.default);
 app.use('/api/trip', _trip.default);
-app.use('/api/user', _user.default);
+app.use('/api/user', _user.default); // app.post('/image-upload', (req, res) => {
+// 	const values = Object.values(req.files)
+// 	const promises = values.map(image => cloudinary.uploader.upload(image.path))
+//
+// 	Promise
+// 	.all(promises)
+// 	.then(results => res.json(results))
+// 	.catch((err) => res.status(400).json(err))
+// })
 
 const start = async () => {
   try {

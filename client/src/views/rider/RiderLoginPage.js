@@ -108,7 +108,6 @@ class RiderLoginPage extends React.Component {
 											}}
 										/>
 									</div>
-									{/*<button onClick={signInWithGoogle}>Sign In With Google</button>*/}
 									<div className={classes.textCenter}>
 										<button className={classes.submitBtn} type="submit" >
 											{this.props.loggingIn

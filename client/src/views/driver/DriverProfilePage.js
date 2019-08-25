@@ -15,24 +15,17 @@ import {
 
 class DriverProfilePage extends Component {
 	state = {
-		isEditing: false,
 		activeId: null,
 		isDirty: true,
 		showEstimate:false,
 		profileBody: "I am trained in defensive driving and drive the ambulances. I hope to help you by providing a fair price and responding quickly.",
-		// driver:null,
 		trip:{}
 	}
 	
 	componentWillMount() {
-		console.log('this.props', this.props)
 		this.props.getDriversById(this.props.match.params.id).then((res) => {
 			console.log('res',res)
 		})
-	}
-	
-	editProfile = ()=>{
-		this.setState({isEditing: !this.state.isEditing})
 	}
 	
 	changeHandler = (e) => {
@@ -45,26 +38,6 @@ class DriverProfilePage extends Component {
 		e.preventDefault()
 	   this.setState({showEstimate: !this.state.showEstimate})
 	}
-	
-	
-	// sendTripRequest = (e)=>{
-	// 	e.preventDefault()
-	// 	const user =  JSON.parse(localStorage.getItem('user'))
-		// const tripRequest =  JSON.parse(localStorage.getItem('tripRequest'))
-		// const trip = {
-		// 		trip_id:1,
-		// 		driver_id:2,
-		// 		requestTime : {date:"2016-10-31T12:12:37.321Z"},
-		// 	    tripInfo: tripRequest,
-		// 		status : "confirmed",
-		// }
-		
-		
-		// this.props.sendTripRequest(trip)
-		// 	.then(res => {
-		// 		this.props.history.push(`/rider/${user._id}/trip`);
-		// 	})
-	// }
 	
 	render() {
 		const {currentDriver, findDriverByIdStarted} = this.props

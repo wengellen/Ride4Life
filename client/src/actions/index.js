@@ -1,3 +1,5 @@
+import {API} from "../utils/axiosAuth";
+import {DRIVER_LOGIN_FAILURE, DRIVER_LOGIN_STARTED, DRIVER_LOGIN_SUCCESS} from "./driverAction";
 
 export {
 	DRIVER_SIGNUP_STARTED,
@@ -6,10 +8,14 @@ export {
 	DRIVER_LOGIN_STARTED,
 	DRIVER_LOGIN_SUCCESS,
 	DRIVER_LOGIN_FAILURE,
+	UPLOAD_PROFILE_STARTED,
+	UPLOAD_PROFILE_SUCCESS,
+	UPLOAD_PROFILE_FAILURE,
 	updateDriverLocation,
 	updateProfile,
 	signup_driver,
-	login_driver
+	login_driver,
+	uploadProfilePhoto
 }from './driverAction'
 
 
@@ -49,3 +55,4 @@ export {
 	submitDriverReview,
 	updateRiderLocation
 }from './riderAction'
+

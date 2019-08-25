@@ -5,6 +5,11 @@ import Lock from "@material-ui/icons/Lock";
 
 class SelectRolePanel extends Component {
 	
+	componentDidMount() {
+		window.scrollTo(0, 0);
+		document.body.scrollTop = 0;
+	}
+	
 	handleClick = (linkUrl) => {
 		this.props.history.push(linkUrl)
 		this.props.closePanel()

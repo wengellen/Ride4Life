@@ -1,5 +1,15 @@
 import { Driver } from './driver.model'
 import { Trip } from '../trip/trip.model'
+require('dotenv').config()
+
+import cloudinary from 'cloudinary'
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+})
+
 
 export const getMe = (req, res) => {
     res.status(200).send(req.user)
@@ -66,4 +76,15 @@ export const quoteTrip = async (req, res) => {
     } catch (e) {
         return res.status(400).send(e)
     }
+}
+
+export const uploadProfilePhoto = async (req, res) => {
+    const values = Object.values(req.files)
+    
+    const promises = values.map(image => cloudinary.uploader.upload(image.path))
+    //
+    Promise
+    .all(promises)
+    .then(results => res.json(results))
+    .catch((err) => res.status(400).json(err))
 }

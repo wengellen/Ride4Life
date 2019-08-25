@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import {Link, NavLink, withRouter} from 'react-router-dom'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -119,7 +119,10 @@ class Header extends React.Component {
                             <Close />
                         </IconButton>
                         <div className="nav-drawer">
-                            <Link to={"/"}  onClick={()=>this.logout()}>Logout</Link>
+                            <div>
+                                <NavLink to={"/driver/edit-profile"} onClick={this.handleDrawerToggle}>Profile</NavLink>
+                                <NavLink to={"/"}  onClick={()=>this.logout()}>Logout</NavLink>
+                            </div>
                         </div>
                     </Drawer>
                 </div>

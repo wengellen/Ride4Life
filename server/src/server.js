@@ -1,8 +1,10 @@
 import express from 'express'
+require('dotenv').config()
 import * as logger  from './logger'
 import http from "http"
 import {io, initialize} from "./io";
 import { json, urlencoded } from 'body-parser'
+import formData from 'express-form-data'
 import morgan from 'morgan'
 import config from './config'
 import cors from 'cors'
@@ -22,10 +24,17 @@ if (process.env.NODE_ENV==='production') {
 	corsOptions = {
 		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
 	}
+}else{
+	corsOptions = {
+		origin: 'http://localhost:3001'
+	}
 }
+
 app.disable('x-powered-by')
 app.use(cors(corsOptions))
 app.use(json())
+
+app.use(formData.parse())
 app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
@@ -39,7 +48,15 @@ app.use('/api/trip', tripRouter)
 
 app.use('/api/user', userRouter)
 
-
+// app.post('/image-upload', (req, res) => {
+// 	const values = Object.values(req.files)
+// 	const promises = values.map(image => cloudinary.uploader.upload(image.path))
+//
+// 	Promise
+// 	.all(promises)
+// 	.then(results => res.json(results))
+// 	.catch((err) => res.status(400).json(err))
+// })
 
 export const start = async () => {
 	try {

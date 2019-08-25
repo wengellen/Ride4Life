@@ -16,6 +16,7 @@ import RiderTripPage from './views/rider/RiderTripPage'
 import './App.css'
 import SelectRolePanel from './views/SelectRolePanel'
 import { logoutUser } from './actions'
+import DriverEditProfilePage from "./views/driver/DriverEditProfilePage";
 
 class App extends React.Component {
     constructor() {
@@ -67,6 +68,7 @@ class App extends React.Component {
                     <Route path="/rider-signup" component={RiderSignupPage} />
                     <Route path="/driver-login" component={DriverLoginPage} />
                     <Route path="/driver-signup" component={DriverSignupPage} />
+                    <Route path="/driver/edit-profile" component={DriverEditProfilePage} />
 
                     <Route
                         path="/rider-home/standby"

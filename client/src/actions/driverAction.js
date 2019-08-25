@@ -19,6 +19,10 @@ export const UPDATE_LOCATION_STARTED = 'UPDATE_LOCATION_STARTED'
 export const UPDATE_LOCATION_SUCCESS = 'UPDATE_LOCATION_SUCCESS'
 export const UPDATE_LOCATION_FAILURE = 'UPDATE_LOCATION_FAILURE'
 
+export const UPLOAD_PROFILE_STARTED = 'UPLOAD_PROFILE_STARTED'
+export const UPLOAD_PROFILE_SUCCESS = 'UPLOAD_PROFILE_SUCCESS'
+export const UPLOAD_PROFILE_FAILURE = 'UPLOAD_PROFILE_FAILURE'
+
 // Should return a list of drivers nearby
 export const updateDriverLocation = (location) => dispatch => {
 	dispatch({type: UPDATE_LOCATION_STARTED})
@@ -88,6 +92,31 @@ export const login_driver= (driver) => dispatch =>{
 		})
 	)
 }
+
+
+export const uploadProfilePhoto = (formData) => dispatch =>{
+	dispatch({type:UPLOAD_PROFILE_STARTED})
+	console.log('uploadProfilePhoto formData', formData)
+	
+	return (
+		API.post(`/api/driver/uploadProfilePhoto`, formData)
+		// API.post(`/image-upload`, formData)
+		.then(res =>{
+			console.log('uploadProfilePhoto usccess', res)
+			dispatch({type: UPLOAD_PROFILE_SUCCESS, payload: res.data})
+			return res.data
+		})
+		.catch(err =>{
+			console.log('err', err)
+			if (err.response && err.response.status === 401) {
+				dispatch({type: UPLOAD_PROFILE_FAILURE, payload: err.response.data})
+			}
+			
+			return  err.response.data
+		})
+	)
+}
+
 
 
 

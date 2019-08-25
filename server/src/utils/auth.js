@@ -142,6 +142,7 @@ export const signin = async (req, res) => {
   }
 };
 
+
 export const protect = async (req, res, next) => {
   let doc;
   const bearer = req.headers.authorization;
