@@ -110,6 +110,10 @@ class App extends React.Component {
                         path="/driver-home/confirmed"
                         component={DriverHomePage}
                     />
+                    <Route
+                        path="/driver-home/pickup"
+                        component={DriverHomePage}
+                    />
                     <Route path="/drivers/:id" component={DriverProfilePage} />
                     <Route path="/driver/review" component={DriverReviewPage} />
                 </Switch>

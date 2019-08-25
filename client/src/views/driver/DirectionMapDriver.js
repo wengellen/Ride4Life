@@ -149,7 +149,7 @@ class DirectionMapDriver extends React.Component {
                 this.setState({
                     driverStatus:"confirmed",
                     requestDetails: data,
-                    headerMessage:"Drive to pickup location",
+                    headerMessage:"Trip Confirmed",
                     tripId:data._id
                 }) //Save request details
         
@@ -204,13 +204,33 @@ class DirectionMapDriver extends React.Component {
         this.destInput.value = ""
     }
     
-    handleDriveToUser = (e) => {
-        this.directions.setOrigin(this.state.location)
-        this.directions.setDestination(this.state.requestDetails.startLocation.coordinates)
-        console.log('this.state.requestDetails.startLocation.coordinates',this.state.requestDetails.startLocation.coordinates)
+    handleStartTrip = (e) => {
+        this.setState({
+            driverStatus:"tripStarted",
+        })
+        const requestDetails = JSON.parse( localStorage.getItem('requestDetails'))
+        this.directions.setOrigin(requestDetails.startLocation.coordinates)
+        this.directions.setDestination(requestDetails.endLocationAddress)
         this.startInput.value = "Your Location"
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
         e.target.style.display = "none"
+        this.props.history.push('/driver-home/pickup')
+    }
+    
+    
+    handleDriveToUser = (e) => {
+        this.setState({
+            driverStatus:"pickup",
+        })
+        const requestDetails = JSON.parse( localStorage.getItem('requestDetails'))
+        this.directions.setOrigin(this.state.location)
+        this.directions.setDestination(requestDetails.startLocation.coordinates)
+        this.startInput.value = "Your Location"
+        document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
+        // e.target.style.display = "none"
+    
+        this.props.history.push('/driver-home/pickup')
+    
     }
     
     handleAcceptTrip = (e) => {
@@ -269,9 +289,7 @@ class DirectionMapDriver extends React.Component {
         const { driverStatus, headerMessage } = this.state
         const path = this.getStatePath(this.props.location.pathname)
         
-        // if (requestDetails === null){
         const requestDetails = JSON.parse( localStorage.getItem('requestDetails')) || null
-        // }
     
         const statusPanel = () => {
             switch(path) {
@@ -330,7 +348,7 @@ class DirectionMapDriver extends React.Component {
                         <div className="driver-item-container-list requesting">
                             <div className="driver-img-container-list">
                                 <img
-                                    src={this.state.requestDetails.rider.avatar}
+                                    src={requestDetails.rider.avatar}
                                     alt={'driver'}
                                 />
                             </div>
@@ -348,10 +366,9 @@ class DirectionMapDriver extends React.Component {
                                 <span className={"tag orange"}>{requestDetails.duration} mins</span>
                                 <span className={"tag blue"}>{requestDetails.distance} mi</span>
                             </div>
-                            
                             <button className={"driver-item-accept-button requesting main"}
-                                     disabled>
-                                <Loader type="ThreeDots" color="#424B5A" height={40} width={40} />
+                                    onClick={(e)=> this.handleAcceptTrip(e)}>
+                                <Loader type="ThreeDots" color="#fff" height={40} width={40} />
                             </button>
                         </div>
                         {/*</div>*/}
@@ -393,6 +410,42 @@ class DirectionMapDriver extends React.Component {
                         </div>
                         <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
                         <button className="main" onClick={this.handleDriveToUser}>PICKUP RIDER</button>
+                    </div>
+                )
+                case "pickup": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                        <div
+                            className="driver-item-container-list"
+                        >
+                            <div className="driver-img-container-list">
+                                <img
+                                    src={requestDetails.rider.avatar}
+                                    alt={'driver'}
+                                />
+                            </div>
+                            <div className="driver-item-content-list">
+                                <h2>{requestDetails.rider.username}</h2>
+                                <h3>
+                                    2 miles away
+                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
+                                </h3>
+                            </div>
+                            <div className={"driver-item-buttons-list"}>
+                                {
+                                    <div className={"action-icon-button-bar"}>
+                                        <IconButton className={"driver-item-icon-button"}>
+                                            <ChatBubbleIcon />
+                                        </IconButton>
+                                        <IconButton className={"driver-item-icon-button"}>
+                                            <PhoneIcon />
+                                        </IconButton>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>
                     </div>
                 )
                 default:      return <h1>No match</h1>

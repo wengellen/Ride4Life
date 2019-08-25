@@ -110,14 +110,14 @@ class DirectionMap extends React.Component {
     
             this.directions.on('route', e => {
                 // Logs the current route shown in the interface.
+                
                 console.log('e',e)
                 if ( e.route && e.route.length){
-                    // console.log(e.route)
                     const {distance, legs, duration} = e.route[0]
                     this.setState({
                         endLocationAddress: legs[0].summary,
-                        duration: duration || 0,
-                        distance: distance || 0,
+                        duration: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > span")[0].textContent.split("min")[0] ,
+                        distance: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > h1")[0].textContent.split("mi")[0] ,
                     })
                 }
             })
