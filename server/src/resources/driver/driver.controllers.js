@@ -6,12 +6,11 @@ export const getMe = (req, res) => {
 }
 
 export const getDriverById = async (req, res) => {
-    console.log('')
-    const {driverId} = req.params.id
-    console.log("driverId", req.params)
     try {
-        const driver = await Driver.findOne({ driver: driverId})
-            .exec()
+        const driver = await Driver.findOne({_id:req.params.id})
+                                    .lean()
+                                    .exec()
+            console.log('driver',driver)
         res.status(200).json( driver )
     } catch (e) {
         res.status(500).json({ error: e })

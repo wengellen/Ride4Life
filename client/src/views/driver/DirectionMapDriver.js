@@ -227,7 +227,6 @@ class DirectionMapDriver extends React.Component {
         this.directions.setDestination(requestDetails.startLocation.coordinates)
         this.startInput.value = "Your Location"
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
-        // e.target.style.display = "none"
     
         this.props.history.push('/driver-home/pickup')
     
@@ -371,7 +370,6 @@ class DirectionMapDriver extends React.Component {
                                 <Loader type="ThreeDots" color="#fff" height={40} width={40} />
                             </button>
                         </div>
-                        {/*</div>*/}
             
                         <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                     </div>
@@ -394,6 +392,14 @@ class DirectionMapDriver extends React.Component {
                                     2 miles away
                                     <span> {`, ${requestDetails.rider.rating} `}stars</span>
                                 </h3>
+                            </div>
+                            <div className={"trip-destination-container"}>
+                                <div className={"trip-destination-left"}>
+                                    <h2>{requestDetails.endLocationAddress}</h2>
+                                    <span className={"tag white"}>{requestDetails.duration} mins</span>
+                                    <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                                    <span className={"tag pink"}>${requestDetails.tripFare}</span>
+                                </div>
                             </div>
                             <div className={"driver-item-buttons-list"}>
                                 {
@@ -430,6 +436,14 @@ class DirectionMapDriver extends React.Component {
                                     2 miles away
                                     <span> {`, ${requestDetails.rider.rating} `}stars</span>
                                 </h3>
+                            </div>
+                            <div className={"trip-destination-container"}>
+                                <div className={"trip-destination-left"}>
+                                    <h2>{requestDetails.endLocationAddress}</h2>
+                                    <span className={"tag white"}>{requestDetails.duration} mins</span>
+                                    <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                                    <span className={"tag pink"}>${requestDetails.tripFare}</span>
+                                </div>
                             </div>
                             <div className={"driver-item-buttons-list"}>
                                 {

@@ -86,7 +86,7 @@ class App extends React.Component {
                     />
                     <Route
                         path="/rider-home/driver/:id"
-                        component={RiderHomePage}
+                        component={DriverProfilePage}
                     />
                     <Route path="/rider/:id/trip" component={RiderTripPage} />
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import Chat from "@material-ui/icons/Chat";
@@ -9,7 +9,8 @@ import Loader from 'react-loader-spinner'
 import Clear from  "@material-ui/icons/Clear";
 
 import {
- sendTripRequest,
+	getDriversById,
+	sendTripRequest,
 } from '../../actions';
 
 class DriverProfilePage extends Component {
@@ -19,8 +20,15 @@ class DriverProfilePage extends Component {
 		isDirty: true,
 		showEstimate:false,
 		profileBody: "I am trained in defensive driving and drive the ambulances. I hope to help you by providing a fair price and responding quickly.",
-		driver:null,
+		// driver:null,
 		trip:{}
+	}
+	
+	componentWillMount() {
+		console.log('this.props', this.props)
+		this.props.getDriversById(this.props.match.params.id).then((res) => {
+			console.log('res',res)
+		})
 	}
 	
 	editProfile = ()=>{
@@ -37,6 +45,7 @@ class DriverProfilePage extends Component {
 		e.preventDefault()
 	   this.setState({showEstimate: !this.state.showEstimate})
 	}
+	
 	
 	// sendTripRequest = (e)=>{
 	// 	e.preventDefault()
@@ -59,7 +68,8 @@ class DriverProfilePage extends Component {
 	
 	render() {
 		const {currentDriver, findDriverByIdStarted} = this.props
-	   if(findDriverByIdStarted){
+		console.log('currentDriver', currentDriver)
+	   if(!currentDriver){
 		   return (<Loader/>)
 	   }else{
 		   return (
@@ -157,7 +167,8 @@ const mapStateToProps = ({riderReducer}) => {
 	}
 }
 
-export default connect(
+export default withRouter(connect(
 	mapStateToProps,
-	{sendTripRequest}
-)(DriverProfilePage);
+	{sendTripRequest,
+	 getDriversById}
+)(DriverProfilePage));

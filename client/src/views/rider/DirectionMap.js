@@ -74,7 +74,6 @@ class DirectionMap extends React.Component {
                 loadingMap: false,
             })
     
-    
             this.map = new mapboxgl.Map({
                 container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
                 style: 'mapbox://styles/mapbox/streets-v9',
@@ -107,10 +106,7 @@ class DirectionMap extends React.Component {
                 })
             })
     
-    
             this.directions.on('route', e => {
-                // Logs the current route shown in the interface.
-                
                 console.log('e',e)
                 if ( e.route && e.route.length){
                     const {distance, legs, duration} = e.route[0]
@@ -167,6 +163,7 @@ class DirectionMap extends React.Component {
             this.setState({
                 tripStatus:"standby",
                 headerMessage:"Start a new ride",
+                acceptedDrivers:[]
             })
             this.props.history.push('/rider-home/standby')
     
@@ -179,6 +176,7 @@ class DirectionMap extends React.Component {
             this.setState({
                 tripStatus:"standby",
                 headerMessage:"Send a new request",
+                acceptedDrivers:[]
             })
             this.props.history.push('/rider-home/standby')
         })
@@ -252,6 +250,7 @@ class DirectionMap extends React.Component {
             rider: JSON.parse(localStorage.getItem('user')),
             tripId:this.state.tripId
         })
+        this.setState({acceptedDrivers:[]})
         this.props.history.push('/rider-home/standby')
     }
     
@@ -366,8 +365,6 @@ class DirectionMap extends React.Component {
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur dolor sit amet,
-                            consectetur
                         </p>
                         <div className="drivers-nearby-container-list">
                             { acceptedDrivers &&
@@ -460,22 +457,22 @@ class DirectionMap extends React.Component {
         }
         
         return (
-            // return this.state.loadingMap ? (
-            //     <div
-            //         style={{
-            //             width: '100%',
-            //             height: '100vh',
-            //             display: 'flex',
-            //             flexDirection: 'column',
-            //             justifyContent: 'center',
-            //             alignItems: 'center',
-            //             backgroundColor: 'rgba(0,0,0,0.9)',
-            //         }}
-            //     >
-            //         <Loader type="ThreeDots" color="white" height="50" width="50" />
-            //         <h3>Loading...</h3>
-            //     </div>
-            // ) : (
+           this.state.loadingMap ? (
+                <div
+                    style={{
+                        width: '100%',
+                        height: '100vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0,0,0,0.9)',
+                    }}
+                >
+                    <Loader type="ThreeDots" color="white" height="50" width="50" />
+                    <h3>Loading...</h3>
+                </div>
+            ) : (
             
                 <div
                     className="map-wrapper "
@@ -491,7 +488,7 @@ class DirectionMap extends React.Component {
                     ></div>
                     {statusPanel()}
             </div>
-        )
+        ))
     }
 }
 const mapStateToProps = ({ riderReducer, tripReducer }) => ({

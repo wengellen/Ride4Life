@@ -12,4 +12,3 @@ router.put('/quote', quoteTrip)
 
 // router.post('/:id/trip', requestTrip)
 export default router
-
