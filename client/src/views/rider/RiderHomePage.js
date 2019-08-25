@@ -9,11 +9,11 @@ class RiderHomePage extends Component {
 	}
 	
 	componentWillUnmount() {
-		window.removeEventListener('resize', this.resize);
+		// window.removeEventListener('resize', this.resize);
 	}
 	
 	componentDidMount() {
-		window.addEventListener('resize', this.resize);
+		// window.addEventListener('resize', this.resize);
 	}
 	
 	
@@ -24,7 +24,7 @@ class RiderHomePage extends Component {
 	render() {
 		return (
 			<div className="map-container ">
-					 <DirectionMap history={this.props.history}/>
+				 <DirectionMap />
 			</div>
 		);
 	}

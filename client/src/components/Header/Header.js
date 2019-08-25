@@ -52,14 +52,11 @@ class Header extends React.Component {
         }
     }
     componentWillUnmount() {
-        if (this.props.changeColorOnScroll) {
-            window.removeEventListener('scroll', this.headerColorChange)
-        }
     }
     render() {
         console.log('this.props', this.props)
-        const { classes, color, links, fixed, absolute, openPanel, logoutUser } = this.props
-        let user = JSON.parse(localStorage.getItem('user'))
+        const { classes, color, links, fixed, absolute, openPanel, logoutUser, history, user } = this.props
+        // let user = JSON.parse(localStorage.getItem('user'))
         const appBarClasses = classNames({
             [classes.appBar]: true,
             [classes[color]]: color,

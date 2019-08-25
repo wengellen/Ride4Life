@@ -107,10 +107,12 @@ class DirectionMapDriver extends React.Component {
             this.socket.on('REQUEST_TRIP', data => {
                 const requestDetails = data
                 console.log('data',data)
+                
                 if (this.state.driverStatus === 'requestIncoming') {
                     return;
                 }
-        
+               localStorage.setItem('requestDetails', JSON.stringify( data))
+    
                 this.setState({
                     driverStatus:"requestIncoming",
                     requestDetails: data,
@@ -120,6 +122,7 @@ class DirectionMapDriver extends React.Component {
                     'You have a new request! \n' +
                     JSON.stringify(requestDetails)
                 )
+                
                 this.props.history.push('/driver-home/requestIncoming')
             })
     
@@ -254,8 +257,13 @@ class DirectionMapDriver extends React.Component {
     }
     
     render() {
-        const { driverStatus, requestDetails, headerMessage } = this.state
+        const { driverStatus, headerMessage } = this.state
         const path = this.getStatePath(this.props.location.pathname)
+        
+        // if (requestDetails === null){
+        const requestDetails = JSON.parse( localStorage.getItem('requestDetails')) || null
+        // }
+    
         const statusPanel = () => {
             switch(path) {
                 case "offline": return (
@@ -345,7 +353,6 @@ class DirectionMapDriver extends React.Component {
                 case "confirmed": return (
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                        <button className="main" onClick={this.handleDriveToUser}>GO</button>
                         <div
                             className="driver-item-container-list"
                         >
@@ -375,6 +382,7 @@ class DirectionMapDriver extends React.Component {
                                 }
                             </div>
                         </div>
+                        <button className="main" onClick={this.handleDriveToUser}>GO</button>
                         <Button className={'request-ride-button bordered main'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
                     </div>
                 )
@@ -389,8 +397,7 @@ class DirectionMapDriver extends React.Component {
                 
                 <div
                     ref={el => (this.mapContainer = el)}
-                    className={"driver-map hide-direction"}
-                    // className={`driver-map hide-direction`}
+                    className={`driver-map hide-direction`}
                     style={{
                         width: '100%',
                         height: '100%',

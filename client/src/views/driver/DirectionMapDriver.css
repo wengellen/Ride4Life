@@ -213,6 +213,7 @@
     bottom:0;
     overflow:auto;
     overflow-x:hidden;
+    display:block;
 }
 .directions-control.directions-control-inputs {
     top:10px;
@@ -272,7 +273,7 @@
     position:absolute;
     right:10px;
     top:10px;
-    display:none;
+    display:block;
 }
 .mapbox-directions-inputs .directions-pin-right *.active { display:block; }
 
@@ -282,7 +283,7 @@
     padding:2px;
     border-radius:15px;
     vertical-align:middle;
-    display:none;
+    display:block;
 }
 .mapbox-directions-profile label {
     cursor:pointer;
@@ -390,7 +391,7 @@
 
 /* Instructions */
 .mapbox-directions-instructions{
-    display:none;
+    display:block;
 }
 .mapbox-directions-instructions .directions-icon {
     position:absolute;
@@ -445,7 +446,7 @@
 }
 .mapbox-directions-step:last-child:after,
 .mapbox-directions-step:last-child .mapbox-directions-step-distance {
-    display:none;
+    display:block;
 }
 
 .mapbox-marker-drag-icon {
