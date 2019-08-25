@@ -73,7 +73,67 @@ class DirectionMap extends React.Component {
                 location: [position.coords.longitude, position.coords.latitude],
                 loadingMap: false,
             })
-
+    
+    
+            this.map = new mapboxgl.Map({
+                container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
+                style: 'mapbox://styles/mapbox/streets-v9',
+                center: this.state.startLocation,
+                zoom: 13,
+            })
+    
+            // Directions
+            this.directions = new MapboxDirections({
+                accessToken: mapboxgl.accessToken,
+                unit: 'imperial',
+                profile: 'mapbox/driving',
+            })
+    
+            this.directions.on('origin', e => {
+                let startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
+                this.setState({
+                    startLocation: e.feature.geometry.coordinates,
+                    startLocationAddress:startInput.value
+                })
+        
+                startInput.value = "Your Location"
+            })
+    
+            this.directions.on('destination', e => {
+                let destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
+                this.setState({
+                    endLocation: e.feature.geometry.coordinates,
+                    endLocationAddress:destInput.value
+                })
+            })
+    
+    
+            this.directions.on('route', e => {
+                // Logs the current route shown in the interface.
+                console.log('e',e)
+                if ( e.route && e.route.length){
+                    // console.log(e.route)
+                    const {distance, legs, duration} = e.route[0]
+                    this.setState({
+                        endLocationAddress: legs[0].summary,
+                        duration: duration || 0,
+                        distance: distance || 0,
+                    })
+                }
+            })
+    
+            this.geolocate = new mapboxgl.GeolocateControl({
+                positionOptions: {
+                    enableHighAccuracy: true,
+                    watchPosition: true,
+                },
+            })
+    
+            this.map.addControl(this.directions, 'bottom-left')
+            this.map.addControl(this.geolocate, 'top-right')
+            this.map.on('load', () => {
+                this.directions.setOrigin(this.state.startLocation)
+            })
             this.socket.emit('UPDATE_RIDER_LOCATION', {
                 coordinates: [
                     position.coords.longitude,
@@ -121,9 +181,7 @@ class DirectionMap extends React.Component {
                 headerMessage:"Send a new request",
             })
             this.props.history.push('/rider-home/standby')
-    
         })
-    
     
         this.socket.on('DRIVER_GO_OFFLINE', (data) => {
             console.log(
@@ -138,65 +196,6 @@ class DirectionMap extends React.Component {
             })
         })
 
-        this.map = new mapboxgl.Map({
-            container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
-            style: 'mapbox://styles/mapbox/streets-v9',
-            center: this.state.startLocation,
-            zoom: 13,
-        })
-
-        // Directions
-        this.directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            unit: 'imperial',
-            profile: 'mapbox/driving',
-        })
-    
-        this.directions.on('origin', e => {
-            let startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
-            this.setState({
-                startLocation: e.feature.geometry.coordinates,
-                startLocationAddress:startInput.value
-            })
-    
-            startInput.value = "Your Location"
-        })
-
-        this.directions.on('destination', e => {
-            let destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
-            this.setState({
-                endLocation: e.feature.geometry.coordinates,
-                endLocationAddress:destInput.value
-            })
-        })
-        
-
-        this.directions.on('route', e => {
-          // Logs the current route shown in the interface.
-            console.log('e',e)
-            if ( e.route && e.route.length){
-                // console.log(e.route)
-                const {distance, legs, duration} = e.route[0]
-                this.setState({
-                    endLocationAddress: legs[0].summary,
-                    duration: duration || 0,
-                    distance: distance || 0,
-                })
-            }
-        })
-
-        this.geolocate = new mapboxgl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true,
-                watchPosition: true,
-            },
-        })
-
-        this.map.addControl(this.directions, 'bottom-left')
-        this.map.addControl(this.geolocate, 'top-right')
-        this.map.on('load', () => {
-            this.directions.setOrigin(this.state.startLocation)
-        })
     }
 
     componentWillUnmount = () => {
@@ -295,13 +294,15 @@ class DirectionMap extends React.Component {
                 'TRIP_ID \n' + JSON.stringify(data)
             )
         })
-        this.props.history.push('/rider-home/requesting')
+    
+        // this.props.history.push('/rider-home/requesting')
     }
 
     handleConfirmRequest = (idx) => {
         const driver = this.state.acceptedDrivers[idx]
         console.log('idx',idx)
         console.log('driver',driver)
+        localStorage.setItem('currentDriver',JSON.stringify(driver))
         this.socket.emit('CONFIRM_TRIP', {
             driverId:driver._id,
             driverUsername:driver.username,
@@ -316,7 +317,7 @@ class DirectionMap extends React.Component {
             tripStatus:"confirmed"
         })
         
-        this.props.history.push('/rider-home/confirmed')
+        // this.props.history.push('/rider-home/confirmed')
     }
     
     getStatePath = (path) => {
@@ -325,8 +326,18 @@ class DirectionMap extends React.Component {
 
     render() {
         const { findNearbyDriverMessage, driversNearby,  } = this.props
-        const { requestingRide, tripFare, tripStatus, acceptedDrivers, currentDriver, headerMessage } = this.state
-        const path = this.getStatePath(this.props.location.pathname)
+        const { requestingRide, tripFare, tripStatus, acceptedDrivers, headerMessage } = this.state
+    
+        const currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
+    
+        // let path = this.getStatePath(this.props.location.pathname)
+        // if(tripStatus !== path){
+        //   // NOT Allowed
+        //     console.log('tripStatus',tripStatus)
+        //     path = tripStatus
+        // }
+        
+        let path = tripStatus
         const statusPanel = () => {
             switch(path) {
                 case "standby": return (
@@ -348,7 +359,7 @@ class DirectionMap extends React.Component {
                     <div className={'status-panel'}>
                         <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
                         <Loader type="Rings" color="#424B5A" height={100} width={100} />
-                        <Button  className={'request-ride-button bordered main'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}>CANCEL REQUEST</Button>
                     </div>
                     )
                 case "driversFound": return (
@@ -439,7 +450,7 @@ class DirectionMap extends React.Component {
                                 )
                             }
                         </div>
-                        <Button className={'request-ride-button bordered main'}
+                        <Button className={'request-ride-button bordered'}
                                 onClick={e => this.cancelTrip()}>
                                 CANCEL TRIP</Button>
                     </div>

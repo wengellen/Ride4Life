@@ -205,8 +205,8 @@
     z-index:1;
 }
 .directions-control.directions-control-directions {
-    background:rgba(0,0,0,0.75);
-    margin: 7px 0 0;
+    background:rgba(0,0,0,0.2);
+    margin: 0 0;
     color:#fff;
     top:0;
     right:0;
@@ -214,6 +214,7 @@
     overflow:auto;
     overflow-x:hidden;
     display:block;
+    border-radius: 12px;
 }
 .directions-control.directions-control-inputs {
     top:10px;

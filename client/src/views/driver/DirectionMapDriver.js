@@ -122,7 +122,7 @@ class DirectionMapDriver extends React.Component {
                     'You have a new request! \n' +
                     JSON.stringify(requestDetails)
                 )
-                
+               
                 this.props.history.push('/driver-home/requestIncoming')
             })
     
@@ -136,6 +136,9 @@ class DirectionMapDriver extends React.Component {
                 console.log(
                     'You have a new request! \n'
                 )
+    
+                localStorage.removeItem('requestDetails')
+    
                 this.props.history.push('/driver-home/standby')
     
             })
@@ -168,7 +171,8 @@ class DirectionMapDriver extends React.Component {
                 console.log(
                     'RIDER_TRIP_CANCELED! \n'
                 )
-    
+                localStorage.removeItem('requestDetails')
+                document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
                 this.props.history.push('/driver-home/standby')
             })
     
@@ -181,6 +185,9 @@ class DirectionMapDriver extends React.Component {
                     headerMessage:"Finding trip for you",
                     requestDetails: null
                 })
+                
+                localStorage.removeItem('requestDetails')
+                document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
                 this.props.history.push('/driver-home/standby')
             })
         })
@@ -199,9 +206,11 @@ class DirectionMapDriver extends React.Component {
     
     handleDriveToUser = (e) => {
         this.directions.setOrigin(this.state.location)
-        this.directions.setDestination(this.state.requestDetails.endLocationAddress)
+        this.directions.setDestination(this.state.requestDetails.startLocation.coordinates)
+        console.log('this.state.requestDetails.startLocation.coordinates',this.state.requestDetails.startLocation.coordinates)
         this.startInput.value = "Your Location"
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
+        e.target.style.display = "none"
     }
     
     handleAcceptTrip = (e) => {
@@ -278,7 +287,7 @@ class DirectionMapDriver extends React.Component {
                         <div className={'status-panel'}>
                             <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
                             <Loader type="Rings" color="#424B5A" height={100} width={100} />
-                            <Button  className={'request-ride-button bordered main'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                            <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
                         </div>
                     )
                 case "requestIncoming": return (
@@ -287,7 +296,7 @@ class DirectionMapDriver extends React.Component {
                              <div className="driver-item-container-list requesting">
                                 <div className="driver-img-container-list">
                                     <img
-                                        src={this.state.requestDetails.rider.avatar}
+                                        src={requestDetails.rider.avatar}
                                         alt={'driver'}
                                     />
                                 </div>
@@ -382,8 +391,8 @@ class DirectionMapDriver extends React.Component {
                                 }
                             </div>
                         </div>
-                        <button className="main" onClick={this.handleDriveToUser}>GO</button>
-                        <Button className={'request-ride-button bordered main'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <button className="main" onClick={this.handleDriveToUser}>PICKUP RIDER</button>
                     </div>
                 )
                 default:      return <h1>No match</h1>
