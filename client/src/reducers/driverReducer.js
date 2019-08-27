@@ -5,12 +5,14 @@ import {
 	DRIVER_SIGNUP_FAILURE,
 	DRIVER_LOGIN_STARTED,
 	DRIVER_LOGIN_SUCCESS,
-	DRIVER_LOGIN_FAILURE, LOGOUT_USER,
+	DRIVER_LOGIN_FAILURE, LOGOUT_USER, UPLOAD_PROFILE_STARTED, UPLOAD_PROFILE_SUCCESS, UPLOAD_PROFILE_FAILURE,
+	UPDATE_PROFILE_STARTED,
+	UPDATE_PROFILE_SUCCESS,
+	UPDATE_PROFILE_FAILURE
 } from '../actions'
 
-
 const initialState = {
-	user:null,
+	user: JSON.parse(localStorage.getItem('user')),
 	driverSignupStarted: false,
 	driverLoginStarted: false,
 	serverMessage:'',
@@ -74,7 +76,19 @@ export const driverReducer = (state = initialState, action)=>{
 				serverMessage:action.payload.message,
 			}
 		
-		
+		case UPDATE_PROFILE_STARTED:
+			return {...state,
+				serverMessage:'Uploading...',
+			}
+		case UPDATE_PROFILE_SUCCESS:
+			return {...state,
+				user: action.payload,
+				serverMessage:action.payload.message,
+			}
+		case UPDATE_PROFILE_FAILURE:
+			return {...state,
+				serverMessage:action.payload.message,
+			}
 		case LOGOUT_USER:
 			return {...state,
 				user: null

@@ -11,6 +11,7 @@ import Close from '@material-ui/icons/Close'
 import headerStyle from 'assets/jss/material-kit-pro-react/components/headerStyle.jsx'
 import logo from 'assets/img/safe_logo.png'
 import { Avatar } from '@material-ui/core'
+import {connect} from "react-redux";
 
 class Header extends React.Component {
     constructor(props) {
@@ -53,10 +54,11 @@ class Header extends React.Component {
     }
     componentWillUnmount() {
     }
+  
+
     render() {
         console.log('this.props', this.props)
-        const { classes, color, links, fixed, absolute, openPanel, logoutUser, history, user } = this.props
-        // let user = JSON.parse(localStorage.getItem('user'))
+        const { classes, color, fixed, absolute, openPanel, user } = this.props
         const appBarClasses = classNames({
             [classes.appBar]: true,
             [classes[color]]: color,
@@ -101,6 +103,7 @@ class Header extends React.Component {
                     >
                         <Menu />
                     </IconButton>
+                    {user &&
                     <Drawer
                         variant="temporary"
                         anchor={'right'}
@@ -118,13 +121,14 @@ class Header extends React.Component {
                         >
                             <Close />
                         </IconButton>
+                 
                         <div className="nav-drawer">
                             <div>
-                                <NavLink to={"/driver/edit-profile"} onClick={this.handleDrawerToggle}>Profile</NavLink>
+                                <NavLink to={`/${user.role}/edit-profile`} onClick={this.handleDrawerToggle}>Profile</NavLink>
                                 <NavLink to={"/"}  onClick={()=>this.logout()}>Logout</NavLink>
                             </div>
                         </div>
-                    </Drawer>
+                    </Drawer>}
                 </div>
             </div>
         )
@@ -174,5 +178,14 @@ Header.propTypes = {
     }),
 }
 
+const mapStateToProps = ({ riderReducer, driverReducer }) => {
+    return {
+        user: driverReducer.user || riderReducer.user,
+    }
+}
 
-export default withStyles(headerStyle)(Header)
+export default connect(
+    mapStateToProps,
+    null
+)(withStyles(headerStyle)(Header))
+

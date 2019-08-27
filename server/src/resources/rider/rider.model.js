@@ -51,9 +51,11 @@ const riderSchema = new mongoose.Schema(
       role:{
           type:String,
           required:true,
-          enum: ['driver', 'rider'],
           default: 'rider',
       },
+      description:{
+          type:String,
+      }
   },
   
   { timestamps: true }

@@ -16,11 +16,10 @@ import Phone from '@material-ui/icons/Phone'
 import Face from '@material-ui/icons/Face'
 import Place from '@material-ui/icons/Place'
 
-import { uploadProfilePhoto,uploadProfile } from '../../actions'
-import FileUploadButton from '../../components/Button/FileUploadButton'
+import { uploadRiderProfile } from '../../actions'
 import ImageInput from "../../components/ImageInput";
 
-class DriverEditProfilePage extends React.Component {
+class RiderEditProfilePage extends React.Component {
     state = {
         profile: {
             email: '',
@@ -34,8 +33,6 @@ class DriverEditProfilePage extends React.Component {
         user: null,
         profilePhotoSelected: null,
     }
-
-    avatarImg = React.createRef()
 
     componentDidMount() {
         window.scrollTo(0, 0)
@@ -55,47 +52,14 @@ class DriverEditProfilePage extends React.Component {
     editDriverProfile = e => {
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
-        this.props.uploadProfile(values).then(res=>{
+        this.props.uploadRiderProfile(values).then(res=>{
             this.props.history.push()
-        })
-    }
-    
-    handleFileSelected = e => {
-        console.log('e', e)
-        console.log(' e.target.files[0]', e.target.files[0])
-        const errors = []
-
-        const files = Array.from(e.target.files)
-        const formData = new FormData()
-        const types = ['image/png', 'image/jpeg', 'image/gif']
-
-        files.forEach((file, i) => {
-            if (types.every(type => file.type !== type)) {
-                errors.push(`'${file.type}' is not a supported format`)
-            }
-
-            if (file.size > 150000) {
-                errors.push(
-                    `'${file.name}' is too large, please pick a smaller file`
-                )
-            }
-
-            formData.append(i, file)
-        })
-        formData.append('_id', this.props.user._id)
-
-        console.log('formData', formData)
-        this.setState({ uploading: true })
-        this.props.uploadProfilePhoto(formData).then(res => {
-            console.log('res.data', res.data)
-            console.log('res.user.avatar', res.data.avatar)
-            // this.setState({ profilePhotoSelected: e.target.files[0] })
-            this.avatarImg.src= res.data.avatar
         })
     }
 
     render() {
         const { classes, user } = this.props
+        console.log('user',user)
         return (
             <div className={classes.container}>
                 <GridContainer justify="center">
@@ -208,28 +172,6 @@ class DriverEditProfilePage extends React.Component {
                                             ),
                                         }}
                                     />
-                                    <CustomInput
-                                        id="city"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            placeholder: 'city',
-                                            type: 'option',
-                                            onChange: this.handleChange,
-                                            value:  user.city,
-                                            name: 'city',
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <Place
-                                                        className={
-                                                            classes.inputIconsColor
-                                                        }
-                                                    />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
                                 </div>
                                 <div className={classes.textCenter}>
                                     <button
@@ -247,13 +189,12 @@ class DriverEditProfilePage extends React.Component {
         )
     }
 }
-const mapStateToProps = ({ driverReducer }) => ({
-    driverSignupStarted: driverReducer.driverSignupStarted,
-    serverMessage: driverReducer.serverMessage,
-    user: driverReducer.user,
+const mapStateToProps = ({ riderReducer }) => ({
+    serverMessage: riderReducer.serverMessage,
+    user: riderReducer.user,
 })
 
 export default connect(
     mapStateToProps,
-    { uploadProfilePhoto,uploadProfile }
-)(withStyles(loginPageStyle)(DriverEditProfilePage))
+    { uploadRiderProfile }
+)(withStyles(loginPageStyle)(RiderEditProfilePage))

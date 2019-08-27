@@ -55,7 +55,7 @@ if (process.env.NODE_ENV === 'production') {
   };
 } else {
   corsOptions = {
-    origin: 'http://localhost:3001'
+    origin: 'http://localhost:3000'
   };
 }
 
@@ -73,15 +73,7 @@ app.use('/api', _auth.protect);
 app.use('/api/rider', _rider.default);
 app.use('/api/driver', _driver.default);
 app.use('/api/trip', _trip.default);
-app.use('/api/user', _user.default); // app.post('/image-upload', (req, res) => {
-// 	const values = Object.values(req.files)
-// 	const promises = values.map(image => cloudinary.uploader.upload(image.path))
-//
-// 	Promise
-// 	.all(promises)
-// 	.then(results => res.json(results))
-// 	.catch((err) => res.status(400).json(err))
-// })
+app.use('/api/user', _user.default);
 
 const start = async () => {
   try {

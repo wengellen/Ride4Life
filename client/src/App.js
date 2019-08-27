@@ -17,12 +17,13 @@ import './App.css'
 import SelectRolePanel from './views/SelectRolePanel'
 import { logoutUser } from './actions'
 import DriverEditProfilePage from "./views/driver/DriverEditProfilePage";
+import RiderEditProfilePage from "./views/rider/RiderEditProfilePage";
 
 class App extends React.Component {
     constructor() {
         super()
         this.state = {
-            // user: null,
+            user: null,
             showSlidingPanel: false,
             slidingPanelComponent: null,
         }
@@ -43,15 +44,15 @@ class App extends React.Component {
     }
     render() {
         const { showSlidingPanel, slidingPanelComponent } = this.state
-		const user = JSON.parse(localStorage.getItem('user'))
+        const { user } = this.props
+		// const user = JSON.parse(localStorage.getItem('user'))
 	
-        console.log('this.props', this.props)
+        // console.log('this.props', this.props)
         return (
             <div className="App">
                 <Header
                     openPanel={this.openPanel}
                     logoutUser={this.logout}
-                    user={user}
                     fixed
                     history={this.props.history}
                 />
@@ -90,6 +91,9 @@ class App extends React.Component {
                         path="/rider-home/driver/:id"
                         component={DriverProfilePage}
                     />
+    
+                    <Route path="/rider/edit-profile" component={RiderEditProfilePage} />
+    
                     <Route path="/rider/:id/trip" component={RiderTripPage} />
 
                     <Route
@@ -127,7 +131,7 @@ class App extends React.Component {
 const mapStateToProps = ({ riderReducer, driverReducer }) => {
     // console.log('riderReducer.loggedInUser', riderReducer)
     return {
-        // user: riderReducer.user || driverReducer.user,
+        user: riderReducer.user || driverReducer.user,
     }
 }
 

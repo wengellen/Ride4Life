@@ -78,13 +78,47 @@ export const quoteTrip = async (req, res) => {
     }
 }
 
+export const uploadProfile = async (req, res) => {
+    console.log(".req.body", req.body)
+    console.log("req.user._id", req.user._id)
+    try {
+        const driver = await Driver.findByIdAndUpdate(
+            req.user._id,
+            {...req.body},
+            { new: true }
+        ).exec()
+        
+        console.log('driver',driver)
+        if (!driver){
+            res.status(403).json({ message: 'No driver found'})
+        }
+        res.status(200).json(driver);
+    } catch (e) {
+        res.status(500).json({ error: e })
+    }
+}
+
 export const uploadProfilePhoto = async (req, res) => {
+    console.log("req", req)
     const values = Object.values(req.files)
     
     const promises = values.map(image => cloudinary.uploader.upload(image.path))
-    //
+    
     Promise
     .all(promises)
-    .then(results => res.json(results))
+    .then(async(results) => {
+        console.log('results',results)
+        try {
+            const driver = await Driver.findByIdAndUpdate(
+                req.user._id,
+                { avatar:results[0].url},
+                { new: true }
+            ).exec()
+            res.json({data:driver})
+        } catch (e) {
+            res.status(500).json({ error: e })
+        }
+
+    })
     .catch((err) => res.status(400).json(err))
 }

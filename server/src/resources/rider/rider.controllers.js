@@ -65,3 +65,23 @@ export const fetchNearestDriver = async (req, res) => {
     res.status(500).json(e);
   }
 }
+
+export const uploadProfile = async (req, res) => {
+  console.log(".req.body", req.body)
+  console.log("req.user._id", req.user._id)
+  
+  try {
+    const rider = await Rider.findByIdAndUpdate(
+        req.user._id,
+        {...req.body},
+        { new: true }
+    ).exec()
+    if (!rider){
+      res.status(403).json({ message: 'No account found'})
+    }
+    console.log('rider',rider)
+    res.status(200).json(rider);
+  } catch (e) {
+    res.status(500).json({ error: e })
+  }
+}

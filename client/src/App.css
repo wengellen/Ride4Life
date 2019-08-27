@@ -616,3 +616,14 @@ status-panel
     margin-left:40px;
 }
 
+/* DriverEditProfilePage */
+.avatar-input {
+    min-width: 60px;
+    height: 60px;
+    background-color: white;
+
+    background-size: 32px 32px;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}

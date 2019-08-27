@@ -1,6 +1,11 @@
 // RIDER
-import {API} from "../utils/axiosAuth";
-import {DRIVER_LOGIN_SUCCESS} from "./driverAction";
+import API from "../utils/axiosAuth";
+import {
+	DRIVER_LOGIN_SUCCESS,
+	UPDATE_PROFILE_FAILURE,
+	UPDATE_PROFILE_STARTED,
+	UPDATE_PROFILE_SUCCESS
+} from "./driverAction";
 
 export const RIDER_SIGNUP_STARTED = 'RIDER_SIGNUP_STARTED'
 export const RIDER_SIGNUP_SUCCESS = 'RIDER_SIGNUP_SUCCESS'
@@ -28,6 +33,10 @@ export const UPDATE_LOCATION_STARTED = 'UPDATE_LOCATION_STARTED'
 export const UPDATE_LOCATION_SUCCESS = 'UPDATE_LOCATION_SUCCESS'
 export const UPDATE_LOCATION_FAILURE = 'UPDATE_LOCATION_FAILURE'
 
+export const UPDATE_RIDER_PROFILE_STARTED = 'UPDATE_RIDER_PROFILE_STARTED'
+export const UPDATE_RIDER_PROFILE_SUCCESS = 'UPDATE_RIDER_PROFILE_SUCCESS'
+export const UPDATE_RIDER_PROFILE_FAILURE = 'UPDATE_RIDER_PROFILE_FAILURE'
+
 export const SUBMIT_REVIEW_STARTED = 'SUBMIT_REVIEW_STARTED'
 export const SUBMIT_REVIEW_SUCCESS = 'SUBMIT_REVIEW_SUCCESS'
 export const SUBMIT_REVIEW_FAILURE = 'SUBMIT_REVIEW_FAILURE'
@@ -43,7 +52,7 @@ export const sendTripRequest = (trip) => dispatch => {
 	dispatch({type: SEND_TRIP_REQUEST_STARTED})
 	console.log('trip',trip)
 	return (
-		API.post('/api/rider/request')
+		API().post('/api/rider/request')
 		.then(res =>{
 			// console.log('sendTripRequest',res)
 			console.log('res',res)
@@ -60,7 +69,7 @@ export const updateRiderLocation = (location) => dispatch => {
 	dispatch({type: UPDATE_LOCATION_STARTED})
 	console.log('rider location',location)
 	return (
-		API.put('/api/rider/location')
+		API().put('/api/rider/location')
 		.then(res =>{
 			console.log('res',res)
 			dispatch({type: UPDATE_LOCATION_SUCCESS, payload: res})
@@ -85,7 +94,7 @@ export const submitDriverReview = (review, driver_id) => dispatch => {
 	// console.log("requestPayload",requestPayload)
 	
 	return (
-		API.post('/api/drivers/reviews', requestPayload)
+		API().post('/api/drivers/reviews', requestPayload)
 		.then(res =>{
 			dispatch({type: SUBMIT_REVIEW_SUCCESS, payload: res.data})
 		})
@@ -100,7 +109,7 @@ export const findDriversNearby = (location) => dispatch => {
 	console.log('findDriversNearby location',location)
 	dispatch({type: FIND_DRIVERS_NEARBY_STARTED})
 	return (
-		API.get('/api/rider/drivers')
+		API().get('/api/rider/drivers')
 		.then(res =>{
 			dispatch({type: FIND_DRIVERS_NEARBY_SUCCESS, payload: res.data})
 			console.log('findDriversNearby', res.data)
@@ -118,7 +127,7 @@ export const getDriversById = (driverId) => dispatch => {
 	dispatch({type: FIND_DRIVER_BY_ID_STARTED})
 	console.log('driverId,',driverId)
 	return (
-		API.get(`/api/driver/${driverId}`)
+		API().get(`/api/driver/${driverId}`)
 		.then(res =>{
 			dispatch({type: FIND_DRIVER_BY_ID_SUCCESS, payload: res.data})
 		})
@@ -133,7 +142,7 @@ export const getDriversById = (driverId) => dispatch => {
 export const signup_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_SIGNUP_STARTED})
   	return (
-		API.post('/signup', {...rider, role:'rider'})
+		API().post('/signup', {...rider, role:'rider'})
 		.then(res =>{
 			dispatch({type: RIDER_SIGNUP_SUCCESS, payload: res.data})
 			return res.data
@@ -150,7 +159,7 @@ export const signup_rider = (rider) => dispatch => {
 export const login_rider = (rider) => dispatch => {
 	dispatch({type: RIDER_LOGIN_STARTED})
 	return (
-		API.post('/signin', {...rider, role:'rider'})
+		API().post('/signin', {...rider, role:'rider'})
 		.then(res =>{
 			localStorage.setItem('token', res.data.token)
 			localStorage.setItem('user', JSON.stringify(res.data.user))
@@ -169,6 +178,30 @@ export const login_rider = (rider) => dispatch => {
 		})
 	)
 }
+
+export const uploadRiderProfile = (formValue) => dispatch =>{
+	dispatch({type:UPDATE_RIDER_PROFILE_STARTED})
+	console.log('uploadProfilePhoto formData', formValue)
+	
+	return (
+		API().post(`/api/rider/uploadProfile`, formValue)
+		.then(res =>{
+			console.log('uploadProfilePhoto res', res)
+			// localStorage.setItem('user', JSON.stringify(res.data.user))
+			dispatch({type: UPDATE_RIDER_PROFILE_SUCCESS, payload: res.data})
+			return res.data
+		})
+		.catch(err =>{
+			console.log('err', err)
+			if (err.response && err.response.status === 401) {
+				dispatch({type: UPDATE_RIDER_PROFILE_FAILURE, payload: err.response.data})
+			}
+			
+			return  err.response.data
+		})
+	)
+}
+
 export const logoutUser = () => dispatch => {
 	localStorage.removeItem('token')
 	localStorage.removeItem('user')
@@ -180,7 +213,6 @@ export const cancelTripRequest = () => dispatch => {
 	console.log('cancelTripRequest')
 	dispatch({type: CANCEL_TRIP_REQUEST})
 }
-
 
 // Find drivers nearby
 export const confirmTripRequest = (driver) => dispatch => {

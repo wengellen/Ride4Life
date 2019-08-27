@@ -19,8 +19,11 @@ import {
 	SUBMIT_REVIEW_STARTED,
 	SUBMIT_REVIEW_SUCCESS,
 	SUBMIT_REVIEW_FAILURE,
+	UPDATE_RIDER_PROFILE_STARTED,
+	UPDATE_RIDER_PROFILE_SUCCESS,
+	UPDATE_RIDER_PROFILE_FAILURE,
 	CANCEL_TRIP_REQUEST,
-	CONFIRM_TRIP_REQUEST
+	CONFIRM_TRIP_REQUEST, UPDATE_PROFILE_STARTED, UPDATE_PROFILE_SUCCESS, UPDATE_PROFILE_FAILURE
 } from '../actions'
 
 
@@ -37,7 +40,7 @@ const initialState = {
 	currentDriver:{},
 	activeTrip:{},
     driversNearby:[],
-	user:null,
+	user:JSON.parse(localStorage.getItem('user')),
 	serverMessage:'',
 }
 
@@ -69,7 +72,7 @@ export const riderReducer = (state = initialState, action)=>{
 		case RIDER_LOGIN_SUCCESS:
 			return {...state,
 				riderLoginStarted:false,
-				user: action.payload,
+				user: action.payload.user,
 				serverMessage: 'Login Success'
 			}
 		case RIDER_LOGIN_FAILURE:
@@ -159,6 +162,20 @@ export const riderReducer = (state = initialState, action)=>{
 		case SUBMIT_REVIEW_FAILURE:
 			return {...state,
 				submitDriverReviewStarted:false
+			}
+		
+		case UPDATE_RIDER_PROFILE_STARTED:
+			return {...state,
+				serverMessage:'Uploading...',
+			}
+		case UPDATE_RIDER_PROFILE_SUCCESS:
+			return {...state,
+				user: action.payload,
+				serverMessage:action.payload.message,
+			}
+		case UPDATE_RIDER_PROFILE_FAILURE:
+			return {...state,
+				serverMessage:action.payload.message,
 			}
 		default:
 			return {...state}
