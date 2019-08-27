@@ -76,7 +76,7 @@ class Header extends React.Component {
                     {user ? (
                         <div className="login-container">
                             <IconButton className={`classes.titleNoUnder `}>
-                                <Avatar src={user.avatar} alt={"avatar"} />
+                                <Avatar src={user.avatar} color={"pink"} alt={"avatar"} />
                             </IconButton>
                         </div>
                     ) : (

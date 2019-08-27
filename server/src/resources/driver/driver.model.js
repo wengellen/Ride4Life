@@ -33,7 +33,7 @@ const driverSchema = new mongoose.Schema(
     },
     avatar: {
         type: String,
-        default:"https://i.pravatar.cc/60"
+        default:"person.svg"
     },
     memberSince: {
         type: Date

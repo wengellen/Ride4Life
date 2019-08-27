@@ -22,33 +22,20 @@ import ImageInput from "../../components/ImageInput";
 
 class DriverEditProfilePage extends React.Component {
     state = {
-        profile: {
-            email: '',
-            username: '',
-            password: '',
-            phone: '',
-            city: '',
-        },
-
         isEditing: false,
-        user: null,
-        profilePhotoSelected: null,
+        profile: null,
     }
 
-    avatarImg = React.createRef()
 
     componentDidMount() {
         window.scrollTo(0, 0)
-        document.body.scrollTop = 0
+        document.body.scrollTop = 0;
     }
 
     handleChange = e => {
         this.setState({
-            isEditing: true,
-            profile: {
-                ...this.state.profile,
-                [e.currentTarget.name]: e.currentTarget.value,
-            },
+                isEditing:true,
+                profile: {...this.state.profile,   [e.currentTarget.name]: e.currentTarget.value},
         })
     }
     
@@ -60,54 +47,32 @@ class DriverEditProfilePage extends React.Component {
         })
     }
     
-    handleFileSelected = e => {
-        console.log('e', e)
-        console.log(' e.target.files[0]', e.target.files[0])
-        const errors = []
-
-        const files = Array.from(e.target.files)
-        const formData = new FormData()
-        const types = ['image/png', 'image/jpeg', 'image/gif']
-
-        files.forEach((file, i) => {
-            if (types.every(type => file.type !== type)) {
-                errors.push(`'${file.type}' is not a supported format`)
+    static  getDerivedStateFromProps = (nextProps, prevState) => {
+    	if (prevState.isEditing) return
+    	
+       if (prevState.profile !== nextProps.user) {
+            return {
+                profile: {...nextProps.user}
             }
-
-            if (file.size > 150000) {
-                errors.push(
-                    `'${file.name}' is too large, please pick a smaller file`
-                )
-            }
-
-            formData.append(i, file)
-        })
-        formData.append('_id', this.props.user._id)
-
-        console.log('formData', formData)
-        this.setState({ uploading: true })
-        this.props.uploadProfilePhoto(formData).then(res => {
-            console.log('res.data', res.data)
-            console.log('res.user.avatar', res.data.avatar)
-            // this.setState({ profilePhotoSelected: e.target.files[0] })
-            this.avatarImg.src= res.data.avatar
-        })
+        }else{
+            return  null
+        }
     }
 
     render() {
         const { classes, user } = this.props
-        return (
+        const { profile} = this.state
+       return  (
             <div className={classes.container}>
                 <GridContainer justify="center">
                     <GridItem xs={12} sm={12} md={4}>
                         <Card>
-                        
                             <form
                                 className={classes.form}
                                 onSubmit={this.editDriverProfile}
                             >
                                 <div>
-                                    <h1>Edit Profile Page</h1>
+                                    <h1>Edit Driver Profile</h1>
                                     <br/>
                                     <ImageInput
                                         className='avatar-input'
@@ -129,7 +94,7 @@ class DriverEditProfilePage extends React.Component {
                                             placeholder: 'Useraname',
                                             type: 'text',
                                             onChange: this.handleChange,
-                                            value: user.username,
+                                            value: profile.username,
                                             name: 'username',
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -142,28 +107,28 @@ class DriverEditProfilePage extends React.Component {
                                             ),
                                         }}
                                     />
-                                    <CustomInput
-                                        id="password"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            placeholder: 'Password',
-                                            type: 'password',
-                                            onChange: this.handleChange,
-                                            value:  user.password,
-                                            name: 'password',
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <Lock
-                                                        className={
-                                                            classes.inputIconsColor
-                                                        }
-                                                    />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
+                                    {/*<CustomInput*/}
+                                    {/*    id="password"*/}
+                                    {/*    formControlProps={{*/}
+                                    {/*        fullWidth: true,*/}
+                                    {/*    }}*/}
+                                    {/*    inputProps={{*/}
+                                    {/*        placeholder: 'Password',*/}
+                                    {/*        type: 'password',*/}
+                                    {/*        onChange: this.handleChange,*/}
+                                    {/*        value:  profile.password,*/}
+                                    {/*        name: 'password',*/}
+                                    {/*        startAdornment: (*/}
+                                    {/*            <InputAdornment position="start">*/}
+                                    {/*                <Lock*/}
+                                    {/*                    className={*/}
+                                    {/*                        classes.inputIconsColor*/}
+                                    {/*                    }*/}
+                                    {/*                />*/}
+                                    {/*            </InputAdornment>*/}
+                                    {/*        ),*/}
+                                    {/*    }}*/}
+                                    {/*/>*/}
                                     <CustomInput
                                         id="email"
                                         formControlProps={{
@@ -173,7 +138,7 @@ class DriverEditProfilePage extends React.Component {
                                             placeholder: 'Email...',
                                             type: 'email',
                                             onChange: this.handleChange,
-                                            value: user.email,
+                                            value: profile.email,
                                             name: 'email',
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -195,7 +160,7 @@ class DriverEditProfilePage extends React.Component {
                                             placeholder: 'Cell phone',
                                             type: 'phone',
                                             onChange: this.handleChange,
-                                            value: user.phone,
+                                            value: profile.phone,
                                             name: 'phone',
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -217,7 +182,7 @@ class DriverEditProfilePage extends React.Component {
                                             placeholder: 'city',
                                             type: 'option',
                                             onChange: this.handleChange,
-                                            value:  user.city,
+                                            value:  profile.city,
                                             name: 'city',
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -247,11 +212,13 @@ class DriverEditProfilePage extends React.Component {
         )
     }
 }
-const mapStateToProps = ({ driverReducer }) => ({
-    driverSignupStarted: driverReducer.driverSignupStarted,
-    serverMessage: driverReducer.serverMessage,
-    user: driverReducer.user,
-})
+const mapStateToProps = ({ driverReducer }) => {
+    return  {
+        driverSignupStarted: driverReducer.driverSignupStarted,
+        serverMessage: driverReducer.serverMessage,
+        user: driverReducer.user,
+    }
+}
 
 export default connect(
     mapStateToProps,

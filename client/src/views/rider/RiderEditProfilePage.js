@@ -21,17 +21,8 @@ import ImageInput from "../../components/ImageInput";
 
 class RiderEditProfilePage extends React.Component {
     state = {
-        profile: {
-            email: '',
-            username: '',
-            password: '',
-            phone: '',
-            city: '',
-        },
-
-        isEditing: false,
-        user: null,
-        profilePhotoSelected: null,
+		isEditing: false,
+		profile: null,
     }
 
     componentDidMount() {
@@ -40,26 +31,35 @@ class RiderEditProfilePage extends React.Component {
     }
 
     handleChange = e => {
-        this.setState({
-            isEditing: true,
-            profile: {
-                ...this.state.profile,
-                [e.currentTarget.name]: e.currentTarget.value,
-            },
-        })
+		this.setState({
+			isEditing:true,
+			profile: {...this.state.profile,   [e.currentTarget.name]: e.currentTarget.value},
+		})
     }
     
-    editDriverProfile = e => {
+    editRiderProfile = e => {
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
         this.props.uploadRiderProfile(values).then(res=>{
             this.props.history.push()
         })
     }
+    
+	static  getDerivedStateFromProps = (nextProps, prevState) => {
+		if (prevState.isEditing) return null
+		
+		if (prevState.profile !== nextProps.user) {
+			return {
+				profile: {...nextProps.user}
+			}
+		}else{
+			return  null
+		}
+	}
 
     render() {
         const { classes, user } = this.props
-        console.log('user',user)
+		const { profile} = this.state
         return (
             <div className={classes.container}>
                 <GridContainer justify="center">
@@ -68,10 +68,10 @@ class RiderEditProfilePage extends React.Component {
                         
                             <form
                                 className={classes.form}
-                                onSubmit={this.editDriverProfile}
+                                onSubmit={this.editRiderProfile}
                             >
                                 <div>
-                                    <h1>Edit Profile Page</h1>
+                                    <h1>Edit Rider Profile</h1>
                                     <br/>
                                     <ImageInput
                                         className='avatar-input'
@@ -93,7 +93,7 @@ class RiderEditProfilePage extends React.Component {
                                             placeholder: 'Useraname',
                                             type: 'text',
                                             onChange: this.handleChange,
-                                            value: user.username,
+                                            value: profile.username,
                                             name: 'username',
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -106,28 +106,28 @@ class RiderEditProfilePage extends React.Component {
                                             ),
                                         }}
                                     />
-                                    <CustomInput
-                                        id="password"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            placeholder: 'Password',
-                                            type: 'password',
-                                            onChange: this.handleChange,
-                                            value:  user.password,
-                                            name: 'password',
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <Lock
-                                                        className={
-                                                            classes.inputIconsColor
-                                                        }
-                                                    />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
+                                    {/*<CustomInput*/}
+                                    {/*    id="password"*/}
+                                    {/*    formControlProps={{*/}
+                                    {/*        fullWidth: true,*/}
+                                    {/*    }}*/}
+                                    {/*    inputProps={{*/}
+                                    {/*        placeholder: 'Password',*/}
+                                    {/*        type: 'password',*/}
+                                    {/*        onChange: this.handleChange,*/}
+                                    {/*        value:  profile.password,*/}
+                                    {/*        name: 'password',*/}
+                                    {/*        startAdornment: (*/}
+                                    {/*            <InputAdornment position="start">*/}
+                                    {/*                <Lock*/}
+                                    {/*                    className={*/}
+                                    {/*                        classes.inputIconsColor*/}
+                                    {/*                    }*/}
+                                    {/*                />*/}
+                                    {/*            </InputAdornment>*/}
+                                    {/*        ),*/}
+                                    {/*    }}*/}
+                                    {/*/>*/}
                                     <CustomInput
                                         id="email"
                                         formControlProps={{
@@ -137,7 +137,7 @@ class RiderEditProfilePage extends React.Component {
                                             placeholder: 'Email...',
                                             type: 'email',
                                             onChange: this.handleChange,
-                                            value: user.email,
+                                            value: profile.email,
                                             name: 'email',
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -159,7 +159,7 @@ class RiderEditProfilePage extends React.Component {
                                             placeholder: 'Cell phone',
                                             type: 'phone',
                                             onChange: this.handleChange,
-                                            value: user.phone,
+                                            value: profile.phone,
                                             name: 'phone',
                                             startAdornment: (
                                                 <InputAdornment position="start">

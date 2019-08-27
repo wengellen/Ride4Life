@@ -141,13 +141,3 @@ export const uploadProfilePhoto = (formData) => dispatch =>{
 }
 
 
-
-
-// Find drivers nearby
-// export const setDriverOnline = (driver) => dispatch => {
-// 	console.log('setDriverOnline')
-// 	dispatch({type: CONFIRM_TRIP_REQUEST, payload: driver})
-// }
-//
-
-
