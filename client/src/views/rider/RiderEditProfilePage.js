@@ -18,6 +18,8 @@ import Place from '@material-ui/icons/Place'
 
 import { uploadRiderProfile } from '../../actions'
 import ImageInput from "../../components/ImageInput";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 class RiderEditProfilePage extends React.Component {
     state = {
@@ -41,7 +43,7 @@ class RiderEditProfilePage extends React.Component {
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
         this.props.uploadRiderProfile(values).then(res=>{
-            this.props.history.push()
+            this.props.history.push(this.props.location.state.prevPath)
         })
     }
     
@@ -56,6 +58,10 @@ class RiderEditProfilePage extends React.Component {
 			return  null
 		}
 	}
+    
+    handleClose = () => {
+        this.props.history.push(this.props.location.state.prevPath)
+    }
 
     render() {
         const { classes, user } = this.props
@@ -185,6 +191,9 @@ class RiderEditProfilePage extends React.Component {
                         </Card>
                     </GridItem>
                 </GridContainer>
+                <IconButton className="sliding-panel-close-button" onClick={this.handleClose}>
+                    <CloseIcon color="#353A50" />
+                </IconButton>
             </div>
         )
     }

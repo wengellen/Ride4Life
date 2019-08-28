@@ -27,7 +27,14 @@ class Header extends React.Component {
     handleDrawerToggle() {
         this.setState({ mobileOpen: !this.state.mobileOpen })
     }
-
+    
+    handleOpenProfile = () => {
+        this.handleDrawerToggle()
+        this.props.history.push({
+            pathname:`/${this.props.user.role}/edit-profile`,
+            state: { prevPath: this.props.location.pathname }})
+    }
+ 
     logout() {
         this.props.logoutUser()
 		this.setState({ mobileOpen: false})
@@ -124,8 +131,9 @@ class Header extends React.Component {
                  
                         <div className="nav-drawer">
                             <div>
-                                <NavLink to={`/${user.role}/edit-profile`} onClick={this.handleDrawerToggle}>Profile</NavLink>
-                                <NavLink to={"/"}  onClick={()=>this.logout()}>Logout</NavLink>
+                                {/*<Link to={`/${user.role}/edit-profile`}  onClick={this.handleDrawerToggle}>Profile</Link>*/}
+                                <button className={"drawer-profile-button"} onClick={this.handleOpenProfile}>Profile</button>
+                                <Link to={"/"}  onClick={()=>this.logout()}>Logout</Link>
                             </div>
                         </div>
                     </Drawer>}
@@ -184,8 +192,8 @@ const mapStateToProps = ({ riderReducer, driverReducer }) => {
     }
 }
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     null
-)(withStyles(headerStyle)(Header))
+)(withStyles(headerStyle)(Header)))
 

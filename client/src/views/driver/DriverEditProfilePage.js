@@ -15,23 +15,21 @@ import Lock from '@material-ui/icons/Lock'
 import Phone from '@material-ui/icons/Phone'
 import Face from '@material-ui/icons/Face'
 import Place from '@material-ui/icons/Place'
-
 import { uploadProfilePhoto,uploadProfile } from '../../actions'
-import FileUploadButton from '../../components/Button/FileUploadButton'
 import ImageInput from "../../components/ImageInput";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 class DriverEditProfilePage extends React.Component {
     state = {
         isEditing: false,
         profile: null,
+        prevPath:null
     }
-
-
     componentDidMount() {
         window.scrollTo(0, 0)
         document.body.scrollTop = 0;
     }
-
     handleChange = e => {
         this.setState({
                 isEditing:true,
@@ -43,13 +41,13 @@ class DriverEditProfilePage extends React.Component {
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
         this.props.uploadProfile(values).then(res=>{
-            this.props.history.push()
+            this.props.history.push(this.props.location.state.prevPath)
         })
     }
     
     static  getDerivedStateFromProps = (nextProps, prevState) => {
     	if (prevState.isEditing) return
-    	
+  
        if (prevState.profile !== nextProps.user) {
             return {
                 profile: {...nextProps.user}
@@ -57,6 +55,10 @@ class DriverEditProfilePage extends React.Component {
         }else{
             return  null
         }
+    }
+    
+    handleClose = () => {
+        this.props.history.push(this.props.location.state.prevPath)
     }
 
     render() {
@@ -208,6 +210,9 @@ class DriverEditProfilePage extends React.Component {
                         </Card>
                     </GridItem>
                 </GridContainer>
+                <IconButton className="sliding-panel-close-button" onClick={this.handleClose}>
+                    <CloseIcon color="#353A50" />
+                </IconButton>
             </div>
         )
     }
