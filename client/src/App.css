@@ -627,3 +627,17 @@ status-panel
     background-repeat: no-repeat;
     border-radius: 50%;
 }
+
+
+/* HEADER */
+.nav-drawer-inner{
+    width:100%;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    /*background-color:red;*/
+}
+
+.drawer-button{
+    background:transparent;
+}

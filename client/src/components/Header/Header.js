@@ -12,6 +12,8 @@ import headerStyle from 'assets/jss/material-kit-pro-react/components/headerStyl
 import logo from 'assets/img/safe_logo.png'
 import { Avatar } from '@material-ui/core'
 import {connect} from "react-redux";
+import Button from "../CustomButtons/Button";
+import Face from '@material-ui/icons/Face'
 
 class Header extends React.Component {
     constructor(props) {
@@ -38,6 +40,7 @@ class Header extends React.Component {
     logout() {
         this.props.logoutUser()
 		this.setState({ mobileOpen: false})
+        this.props.history.push("/")
     }
 
     headerColorChange() {
@@ -130,11 +133,18 @@ class Header extends React.Component {
                         </IconButton>
                  
                         <div className="nav-drawer">
-                            <div>
-                                {/*<Link to={`/${user.role}/edit-profile`}  onClick={this.handleDrawerToggle}>Profile</Link>*/}
-                                <button className={"drawer-profile-button"} onClick={this.handleOpenProfile}>Profile</button>
-                                <Link to={"/"}  onClick={()=>this.logout()}>Logout</Link>
-                            </div>
+                            <ul className="nav-drawer-inner">
+                                <li>
+                                    <Button  className={"drawer-button"} onClick={this.handleOpenProfile}>
+                                        <Face/>
+                                        Profile</Button>
+                                </li>
+                                <li>
+                                    <Button className={"drawer-button"} onClick={()=>this.logout()}>
+                                        <Face/>
+                                        Logout</Button>
+                                </li>
+                            </ul>
                         </div>
                     </Drawer>}
                 </div>

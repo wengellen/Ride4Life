@@ -273,11 +273,8 @@ const headerStyle = theme => ({
     top: "9px",
     zIndex: "1"
   },
-  drawerProfileButton:{
-     // "&.show":{
-     //
-     // }
-  }
+  
+  
   
   
 });
