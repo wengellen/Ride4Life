@@ -8,18 +8,19 @@ class HomePage extends Component {
     }
     
     render() {
-    return (
-      <div>
-            <div className={"home-page-image-holder"}>
-              <img src={HomeImage} style={{maxWidth:"100%"}}/>
-            </div>
-            <main className={"app-content"}>
-                <h1>Welcome to Ride for life</h1>
-                <p>A RideSharing service for soon-to-be mothers <br/><em>Quote, Choose, and Ride</em></p>
-                <button onClick={()=> this.onRequestRide()}>Request Ride</button>
-            </main>
-      </div>
-    );
+        const {user} = this.props
+        return (
+          <div>
+                <div className={"home-page-image-holder"}>
+                  <img src={HomeImage} style={{maxWidth:"100%"}}/>
+                </div>
+                <main className={"app-content"}>
+                    <h1>Welcome to Ride for life</h1>
+                    <p>A RideSharing service for soon-to-be mothers <br/><em>Quote, Choose, and Ride</em></p>
+                    <button onClick={()=> this.onRequestRide()}>Request Ride</button>
+                </main>
+          </div>
+        );
   }
 }
 

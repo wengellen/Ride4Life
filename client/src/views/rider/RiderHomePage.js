@@ -8,15 +8,6 @@ class RiderHomePage extends Component {
 	state = {
 	}
 	
-	componentWillUnmount() {
-		// window.removeEventListener('resize', this.resize);
-	}
-	
-	componentDidMount() {
-		// window.addEventListener('resize', this.resize);
-	}
-	
-	
 	cancelTrip = ()=>{
 		console.log('cancelling trips')
 	}

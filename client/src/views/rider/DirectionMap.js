@@ -293,8 +293,6 @@ class DirectionMap extends React.Component {
                 'TRIP_ID \n' + JSON.stringify(data)
             )
         })
-    
-        // this.props.history.push('/rider-home/requesting')
     }
 
     handleConfirmRequest = (idx) => {

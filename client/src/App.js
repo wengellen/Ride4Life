@@ -16,8 +16,9 @@ import RiderTripPage from './views/rider/RiderTripPage'
 import './App.css'
 import SelectRolePanel from './views/SelectRolePanel'
 import { logoutUser } from './actions'
-import DriverEditProfilePage from "./views/driver/DriverEditProfilePage";
-import RiderEditProfilePage from "./views/rider/RiderEditProfilePage";
+import DriverEditProfilePage from './views/driver/DriverEditProfilePage'
+import RiderEditProfilePage from './views/rider/RiderEditProfilePage'
+import PrivateRoute from './components/PrivateRoute'
 
 class App extends React.Component {
     constructor() {
@@ -45,9 +46,7 @@ class App extends React.Component {
     render() {
         const { showSlidingPanel, slidingPanelComponent } = this.state
         const { user } = this.props
-		// const user = JSON.parse(localStorage.getItem('user'))
-	
-        // console.log('this.props', this.props)
+
         return (
             <div className="App">
                 <Header
@@ -62,66 +61,80 @@ class App extends React.Component {
                     closePanel={this.closePanel}
                     history={this.props.history}
                 />
-
                 <Switch>
                     <Route exact path="/" component={HomePage} />
                     <Route path="/rider-login" component={RiderLoginPage} />
                     <Route path="/rider-signup" component={RiderSignupPage} />
                     <Route path="/driver-login" component={DriverLoginPage} />
                     <Route path="/driver-signup" component={DriverSignupPage} />
-                    <Route path="/driver/edit-profile" component={DriverEditProfilePage} />
 
-                    <Route
+                    <PrivateRoute
+                        path="/driver/edit-profile"
+                        component={DriverEditProfilePage}
+                    />
+                    <PrivateRoute
                         path="/rider-home/standby"
                         component={RiderHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/rider-home/requesting"
                         component={RiderHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/rider-home/driversFound"
                         component={RiderHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/rider-home/confirmed"
                         component={RiderHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/rider-home/driver/:id"
                         component={DriverProfilePage}
                     />
-    
-                    <Route path="/rider/edit-profile" component={RiderEditProfilePage} />
-    
-                    <Route path="/rider/:id/trip" component={RiderTripPage} />
 
-                    <Route
+                    <PrivateRoute
+                        path="/rider/edit-profile"
+                        component={RiderEditProfilePage}
+                    />
+
+                    <PrivateRoute
+                        path="/rider/:id/trip"
+                        component={RiderTripPage}
+                    />
+
+                    <PrivateRoute
                         path="/driver-home/offline"
                         component={DriverHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/driver-home/standby"
                         component={DriverHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/driver-home/requestIncoming"
                         component={DriverHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/driver-home/waitingForConfirmation"
                         component={DriverHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/driver-home/confirmed"
                         component={DriverHomePage}
                     />
-                    <Route
+                    <PrivateRoute
                         path="/driver-home/pickup"
                         component={DriverHomePage}
                     />
-                    <Route path="/drivers/:id" component={DriverProfilePage} />
-                    <Route path="/driver/review" component={DriverReviewPage} />
+                    <PrivateRoute
+                        path="/drivers/:id"
+                        component={DriverProfilePage}
+                    />
+                    <PrivateRoute
+                        path="/driver/review"
+                        component={DriverReviewPage}
+                    />
                 </Switch>
             </div>
         )
@@ -129,7 +142,6 @@ class App extends React.Component {
 }
 
 const mapStateToProps = ({ riderReducer, driverReducer }) => {
-    // console.log('riderReducer.loggedInUser', riderReducer)
     return {
         user: riderReducer.user || driverReducer.user,
     }

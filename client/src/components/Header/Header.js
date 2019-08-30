@@ -40,7 +40,6 @@ class Header extends React.Component {
     logout() {
         this.props.logoutUser()
 		this.setState({ mobileOpen: false})
-        this.props.history.push("/")
     }
 
     headerColorChange() {
@@ -67,7 +66,7 @@ class Header extends React.Component {
   
 
     render() {
-        console.log('this.props', this.props)
+        console.log('user', user)
         const { classes, color, fixed, absolute, openPanel, user } = this.props
         const appBarClasses = classNames({
             [classes.appBar]: true,
@@ -75,6 +74,7 @@ class Header extends React.Component {
             [classes.absolute]: absolute,
             [classes.fixed]: fixed,
         })
+        
         return (
             <div className={`${appBarClasses}`}>
                 <Link className={`classes.titleNoUnder`} to="/">

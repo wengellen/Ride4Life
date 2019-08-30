@@ -14,24 +14,19 @@ class DriverHomePage extends Component {
         };
     }
 
-  componentDidMount() {
-  
-  }
 
   render() {
     return (
-      <div className="map-wrapper ">
-          <div className="map-container">
-              <DirectionMapDriver />
-          </div>
+      <div className="map-container">
+          <DirectionMapDriver />
       </div>
     );
   }
 }
 
 const mapStateToProps = ({ riderReducer, tripReducer }) => ({
-  submitDriverReviewSuccessMessage:
-    riderReducer.submitDriverReviewSuccessMessage
+  // submitDriverReviewSuccessMessage:
+  //   riderReducer.submitDriverReviewSuccessMessage
 });
 
 export default connect(
