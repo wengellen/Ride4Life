@@ -13,7 +13,7 @@ import Email from '@material-ui/icons/Email'
 import Phone from '@material-ui/icons/Phone'
 import Face from '@material-ui/icons/Face'
 import Place from '@material-ui/icons/Place'
-import { uploadProfilePhoto,uploadProfile } from '../../actions'
+import { uploadProfile } from '../../actions'
 import ImageInput from "../../components/ImageInput";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
@@ -223,5 +223,5 @@ const mapStateToProps = ({ driverReducer }) => {
 
 export default connect(
     mapStateToProps,
-    { uploadProfilePhoto,uploadProfile }
+    { uploadProfile }
 )(withStyles(loginPageStyle)(DriverEditProfilePage))

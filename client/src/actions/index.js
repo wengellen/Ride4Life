@@ -1,3 +1,5 @@
+import {acceptTrip} from "./driverAction";
+
 export {
     DRIVER_SIGNUP_STARTED,
     DRIVER_SIGNUP_SUCCESS,
@@ -15,8 +17,11 @@ export {
     updateProfile,
     signup_driver,
     login_driver,
-    uploadProfilePhoto,
     uploadProfile,
+    acceptTrip,
+    driverGoOnline,
+    driverGoOffline,
+    driverCancelTrip,
 } from './driverAction'
 
 export {

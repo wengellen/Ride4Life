@@ -8,18 +8,24 @@ import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import {
     updateDriverLocation,
+    driverGoOnline,
+    driverGoOffline,
+    acceptTrip,
+    driverCancelTrip,
 } from '../../actions'
 import IconButton from "@material-ui/core/IconButton";
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
-import socket from "../../utils/socketConnection";
+// import socket from "../../utils/socketConnection";
+import io from "socket.io-client"
 import Button from "@material-ui/core/Button";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
+
+let socket
 
 class DriverHomePage extends Component {
     constructor(props) {
         super(props);
-        const {dispatch} = this.props
         this.state = {
             location: [],
             startLocation: [],
@@ -41,6 +47,98 @@ class DriverHomePage extends Component {
         this.destInput = null
         this.instruction = null
         this.driver=JSON.parse(localStorage.getItem('user'))
+    
+        socket = io.connect("http://localhost:7000")
+        
+        socket.on('REQUEST_TRIP', data => {
+            const requestDetails = data
+            console.log('data',data)
+        
+            if (this.state.driverStatus === 'requestIncoming') {
+                return;
+            }
+            localStorage.setItem('requestDetails', JSON.stringify( data))
+        
+            this.setState({
+                driverStatus:"requestIncoming",
+                requestDetails: data,
+                headerMessage:"You have 1 request. Offer ride?",
+            })
+            console.log(
+                'You have a new request! \n' +
+                JSON.stringify(requestDetails)
+            )
+            this.props.history.push('/driver-home/requestIncoming')
+        })
+    
+    
+        socket.on('RIDER_REQUEST_CANCELED', () => {
+            this.setState({
+                driverStatus:"standby",
+                requestDetails: null,
+                headerMessage:"Request cancelled. Finding another ride for you",
+            }) //Save request details
+            console.log(
+                'You have a new request! \n'
+            )
+        
+            localStorage.removeItem('requestDetails')
+            this.props.history.push('/driver-home/standby')
+        
+        })
+    
+        socket.on('CONFIRM_TRIP', data => {
+            // clearTimeout(requestTimer)
+            const requestDetails = data
+            this.setState({
+                driverStatus:"confirmed",
+                requestDetails: data,
+                headerMessage:"Trip Confirmed",
+                tripId:data._id
+            }) //Save request details
+        
+            console.log(
+                'Rider has accept your service! \n' +
+                JSON.stringify(requestDetails)
+            )
+        
+            this.props.history.push('/driver-home/confirmed')
+        })
+    
+        socket.on('RIDER_TRIP_CANCELED', () => {
+            this.setState({
+                driverStatus:"standby",
+                headerMessage:"The trip has been cancelled",
+                requestDetails: null
+            }) //Save request details
+        
+            console.log(
+                'RIDER_TRIP_CANCELED! \n'
+            )
+            localStorage.removeItem('requestDetails')
+            document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
+            
+            this.resetTrip()
+            
+            this.props.history.push('/driver-home/standby')
+        })
+    
+        socket.on('DRIVER_TRIP_CANCELED', () => {
+            console.log(
+                'DRIVER_TRIP_CANCELED! \n'
+            )
+            this.setState({
+                driverStatus:"standby",
+                headerMessage:"Finding trip for you",
+                requestDetails: null
+            })
+            
+            this.resetTrip()
+    
+            localStorage.removeItem('requestDetails')
+            document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
+            this.props.history.push('/driver-home/standby')
+        })
     }
     
     componentWillUnmount() {
@@ -52,7 +150,7 @@ class DriverHomePage extends Component {
     }
 
     componentDidMount() {
-            let map, directions, geolocate
+            let  geolocate
             const driver = JSON.parse(localStorage.getItem('user'))
             let requestTimer
         navigator.geolocation.getCurrentPosition(position => {
@@ -60,14 +158,13 @@ class DriverHomePage extends Component {
                 position.coords.longitude,
                 position.coords.latitude,
             ]
-        
-            socket.emit('UPDATE_DRIVER_LOCATION', {
-                    coordinates,
-                    role: 'driver',
-                    username: driver.username,
-                    driver: driver,
-                },
-            )
+            
+            this.props.updateDriverLocation(socket,  {
+                coordinates,
+                role: 'driver',
+                username: driver.username,
+                driver: driver,
+            } )
         
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],
@@ -103,8 +200,8 @@ class DriverHomePage extends Component {
             
                 console.log('e.route.steps',steps)
                 console.log(document.querySelectorAll(".mapbox-directions-instructions")[0])
-            
-                document.querySelectorAll(".mapbox-directions-instructions")[0].style.display = "block";
+                const instruction = document.querySelectorAll(".mapbox-directions-instructions")[0]
+                instruction && (document.querySelectorAll(".mapbox-directions-instructions")[0].style.display = "block")
             })
     
             this.map.on('load', () => {
@@ -115,97 +212,17 @@ class DriverHomePage extends Component {
     
             this.map.addControl(this.directions, 'top-left')
             this.map.addControl(new mapboxgl.NavigationControl());
-    
-    
-            socket.on('REQUEST_TRIP', data => {
-                const requestDetails = data
-                console.log('data',data)
-            
-                if (this.state.driverStatus === 'requestIncoming') {
-                    return;
-                }
-                localStorage.setItem('requestDetails', JSON.stringify( data))
-            
-                this.setState({
-                    driverStatus:"requestIncoming",
-                    requestDetails: data,
-                    headerMessage:"You have 1 request. Offer ride?",
-                })
-                console.log(
-                    'You have a new request! \n' +
-                    JSON.stringify(requestDetails)
-                )
-                this.props.history.push('/driver-home/requestIncoming')
-            })
-        
-        
-            socket.on('RIDER_REQUEST_CANCELED', () => {
-                this.setState({
-                    driverStatus:"standby",
-                    requestDetails: null,
-                    headerMessage:"Request cancelled. Finding another ride for you",
-                }) //Save request details
-                console.log(
-                    'You have a new request! \n'
-                )
-            
-                localStorage.removeItem('requestDetails')
-                this.props.history.push('/driver-home/standby')
-            
-            })
-        
-             socket.on('CONFIRM_TRIP', data => {
-                clearTimeout(requestTimer)
-                const requestDetails = data
-                this.setState({
-                    driverStatus:"confirmed",
-                    requestDetails: data,
-                    headerMessage:"Trip Confirmed",
-                    tripId:data._id
-                }) //Save request details
-            
-                console.log(
-                    'Rider has accept your service! \n' +
-                    JSON.stringify(requestDetails)
-                )
-            
-                this.props.history.push('/driver-home/confirmed')
-            })
-        
-             socket.on('RIDER_TRIP_CANCELED', () => {
-                this.setState({
-                    driverStatus:"standby",
-                    headerMessage:"The trip has been cancelled",
-                    requestDetails: null
-                }) //Save request details
-            
-                console.log(
-                    'RIDER_TRIP_CANCELED! \n'
-                )
-                localStorage.removeItem('requestDetails')
-                document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
-                this.props.history.push('/driver-home/standby')
-            })
-        
-             socket.on('DRIVER_TRIP_CANCELED', () => {
-                console.log(
-                    'DRIVER_TRIP_CANCELED! \n'
-                )
-                this.setState({
-                    driverStatus:"standby",
-                    headerMessage:"Finding trip for you",
-                    requestDetails: null
-                })
-            
-                localStorage.removeItem('requestDetails')
-                document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
-                this.props.history.push('/driver-home/standby')
-            })
         })
     }
     
-    cancelTrip = () => {
-        socket.emit('DRIVER_CANCEL_TRIP', {
+    resetTrip = () => {
+        this.directions.removeRoutes();
+        document.querySelectorAll(".mapbox-directions-destination input")[0].value = ''
+        this.map.zoom = 15
+    }
+    
+    cancelTrip = (e) => {
+        this.props.driverCancelTrip(socket, {
             driver: JSON.parse(localStorage.getItem('user')),
             tripId:this.state.tripId
         })
@@ -237,15 +254,16 @@ class DriverHomePage extends Component {
         this.directions.setDestination(requestDetails.startLocation.coordinates)
         this.startInput.value = "Your Location"
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
-        // document.querySelectorAll(".mapbox-directions-instructions")[0].classList.add('show')
-        // this.instruction.classList.add('show')
         this.props.history.push('/driver-home/pickup')
         
     }
     
     handleAcceptTrip = (e) => {
         console.log('ACCEPT_TRIP', )
-         socket.emit('ACCEPT_TRIP', {
+        if (e.target.disabled ) return
+        // e.currentTarget.disabled = true;
+        
+        this.props.acceptTrip(socket, {
             driver: JSON.parse(localStorage.getItem('user')),
             ...this.state.requestDetails,
         })
@@ -256,39 +274,45 @@ class DriverHomePage extends Component {
         })
         
         this.props.history.push('/driver-home/waitingForConfirmation')
-        
     }
     
     handleDriverGoOnline = () => {
         console.log('DRIVER_GO_ONLINE', )
-        socket.on('DRIVER_READY_TO_ACCEPT_TRIP', () => {
-            console.log(
-                'DRIVER_READY_TO_ACCEPT_TRIP! \n'
-            )
-            this.setState({
-                driverStatus:"standby",
-                headerMessage:"Finding Trip for you..."
-            })
-        })
-       socket.emit('DRIVER_GO_ONLINE', {
+    
+        this.props.driverGoOnline(socket,{
             driver: JSON.parse(localStorage.getItem('user'))
         })
+    
+        this.setState({
+            driverStatus:"standby",
+            headerMessage:"Finding Trip for you..."
+        })
         
+        // socket.on('DRIVER_READY_TO_ACCEPT_TRIP', () => {
+        //     console.log(
+        //         'DRIVER_READY_TO_ACCEPT_TRIP! \n'
+        //     )
+        //     this.setState({
+        //         driverStatus:"standby",
+        //         headerMessage:"Finding Trip for you..."
+        //     })
+        // })
         this.props.history.push('/driver-home/standby')
     }
     
     handleDriverGoOffline = () => {
         console.log('DRIVER_GO_OFFLINE', )
-        
-       socket.emit('DRIVER_GO_OFFLINE', {
+        this.props.driverGoOffline(socket, {
             driver: JSON.parse(localStorage.getItem('user'))
-        })
-        socket.on('DRIVER_GONE_OFFLINE', () => {
-            console.log(
-                'DRIVER_GONE_OFFLINE! \n'
-            )
-            this.setState({driverStatus:"offline"})
-        })
+        } )
+        // socket.on('DRIVER_GONE_OFFLINE', () => {
+        //     console.log(
+        //         'DRIVER_GONE_OFFLINE! \n'
+        //     )
+        //     this.setState({driverStatus:"offline"})
+        // })
+        this.setState({driverStatus:"offline"})
+        // socket.disconnect()
         this.props.history.push('/driver-home/offline')
     }
     
@@ -377,8 +401,7 @@ class DriverHomePage extends Component {
                               <span className={"tag orange"}>{requestDetails.duration} mins</span>
                               <span className={"tag blue"}>{requestDetails.distance} mi</span>
                           </div>
-                          <button className={"driver-item-accept-button requesting main"}
-                                  onClick={(e)=> this.handleAcceptTrip(e)}>
+                          <button className={"driver-item-accept-button requesting main"}>
                               <Loader type="ThreeDots" color="#fff" height={40} width={40} />
                           </button>
                       </div>
@@ -512,5 +535,10 @@ const mapStateToProps = ({ driverReducer, tripReducer }, ownProps) => ({
 
 export default connect(
   mapStateToProps,
-  { updateDriverLocation}
+  { updateDriverLocation,
+      driverGoOnline,
+      driverGoOffline,
+      acceptTrip,
+      driverCancelTrip,
+  }
 )(DriverHomePage);

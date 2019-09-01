@@ -2,6 +2,7 @@
 // DRIVER
 import API  from "../utils/axiosAuth";
 import {CONFIRM_TRIP_REQUEST} from "./riderAction";
+import socket from "../utils/socketConnection";
 
 export const DRIVER_SIGNUP_STARTED = 'DRIVER_SIGNUP_STARTED'
 export const DRIVER_SIGNUP_SUCCESS = 'DRIVER_SIGNUP_SUCCESS'
@@ -23,21 +24,31 @@ export const UPLOAD_PROFILE_STARTED = 'UPLOAD_PROFILE_STARTED'
 export const UPLOAD_PROFILE_SUCCESS = 'UPLOAD_PROFILE_SUCCESS'
 export const UPLOAD_PROFILE_FAILURE = 'UPLOAD_PROFILE_FAILURE'
 
-// Should return a list of drivers nearby
-export const updateDriverLocation = (location) => dispatch => {
-	dispatch({type: UPDATE_LOCATION_STARTED})
-	console.log('location',location)
-	return (
-		API().put('/api/driver/location')
-		.then(res =>{
-			console.log('res',res)
-			dispatch({type: UPDATE_LOCATION_SUCCESS, payload: res})
-		})
-		.catch(err =>{
-			dispatch({type: UPDATE_LOCATION_FAILURE, payload: err.message})
-		})
-	)
+export const driverCancelTrip = (socket, data) => dispatch => {
+	console.log('driverCancelTrip')
+	socket.emit('DRIVER_CANCEL_TRIP', data)
 }
+
+export const acceptTrip = (socket, data) => dispatch => {
+	console.log('acceptTrip')
+	socket.emit('ACCEPT_TRIP', data)
+}
+
+export const driverGoOnline = (socket, data) => dispatch => {
+	console.log('driverGoOnline')
+	socket.emit('DRIVER_GO_ONLINE', data)
+}
+
+export const driverGoOffline = (socket, data) => dispatch => {
+	console.log('driverGoOffline')
+	socket.emit('DRIVER_GO_OFFLINE', data)
+}
+
+export const updateDriverLocation = (socket, data) => dispatch => {
+	console.log('updateDriverLocation')
+	socket.emit('UPDATE_DRIVER_LOCATION', data)
+}
+
 // Update Profile
 export const updateProfile = (user) => dispatch => {
 	dispatch({type: UPDATE_PROFILE_STARTED})
@@ -108,31 +119,6 @@ export const uploadProfile = (formValue) => dispatch =>{
 			console.log('err', err)
 			if (err.response && err.response.status === 401) {
 				dispatch({type: UPDATE_PROFILE_FAILURE, payload: err.response.data})
-			}
-			
-			return  err.response.data
-		})
-	)
-}
-
-
-
-export const uploadProfilePhoto = (formData) => dispatch =>{
-	dispatch({type:UPLOAD_PROFILE_STARTED})
-	console.log('uploadProfilePhoto formData', formData)
-	
-	return (
-		API().post(`/api/driver/uploadProfilePhoto`, formData)
-		// API.post(`/image-upload`, formData)
-		.then(res =>{
-			console.log('uploadProfilePhoto usccess', res)
-			dispatch({type: UPLOAD_PROFILE_SUCCESS, payload: res.data})
-			return res.data
-		})
-		.catch(err =>{
-			console.log('err', err)
-			if (err.response && err.response.status === 401) {
-				dispatch({type: UPLOAD_PROFILE_FAILURE, payload: err.response.data})
 			}
 			
 			return  err.response.data

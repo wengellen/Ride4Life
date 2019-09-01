@@ -20,14 +20,17 @@ import {
 	riderCancelTrip,
 	requestTrip,
 	
-	uploadProfilePhoto
-	
 } from '../../actions'
-import socket from "../../utils/socketConnection";
+// import socket from "../../utils/socketConnection";
+
 import IconButton from "@material-ui/core/IconButton";
 import {withRouter} from "react-router";
 import Button from "@material-ui/core/Button";
+import io from "socket.io-client";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
+
+let socket
+
 var geojson = {
 	type: 'FeatureCollection',
 	features: [{
@@ -82,6 +85,8 @@ class RiderHomePage extends Component {
 		this.geolocate = null
 		this.rider = JSON.parse(localStorage.getItem('user'))
 		
+		socket = io.connect("http://localhost:7000")
+		
 		socket.on('ACCEPT_TRIP', data => {
 			console.log('ACCEPT_TRIP data', data)
 			this.setState({
@@ -101,6 +106,9 @@ class RiderHomePage extends Component {
 			console.log(
 				'RIDER_TRIP_CANCELED! \n'
 			)
+			
+			this.resetTrip()
+			
 			this.setState({
 				tripStatus:"standby",
 				headerMessage:"Start a new ride",
@@ -114,6 +122,8 @@ class RiderHomePage extends Component {
 			console.log(
 				'DRIVER_TRIP_CANCELED! \n'
 			)
+			this.resetTrip()
+			
 			this.setState({
 				tripStatus:"standby",
 				headerMessage:"Send a new request",
@@ -297,8 +307,15 @@ class RiderHomePage extends Component {
 		alert("Disconnecting Socket as component will unmount")
 	}
 
+	resetTrip = () => {
+		this.directions.removeRoutes();
+		this.directions.setOrigin(this.state.startLocation)
+		document.querySelectorAll(".mapbox-directions-destination input")[0].value = ''
+	}
 	
 	handleCancelRideRequest = () => {
+		this.resetTrip()
+		
 		const rider = JSON.parse(localStorage.getItem('user'))
 		
 		this.props.riderCancelRequest(socket,  {
@@ -357,7 +374,8 @@ class RiderHomePage extends Component {
 	}
 	
 	cancelTrip = () => {
-	
+		this.resetTrip()
+		
 		this.props.riderCancelTrip(socket,  {
 			rider: JSON.parse(localStorage.getItem('user')),
 			tripId:this.state.tripId

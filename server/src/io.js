@@ -25,10 +25,11 @@ export const initialize = function(server) {
         logger.debug(`A user connected with ${socket.id}`)
 
         socket.on('disconnect', async reason => {
+            console.log('ids.get(socket.id)',socket.id)
             const user = ids.get(socket.id)
             // const trip = trips.get(user.username)
-            logger.debug('USER DISCONNECTED ' + user.username)
-
+            delete socket.id
+            
             if (!user) return
             const map = user.role === 'rider' ? riders : drivers
             
@@ -57,11 +58,11 @@ export const initialize = function(server) {
                     console.log('error', e)
                 }
             }
-            delete socket.id
+
+            logger.debug('USER DISCONNECTED ' + user.username)
         })
         
         // socket.emit('',result)
-        
         socket.on('join', function(data) {
             ids.set(socket.id, data)
             socket.join(data.username) //User joins a uniquyarn deve room/channel that's named after the userId
