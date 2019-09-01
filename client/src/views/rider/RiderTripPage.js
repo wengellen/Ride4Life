@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import {findDriversNearby, getDriversById, sendTripRequest} from "../../actions";
-import DirectionMap from "./DirectionMap";
+import {findDriversNearby, getDriversById} from "../../actions";
 
 class RiderTripPage extends Component {
 	constructor(){
@@ -112,10 +111,8 @@ class RiderTripPage extends Component {
 						 	{/*<button className="brown-btn" onClick={this.endTrip}>End Trip</button>*/}
 					</form>
 				</div>
-				<div className="map-container">
-					<DirectionMap  />
-				</div>
-				
+		y
+			
 			</div>
 		);
 	}
@@ -132,6 +129,5 @@ const mapStateToProps = ({riderReducer, tripReducer}) => (
 export default connect(
 	mapStateToProps,
 	{ findDriversNearby,
-	  sendTripRequest,
 	  getDriversById }
 )(RiderTripPage);

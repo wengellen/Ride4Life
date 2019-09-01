@@ -1,10 +1,3 @@
-import { API } from '../utils/axiosAuth'
-import {
-    DRIVER_LOGIN_FAILURE,
-    DRIVER_LOGIN_STARTED,
-    DRIVER_LOGIN_SUCCESS,
-} from './driverAction'
-
 export {
     DRIVER_SIGNUP_STARTED,
     DRIVER_SIGNUP_SUCCESS,
@@ -55,14 +48,18 @@ export {
     UPDATE_RIDER_PROFILE_SUCCESS,
     UPDATE_RIDER_PROFILE_FAILURE,
     cancelTripRequest,
-    confirmTripRequest,
+    riderCancelTrip,
+    confirmTrip,
+    requestTrip,
     logoutUser,
     getDriversById,
     findDriversNearby,
     signup_rider,
     login_rider,
-    sendTripRequest,
     submitDriverReview,
-    updateRiderLocation,
     uploadRiderProfile,
+    updateThisRiderLocation,
+    riderCancelRequest
 } from './riderAction'
+
+

@@ -84,13 +84,56 @@ class Header extends React.Component {
                 </Link>
                 <div className="icon-navbar">
                     {user ? (
-                        <div className="login-container">
-                            <IconButton className={`classes.titleNoUnder `}>
-                                <Avatar src={user.avatar} color={"pink"} alt={"avatar"} />
+                        <>
+                            <div className="login-container">
+                                <IconButton className={`classes.titleNoUnder `}>
+                                    <Avatar src={user.avatar} color={"pink"} alt={"avatar"} />
+                                </IconButton>
+                            </div>
+                            <IconButton
+                                className={`menuButton show}`}
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={this.handleDrawerToggle}
+                            >
+                                <Menu />
                             </IconButton>
-                        </div>
+                            <Drawer
+                                variant="temporary"
+                                anchor={'right'}
+                                open={this.state.mobileOpen}
+                                classes={{
+                                    paper: classes.drawerPaper,
+                                }}
+                                onClose={this.handleDrawerToggle}
+                            >
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    onClick={this.handleDrawerToggle}
+                                    className={classes.closeButtonDrawer}
+                                >
+                                    <Close />
+                                </IconButton>
+                            
+                                <div className="nav-drawer">
+                                    <ul className="nav-drawer-inner">
+                                        <li>
+                                            <Button  className={"drawer-button"} onClick={this.handleOpenProfile}>
+                                                <Face/>
+                                                Profile</Button>
+                                        </li>
+                                        <li>
+                                            <Button className={"drawer-button"} onClick={()=>this.logout()}>
+                                                <Face/>
+                                                Logout</Button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Drawer>
+                        </>
                     ) : (
-                        <div className={`login-container ${!user ? "hide" : "show"}`}>
+                        <div className={`login-container show}`}>
                             <button
                                 className={"login"}
                                 onClick={() => openPanel('login')}
@@ -103,50 +146,11 @@ class Header extends React.Component {
                             >
                                 Sign Up
                             </button>
+                            
                         </div>
                     )}
-                    <IconButton
-                        className={`menuButton ${!user ? "hide" : "show"}`}
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={this.handleDrawerToggle}
-                    >
-                        <Menu />
-                    </IconButton>
-                    {user &&
-                    <Drawer
-                        variant="temporary"
-                        anchor={'right'}
-                        open={this.state.mobileOpen}
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                        onClose={this.handleDrawerToggle}
-                    >
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={this.handleDrawerToggle}
-                            className={classes.closeButtonDrawer}
-                        >
-                            <Close />
-                        </IconButton>
-                 
-                        <div className="nav-drawer">
-                            <ul className="nav-drawer-inner">
-                                <li>
-                                    <Button  className={"drawer-button"} onClick={this.handleOpenProfile}>
-                                        <Face/>
-                                        Profile</Button>
-                                </li>
-                                <li>
-                                    <Button className={"drawer-button"} onClick={()=>this.logout()}>
-                                        <Face/>
-                                        Logout</Button>
-                                </li>
-                            </ul>
-                        </div>
-                    </Drawer>}
+                  
+                  
                 </div>
             </div>
         )

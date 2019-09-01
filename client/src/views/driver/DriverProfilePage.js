@@ -10,7 +10,6 @@ import Clear from  "@material-ui/icons/Clear";
 
 import {
 	getDriversById,
-	sendTripRequest,
 } from '../../actions';
 
 class DriverProfilePage extends Component {
@@ -142,6 +141,6 @@ const mapStateToProps = ({riderReducer}) => {
 
 export default withRouter(connect(
 	mapStateToProps,
-	{sendTripRequest,
+	{
 	 getDriversById}
 )(DriverProfilePage));

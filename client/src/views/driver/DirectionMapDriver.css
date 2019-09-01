@@ -369,6 +369,11 @@
 .mapbox-directions-instructions {
     overflow: scroll;
 }
+
+.mapbox-directions-instructions.show{
+    display:block;
+}
+
 .mapbox-directions-instructions-wrapper {
     max-height: 50vh;
 }

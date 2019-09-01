@@ -6,6 +6,7 @@ import {
 	UPDATE_PROFILE_STARTED,
 	UPDATE_PROFILE_SUCCESS
 } from "./driverAction";
+import socket from "../utils/socketConnection";
 
 export const RIDER_SIGNUP_STARTED = 'RIDER_SIGNUP_STARTED'
 export const RIDER_SIGNUP_SUCCESS = 'RIDER_SIGNUP_SUCCESS'
@@ -45,40 +46,6 @@ export const CANCEL_TRIP_REQUEST = 'CANCEL_TRIP_REQUEST'
 
 export const CONFIRM_TRIP_REQUEST = 'CONFIRM_TRIP_REQUEST'
 
-
-// SEND_RIDE_REQUEST
-// Should return a list of drivers nearby
-export const sendTripRequest = (trip) => dispatch => {
-	dispatch({type: SEND_TRIP_REQUEST_STARTED})
-	console.log('trip',trip)
-	return (
-		API().post('/api/rider/request')
-		.then(res =>{
-			// console.log('sendTripRequest',res)
-			console.log('res',res)
-			dispatch({type: SEND_TRIP_REQUEST_SUCCESS, payload: res})
-		})
-		.catch(err =>{
-			dispatch({type: SEND_TRIP_REQUEST_FAILURE, payload: err.message})
-		})
-	)
-}
-
-// Should return a list of drivers nearby
-export const updateRiderLocation = (location) => dispatch => {
-	dispatch({type: UPDATE_LOCATION_STARTED})
-	console.log('rider location',location)
-	return (
-		API().put('/api/rider/location')
-		.then(res =>{
-			console.log('res',res)
-			dispatch({type: UPDATE_LOCATION_SUCCESS, payload: res})
-		})
-		.catch(err =>{
-			dispatch({type: UPDATE_LOCATION_FAILURE, payload: err.message})
-		})
-	)
-}
 
 // Find drivers nearby
 export const submitDriverReview = (review, driver_id) => dispatch => {
@@ -208,18 +175,41 @@ export const logoutUser = () => dispatch => {
 	dispatch({type: LOGOUT_USER})
 }
 
-// Find drivers nearby
 export const cancelTripRequest = () => dispatch => {
 	console.log('cancelTripRequest')
 	dispatch({type: CANCEL_TRIP_REQUEST})
 }
 
-// Find drivers nearby
-export const confirmTripRequest = (driver) => dispatch => {
-	console.log('confirmTripRequest')
-	dispatch({type: CONFIRM_TRIP_REQUEST, payload: driver})
+export const confirmTrip = (socket, data) => dispatch => {
+	console.log('confirmTrip')
+	socket.emit('CONFIRM_TRIP', data)
 }
 
+export const riderCancelTrip = (socket, data) => dispatch => {
+	console.log('riderCancelTrip')
+	socket.emit('RIDER_CANCEL_TRIP', data)
+}
+
+
+export const riderCancelRequest = (socket, data) => dispatch => {
+	console.log('riderCancelRequest')
+	socket.emit('RIDER_CANCEL_REQUEST', data)
+	
+	socket.on('RIDER_REQUEST_CANCELED', () => {
+		console.log(
+			'RIDER_REQUEST_CANCELED! \n'
+		)
+	})
+}
+
+export const requestTrip = (socket, data) => dispatch =>{
+	socket.emit('REQUEST_TRIP', data)
+}
+
+export const updateThisRiderLocation = (socket, data) => dispatch =>{
+	console.log('updateRiderLocation...',data)
+	socket.emit('UPDATE_RIDER_LOCATION', data)
+}
 
 
 

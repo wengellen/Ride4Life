@@ -9,12 +9,12 @@ import { connect } from 'react-redux'
 import {
     updateDriverLocation,
 } from '../../actions'
-import socketIOClient from 'socket.io-client'
 import IconButton from "@material-ui/core/IconButton";
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
 import Button from "../../components/CustomButtons/Button";
 import {withRouter} from "react-router";
+import socket from "../../utils/socketConnection";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DirectionMapDriver extends React.Component {
@@ -31,15 +31,16 @@ class DirectionMapDriver extends React.Component {
             loadingMap: true,
             response: false,
             requestDetails:{},
-            endpoint:  process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`,
+            // endpoint:  process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`,
             driverStatus:"offline",
             headerMessage:'',
             tripId:null
         }
-        this.socket = socketIOClient(this.state.endpoint)
+        // this.socket = socketIOClient(this.state.endpoint)
         this.directions =null
         this.startInput = null
         this.destInput = null
+        this.instruction = null
         this.driver=JSON.parse(localStorage.getItem('user'))
     }
     
@@ -72,8 +73,8 @@ class DirectionMapDriver extends React.Component {
                 style: 'mapbox://styles/mapbox/streets-v9',
                 center: [position.coords.longitude, position.coords.latitude],
                 zoom: 15,
+                interactive: false
             })
-    
     
             // Directions
             this.directions = new MapboxDirections({
@@ -93,8 +94,15 @@ class DirectionMapDriver extends React.Component {
             })
     
             this.directions.on('route', function(e) {
-                console.log(e.route) // Logs the current route shown in the interface.
+                console.log('e.route',e.route) // Logs the current route shown in the interface.
+                const steps = e.enroute && e.enroute[0]
+    
+                console.log('e.route.steps',steps)
+                console.log(document.querySelectorAll(".mapbox-directions-instructions")[0])
+    
+                document.querySelectorAll(".mapbox-directions-instructions")[0].style.display = "block";
             })
+    
     
             map.addControl(this.directions, 'top-left')
             map.addControl(geolocate, 'top-right')
@@ -102,6 +110,7 @@ class DirectionMapDriver extends React.Component {
             map.on('load', () => {
                 this.startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
                 this.destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
+                console.log("document.querySelectorAll(\".mapbox-directions-instructions\")", document.querySelectorAll(".mapbox-directions-instructions"))
             })
     
             this.socket.on('REQUEST_TRIP', data => {
@@ -122,7 +131,6 @@ class DirectionMapDriver extends React.Component {
                     'You have a new request! \n' +
                     JSON.stringify(requestDetails)
                 )
-               
                 this.props.history.push('/driver-home/requestIncoming')
             })
     
@@ -138,7 +146,6 @@ class DirectionMapDriver extends React.Component {
                 )
     
                 localStorage.removeItem('requestDetails')
-    
                 this.props.history.push('/driver-home/standby')
     
             })
@@ -192,7 +199,6 @@ class DirectionMapDriver extends React.Component {
             })
         })
     }
-    
    
     cancelTrip = () => {
         this.socket.emit('DRIVER_CANCEL_TRIP', {
@@ -218,7 +224,7 @@ class DirectionMapDriver extends React.Component {
     }
     
     
-    handleDriveToUser = (e) => {
+handleDriveToUser = (e) => {
         this.setState({
             driverStatus:"pickup",
         })
@@ -227,8 +233,9 @@ class DirectionMapDriver extends React.Component {
         this.directions.setDestination(requestDetails.startLocation.coordinates)
         this.startInput.value = "Your Location"
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
-    
-        this.props.history.push('/driver-home/pickup')
+        // document.querySelectorAll(".mapbox-directions-instructions")[0].classList.add('show')
+        // this.instruction.classList.add('show')
+         this.props.history.push('/driver-home/pickup')
     
     }
     
@@ -268,6 +275,7 @@ class DirectionMapDriver extends React.Component {
     
     handleDriverGoOffline = () => {
         console.log('DRIVER_GO_OFFLINE', )
+        
         this.socket.emit('DRIVER_GO_OFFLINE', {
             driver: JSON.parse(localStorage.getItem('user'))
         })
@@ -460,6 +468,13 @@ class DirectionMapDriver extends React.Component {
                         </div>
                         <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
                         <button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>
+                    </div>
+                )
+                case "trip-ended": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header show-bg `}>{headerMessage}</h1>
+                        <div className="drivers-nearby-container-list">Trip Ended</div>
+                        {/*<Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}></Button>*/}
                     </div>
                 )
                 default:      return <h1>No match</h1>

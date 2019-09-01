@@ -59,6 +59,9 @@ export const initialize = function(server) {
             }
             delete socket.id
         })
+        
+        // socket.emit('',result)
+        
         socket.on('join', function(data) {
             ids.set(socket.id, data)
             socket.join(data.username) //User joins a uniquyarn deve room/channel that's named after the userId
