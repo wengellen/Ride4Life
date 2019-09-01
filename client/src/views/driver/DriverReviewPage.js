@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import PinkButton from "../../components/Button/PinkButton";
 import Rating from "../../components/Ratings/Rating";
 import Loader from 'react-loader-spinner'
 
 import {
 	submitDriverReview
 } from '../../actions';
+import {Button} from "@material-ui/core";
 
 class DriverReviewPage extends Component {
 	state = {
@@ -19,7 +19,6 @@ class DriverReviewPage extends Component {
 	}
 	
 	editProfile = ()=>{
-		// console.log('isEditing')
 		this.setState({isEditing: !this.state.isEditing})
 	}
 	
@@ -91,7 +90,7 @@ class DriverReviewPage extends Component {
 								{/*   onChange={e=> this.rateDriver(e)}*/}
 							   {/*/>*/}
 						   </div>
-					   <PinkButton onClick={this.submitDriverReview}>Submit Rating</PinkButton>
+					   <Button onClick={this.submitDriverReview}>Submit Rating</Button>
 					   <h2>{this.props.submitDriverReviewSuccessMessage}</h2>
 				   </main>
 			   </div>

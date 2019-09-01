@@ -12,8 +12,8 @@ import headerStyle from 'assets/jss/material-kit-pro-react/components/headerStyl
 import logo from 'assets/img/safe_logo.png'
 import { Avatar } from '@material-ui/core'
 import {connect} from "react-redux";
-import Button from "../CustomButtons/Button";
 import Face from '@material-ui/icons/Face'
+import Button from "@material-ui/core/Button";
 
 class Header extends React.Component {
     constructor(props) {

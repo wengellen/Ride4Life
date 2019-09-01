@@ -12,8 +12,8 @@ import {
 import IconButton from "@material-ui/core/IconButton";
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
-import Button from "../../components/CustomButtons/Button";
 import socket from "../../utils/socketConnection";
+import Button from "@material-ui/core/Button";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DriverHomePage extends Component {

@@ -12,9 +12,8 @@ import RiderHomePage from './views/rider/RiderHomePage'
 import DriverHomePage from './views/driver/DriverHomePage'
 import DriverProfilePage from './views/driver/DriverProfilePage'
 import Header from './components/Header/Header'
-import RiderTripPage from './views/rider/RiderTripPage'
 import './App.css'
-import SelectRolePanel from './views/SelectRolePanel'
+import SelectRolePanel from './components/SelectRolePanel'
 import { logoutUser } from './actions'
 import DriverEditProfilePage from './views/driver/DriverEditProfilePage'
 import RiderEditProfilePage from './views/rider/RiderEditProfilePage'
@@ -96,11 +95,6 @@ class App extends React.Component {
                     <PrivateRoute
                         path="/rider/edit-profile"
                         component={RiderEditProfilePage}
-                    />
-
-                    <PrivateRoute
-                        path="/rider/:id/trip"
-                        component={RiderTripPage}
                     />
 
                     <PrivateRoute

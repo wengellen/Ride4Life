@@ -25,8 +25,8 @@ import {
 } from '../../actions'
 import socket from "../../utils/socketConnection";
 import IconButton from "@material-ui/core/IconButton";
-import Button from "../../components/CustomButtons/Button";
 import {withRouter} from "react-router";
+import Button from "@material-ui/core/Button";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 var geojson = {
 	type: 'FeatureCollection',

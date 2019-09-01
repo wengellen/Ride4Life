@@ -2,16 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner'
 import { signup_driver } from '../../actions';
-import PinkButton from "../../components/Button/PinkButton";
 import GridContainer from "../../components/Grid/GridContainer";
-import Card from "../../components/Card/Card";
 import GridItem from "../../components/Grid/GridItem";
-import CardHeader from "../../components/Card/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
 import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
-// import image from "assets/img/bg7.jpg";
 import CustomInput from "../../components/CustomInput/CustomInput";
-import CardBody from "../../components/Card/CardBody";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Email from "@material-ui/icons/Email";
 import Lock from "@material-ui/icons/Lock";
@@ -68,7 +63,6 @@ class DriverSingupPage extends React.Component {
           <div className={classes.container}>
             <GridContainer justify="center">
               <GridItem xs={12} sm={12} md={4}>
-                <Card>
                   <form className={classes.form} onSubmit={this.signupDriver}>
                       <div className={classes.cardHeadline}>
                           <h1 className={classes.cardTitle}>Driver</h1>
@@ -185,7 +179,6 @@ class DriverSingupPage extends React.Component {
                       </button>
                     </div>
                   </form>
-                </Card>
               </GridItem>
             </GridContainer>
               <div>

@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import serializeForm from 'form-serialize'
 import Loader from 'react-loader-spinner'
 import GridContainer from '../../components/Grid/GridContainer'
-import Card from '../../components/Card/Card'
 import GridItem from '../../components/Grid/GridItem'
 import withStyles from '@material-ui/core/styles/withStyles'
 import loginPageStyle from '../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx'
@@ -70,8 +69,6 @@ class RiderEditProfilePage extends React.Component {
             <div className={classes.container}>
                 <GridContainer justify="center">
                     <GridItem xs={12} sm={12} md={4}>
-                        <Card>
-                        
                             <form
                                 className={classes.form}
                                 onSubmit={this.editRiderProfile}
@@ -188,7 +185,6 @@ class RiderEditProfilePage extends React.Component {
                                     </button>
                                 </div>
                             </form>
-                        </Card>
                     </GridItem>
                 </GridContainer>
                 <IconButton className="sliding-panel-close-button" onClick={this.handleClose}>

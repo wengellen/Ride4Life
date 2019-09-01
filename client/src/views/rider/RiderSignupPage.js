@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner'
 import { signup_rider } from '../../actions';
 import GridContainer from "../../components/Grid/GridContainer";
-import Card from "../../components/Card/Card";
 import GridItem from "../../components/Grid/GridItem";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Face from "@material-ui/icons/Face";
@@ -59,7 +58,6 @@ class RiderSignupPage extends React.Component {
             <div className={classes.container}>
                 <GridContainer justify="center">
                     <GridItem xs={12} sm={12} md={4}>
-                        <Card>
                             <form className={classes.form} onSubmit={this.signup}>
                                 <div className={classes.cardHeadline}>
                                     <h1 className={classes.cardTitle}>Rider</h1>
@@ -160,7 +158,6 @@ class RiderSignupPage extends React.Component {
                                    </button>
                                 </div>
                             </form>
-                        </Card>
                     </GridItem>
                 </GridContainer>
                 <div>
