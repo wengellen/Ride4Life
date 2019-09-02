@@ -141,13 +141,6 @@ class DriverHomePage extends Component {
             this.props.history.push('/driver-home/standby')
         })
     }
-    
-    componentWillUnmount() {
-        socket.disconnect()
-        if (this.map && !JSON.parse(localStorage.getItem('user'))) {
-            setTimeout(() => this.map.remove(), 3000)
-        }
-    }
 
     componentDidMount() {
             let  geolocate
@@ -165,7 +158,7 @@ class DriverHomePage extends Component {
                 username: driver.username,
                 driver: driver,
             })
-        
+            console.log('componentDidMount is called')
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],
             })
@@ -213,6 +206,16 @@ class DriverHomePage extends Component {
             this.map.addControl(this.directions, 'top-left')
             this.map.addControl(new mapboxgl.NavigationControl());
         })
+    }
+    
+    componentWillUnmount() {
+        socket.disconnect()
+        if (this.map) {
+            setTimeout(() => {
+                console.log('componentWillUnmount is called')
+                return this.map.remove()
+            }, 1000)
+        }
     }
     
     resetTrip = () => {

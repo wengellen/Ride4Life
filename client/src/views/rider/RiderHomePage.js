@@ -84,7 +84,6 @@ class RiderHomePage extends Component {
 		this.directions = null
 		this.geolocate = null
 		this.rider = JSON.parse(localStorage.getItem('user'))
-		
 		socket = io.connect("http://localhost:7000")
 		
 		socket.on('ACCEPT_TRIP', data => {
@@ -298,12 +297,10 @@ class RiderHomePage extends Component {
 	}
 	
 	componentWillUnmount = () => {
-		console.log('this.map', this.map)
 		if (this.map) {
-			setTimeout(() => this.map.remove(), 3000)
+			setTimeout(() => this.map.remove(), 1000)
 		}
 		socket.disconnect()
-		alert("Disconnecting Socket as component will unmount")
 	}
 
 	resetTrip = () => {

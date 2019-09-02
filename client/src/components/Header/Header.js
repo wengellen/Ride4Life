@@ -38,7 +38,13 @@ class Header extends React.Component {
             pathname:`/${this.props.user.role}/edit-profile`,
             state: { prevPath: this.props.location.pathname }})
     }
- 
+    
+    handleEditProfile =  () => {
+        this.props.history.push({
+            pathname:`/${this.props.user.role}/edit-profile`,
+            state: { prevPath: this.props.location.pathname }})
+    };
+    
     logout() {
         this.props.logoutUser()
 		this.setState({ mobileOpen: false})
@@ -88,7 +94,7 @@ class Header extends React.Component {
                     {user ? (
                         <>
                             <div className="login-container">
-                                <IconButton className={`classes.titleNoUnder `}>
+                                <IconButton className={`classes.titleNoUnder `} onClick={this.handleEditProfile}>
                                     <Avatar src={user.avatar ||  placeholder} color={"pink"} alt={"avatar"} />
                                 </IconButton>
                             </div>

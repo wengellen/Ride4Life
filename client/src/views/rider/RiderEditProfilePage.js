@@ -6,13 +6,11 @@ import GridContainer from '../../components/Grid/GridContainer'
 import GridItem from '../../components/Grid/GridItem'
 import withStyles from '@material-ui/core/styles/withStyles'
 import loginPageStyle from '../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx'
-// import image from "assets/img/bg7.jpg";
 import CustomInput from '../../components/CustomInput/CustomInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Email from '@material-ui/icons/Email'
 import Phone from '@material-ui/icons/Phone'
 import Face from '@material-ui/icons/Face'
-
 import { uploadRiderProfile } from '../../actions'
 import ImageInput from "../../components/ImageInput/ImageInput";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,6 +20,7 @@ class RiderEditProfilePage extends React.Component {
     state = {
 		isEditing: false,
 		profile: null,
+        prevPath:null
     }
 
     componentDidMount() {
@@ -40,7 +39,7 @@ class RiderEditProfilePage extends React.Component {
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
         this.props.uploadRiderProfile(values).then(res=>{
-            this.props.history.push(this.props.location.state.prevPath)
+          this.handleClose()
         })
     }
     
@@ -57,7 +56,8 @@ class RiderEditProfilePage extends React.Component {
 	}
     
     handleClose = () => {
-        this.props.history.push(this.props.location.state.prevPath)
+        let backUrl = this.props.location.state ? this.props.location.state.prevPath : '/rider-home/standby'
+        this.props.history.push(backUrl)
     }
 
     render() {
@@ -71,15 +71,17 @@ class RiderEditProfilePage extends React.Component {
                                 className={classes.form}
                                 onSubmit={this.editRiderProfile}
                             >
-                                <div>
+                                <div className={"profile-header-container"} >
                                     <h1>Edit Rider Profile</h1>
                                     <br/>
-                                    <ImageInput
-                                        className='avatar-input'
-                                        name='avatar'
-                                        maxHeight={64}
-                                        value={user.avatar}
-                                    />
+                                    <div className={"avatar-input-container"}>
+                                        <ImageInput
+                                            className='avatar-input'
+                                            name='avatar'
+                                            maxValue={200}
+                                            value={user.avatar}
+                                        />
+                                    </div>
                                 </div>
                                 <p
                                     className={`${classes.description} ${classes.textCenter}`}
@@ -93,7 +95,6 @@ class RiderEditProfilePage extends React.Component {
                                         inputProps={{
                                             placeholder: 'Useraname',
                                             type: 'text',
-                                            onChange: this.handleChange,
                                             value: profile.username,
                                             name: 'username',
                                             startAdornment: (

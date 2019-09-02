@@ -6,7 +6,6 @@ import GridContainer from '../../components/Grid/GridContainer'
 import GridItem from '../../components/Grid/GridItem'
 import withStyles from '@material-ui/core/styles/withStyles'
 import loginPageStyle from '../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx'
-// import image from "assets/img/bg7.jpg";
 import CustomInput from '../../components/CustomInput/CustomInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Email from '@material-ui/icons/Email'
@@ -17,7 +16,6 @@ import { uploadProfile } from '../../actions'
 import ImageInput from "../../components/ImageInput/ImageInput";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import Button from "@material-ui/core/Button";
 
 class DriverEditProfilePage extends React.Component {
     state = {
@@ -40,7 +38,7 @@ class DriverEditProfilePage extends React.Component {
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
         this.props.uploadProfile(values).then(res=>{
-            this.props.history.push(this.props.location.state.prevPath)
+            this.handleClose()
         })
     }
     
@@ -57,7 +55,8 @@ class DriverEditProfilePage extends React.Component {
     }
     
     handleClose = () => {
-        this.props.history.push(this.props.location.state.prevPath)
+        let backUrl = this.props.location.state ? this.props.location.state.prevPath : '/rider-home/standby'
+        this.props.history.push(backUrl)
     }
 
     render() {
@@ -95,7 +94,6 @@ class DriverEditProfilePage extends React.Component {
                                         inputProps={{
                                             placeholder: 'Useraname',
                                             type: 'text',
-                                            onChange: this.handleChange,
                                             value: profile.username,
                                             name: 'username',
                                             startAdornment: (
