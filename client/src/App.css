@@ -652,3 +652,28 @@ status-panel
     border-radius: 50%;
     cursor: pointer;
 }
+.riderMarker {
+    background-image: url('./assets/img/icons/rider.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+}
+.driverMarker {
+    background-image: url('./assets/img/icons/car.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+}
+
+.driverMarker-online {
+    background-image: url('./assets/img/icons/car-online.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+}

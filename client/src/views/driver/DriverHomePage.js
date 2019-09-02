@@ -16,12 +16,10 @@ import {
 import IconButton from "@material-ui/core/IconButton";
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
-// import socket from "../../utils/socketConnection";
-import io from "socket.io-client"
+import socket from "../../utils/socketConnection";
 import Button from "@material-ui/core/Button";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
-let socket
 
 class DriverHomePage extends Component {
     constructor(props) {
@@ -48,18 +46,17 @@ class DriverHomePage extends Component {
         this.instruction = null
         this.mapContainer = React.createRef();
         this.driver=JSON.parse(localStorage.getItem('user'))
-    
-        socket = io.connect("http://localhost:7000")
+        
         
         socket.on('REQUEST_TRIP', data => {
             const requestDetails = data
             console.log('data',data)
-        
+            
             if (this.state.driverStatus === 'requestIncoming') {
                 return;
             }
             localStorage.setItem('requestDetails', JSON.stringify( data))
-        
+            
             this.setState({
                 driverStatus:"requestIncoming",
                 requestDetails: data,
@@ -71,8 +68,8 @@ class DriverHomePage extends Component {
             )
             this.props.history.push('/driver-home/requestIncoming')
         })
-    
-    
+        
+        
         socket.on('RIDER_REQUEST_CANCELED', () => {
             this.setState({
                 driverStatus:"standby",
@@ -82,37 +79,64 @@ class DriverHomePage extends Component {
             console.log(
                 'You have a new request! \n'
             )
-        
+            
             localStorage.removeItem('requestDetails')
             this.props.history.push('/driver-home/standby')
-        
+            
         })
-    
+        
         socket.on('CONFIRM_TRIP', data => {
             // clearTimeout(requestTimer)
             const requestDetails = data
+            var riderGeojson = {
+                type: 'FeatureCollection',
+                features: [{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: requestDetails.rider.location.coordinates
+                    },
+                    properties: {
+                        title: 'Pickup Location',
+                        description: '<h3><strong>Pickup Location</strong></h3><p><a href=\"http://www.mtpleasantdc.com/makeitmtpleasant\" target=\"_blank\" title=\"Opens in a new window\">Make it Mount Pleasant</a'
+                    }
+                }]
+            }
+            riderGeojson.features.forEach((marker)=> {
+                var el = document.createElement('div');
+                el.className = 'riderMarker';
+                
+                const popup = new mapboxgl.Popup({ offset: 25 })
+                .setHTML(marker.properties.description)
+                
+                new mapboxgl.Marker(el)
+                .setLngLat(marker.geometry.coordinates)
+                .setPopup(popup)
+                .addTo(this.map);
+            });
+            
             this.setState({
                 driverStatus:"confirmed",
                 requestDetails: data,
                 headerMessage:"Trip Confirmed",
                 tripId:data._id
             }) //Save request details
-        
+            
             console.log(
                 'Rider has accept your service! \n' +
                 JSON.stringify(requestDetails)
             )
-        
+            
             this.props.history.push('/driver-home/confirmed')
         })
-    
+        
         socket.on('RIDER_TRIP_CANCELED', () => {
             this.setState({
                 driverStatus:"standby",
                 headerMessage:"The trip has been cancelled",
                 requestDetails: null
             }) //Save request details
-        
+            
             console.log(
                 'RIDER_TRIP_CANCELED! \n'
             )
@@ -123,7 +147,7 @@ class DriverHomePage extends Component {
             
             this.props.history.push('/driver-home/standby')
         })
-    
+        
         socket.on('DRIVER_TRIP_CANCELED', () => {
             console.log(
                 'DRIVER_TRIP_CANCELED! \n'
@@ -135,18 +159,32 @@ class DriverHomePage extends Component {
             })
             
             this.resetTrip()
-    
+            
             localStorage.removeItem('requestDetails')
             document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
             this.props.history.push('/driver-home/standby')
         })
     }
-
+    
     componentDidMount() {
-            let  geolocate
-            const driver = JSON.parse(localStorage.getItem('user'))
-            let requestTimer
+        let  geolocate
+        const driver = JSON.parse(localStorage.getItem('user'))
+        let requestTimer
         navigator.geolocation.getCurrentPosition(position => {
+            var driverGeojson = {
+                type: 'FeatureCollection',
+                features: [{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [position.coords.longitude, position.coords.latitude]
+                    },
+                    properties: {
+                        title: 'Your are here',
+                        description: '<h3><strong>You are here</strong></h3><p>2398 Walters way</p>'
+                    }
+                }]
+            }
             const coordinates = [
                 position.coords.longitude,
                 position.coords.latitude,
@@ -162,21 +200,38 @@ class DriverHomePage extends Component {
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],
             })
-        
+            
             this.map = new mapboxgl.Map({
                 container: this.mapContainer.current, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
                 style: 'mapbox://styles/mapbox/streets-v9',
                 center: [position.coords.longitude, position.coords.latitude],
                 zoom: 15,
             })
-        
+            
+            driverGeojson.features.forEach((marker)=> {
+                var el = document.createElement('div');
+                el.className = 'driverMarker';
+                el.id = 'driverMarker';
+                
+                const popup = new mapboxgl.Popup({ offset: 40 })
+                .setHTML(marker.properties.description)
+                
+                new mapboxgl.Marker(el)
+                .setLngLat(marker.geometry.coordinates)
+                .setPopup(popup)
+                .addTo(this.map);
+    
+                console.log('el',el)
+            });
+            
             // Directions
             this.directions = new MapboxDirections({
                 accessToken: mapboxgl.accessToken,
                 unit: 'imperial',
                 profile: 'mapbox/driving',
+                interactive:false
             })
-        
+            
             this.directions.on('destination', e => {
                 this.setState({
                     endLocation: e.feature.geometry.coordinates,
@@ -186,23 +241,29 @@ class DriverHomePage extends Component {
                 })
                 console.log(e) // Logs the current route shown in the interface.
             })
-        
+            
             this.directions.on('route', function(e) {
                 console.log('e.route',e.route) // Logs the current route shown in the interface.
                 const steps = e.enroute && e.enroute[0]
-            
                 console.log('e.route.steps',steps)
                 console.log(document.querySelectorAll(".mapbox-directions-instructions")[0])
                 const instruction = document.querySelectorAll(".mapbox-directions-instructions")[0]
                 instruction && (document.querySelectorAll(".mapbox-directions-instructions")[0].style.display = "block")
             })
-    
+            
             this.map.on('load', () => {
                 this.startInput = document.querySelectorAll(".mapbox-directions-origin input")[0]
                 this.destInput = document.querySelectorAll(".mapbox-directions-destination input")[0]
                 console.log("document.querySelectorAll(\".mapbox-directions-instructions\")", document.querySelectorAll(".mapbox-directions-instructions"))
             })
-    
+            
+            // this.map.on('click', 'driverMarker', () => {
+            //     console.log('mouserOver')
+            //     // el.on('mouseover', function (){
+            //     //     this.openPopup()
+            //     // })
+            // })
+            
             this.map.addControl(this.directions, 'top-left')
             this.map.addControl(new mapboxgl.NavigationControl());
         })
@@ -217,6 +278,7 @@ class DriverHomePage extends Component {
             }, 1000)
         }
     }
+    
     
     resetTrip = () => {
         this.directions.removeRoutes();
@@ -256,6 +318,7 @@ class DriverHomePage extends Component {
         this.directions.setOrigin(this.state.location)
         this.directions.setDestination(requestDetails.startLocation.coordinates)
         this.startInput.value = "Your Location"
+        
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
         this.props.history.push('/driver-home/pickup')
         
@@ -281,11 +344,11 @@ class DriverHomePage extends Component {
     
     handleDriverGoOnline = () => {
         console.log('DRIVER_GO_ONLINE', )
-    
+        
         this.props.driverGoOnline(socket,{
             driver: JSON.parse(localStorage.getItem('user'))
         })
-    
+        
         this.setState({
             driverStatus:"standby",
             headerMessage:"Finding Trip for you..."
@@ -322,213 +385,213 @@ class DriverHomePage extends Component {
     getStatePath = (path) => {
         return path.split('/driver-home/')[1]
     }
-
-  render() {
-      const { driverStatus, headerMessage } = this.state
-      const path = this.getStatePath(this.props.location.pathname)
     
-      const requestDetails = JSON.parse( localStorage.getItem('requestDetails')) || null
-    
-      const statusPanel = () => {
-          switch(path) {
-              case "offline": return (
-                  <div className={'status-panel'}>
-                      <h1 className={`drivers-nearby-header`}>Ready to drive?</h1>
-                      <p>
-                      </p>
-                      <Button className={'request-ride-button main'} onClick={this.handleDriverGoOnline}>GO ONLINE</Button>
-                  </div>
-              )
-              case "standby": return (
-                  <div className={'status-panel'}>
-                      <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                      <Loader type="Rings" color="#424B5A" height={100} width={100} />
-                      <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
-                  </div>
-              )
-              case "requestIncoming": return (
-                  <div className={'status-panel'}>
-                      <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
-                      <div className="driver-item-container-list requesting">
-                          <div className="driver-img-container-list">
-                              <img
-                                  src={requestDetails.rider.avatar}
-                                  alt={'driver'}
-                              />
-                          </div>
-                          <div className="driver-item-content-list">
-                              <h2>{requestDetails.rider.username}</h2>
-                              <h3>
-                                  2 miles away
-                                  <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                              </h3>
-                          </div>
-                      </div>
-                      <div className={"trip-destination-container"}>
-                          <div className={"trip-destination-left"}>
-                              <h2>{requestDetails.endLocationAddress}</h2>
-                              <span className={"tag orange"}>{requestDetails.duration} mins</span>
-                              <span className={"tag blue"}>{requestDetails.distance} mi</span>
-                          </div>
-                          <button className={"driver-item-accept-button requesting main"}
-                                  onClick={(e)=> this.handleAcceptTrip(e)}>
-                              <h2>${requestDetails.tripFare}</h2>
-                              <h3>OFFER</h3>
-                          </button>
-                      </div>
-                      <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
-                  </div>
-              )
-            
-              case "waitingForConfirmation": return (
-                  <div className={'status-panel'}>
-                      <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
-                      <div className="driver-item-container-list requesting">
-                          <div className="driver-img-container-list">
-                              <img
-                                  src={requestDetails.rider.avatar}
-                                  alt={'driver'}
-                              />
-                          </div>
-                          <div className="driver-item-content-list">
-                              <h2>{requestDetails.rider.username}</h2>
-                              <h3>
-                                  2 miles away
-                                  <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                              </h3>
-                          </div>
-                      </div>
-                      <div className={"trip-destination-container"}>
-                          <div className={"trip-destination-left"}>
-                              <h2>{requestDetails.endLocationAddress}</h2>
-                              <span className={"tag orange"}>{requestDetails.duration} mins</span>
-                              <span className={"tag blue"}>{requestDetails.distance} mi</span>
-                          </div>
-                          <button className={"driver-item-accept-button requesting main"}>
-                              <Loader type="ThreeDots" color="#fff" height={40} width={40} />
-                          </button>
-                      </div>
-                    
-                      <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
-                  </div>
-              )
-              case "confirmed": return (
-                  <div className={'status-panel'}>
-                      <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                      <div
-                          className="driver-item-container-list"
-                      >
-                          <div className="driver-img-container-list">
-                              <img
-                                  src={requestDetails.rider.avatar}
-                                  alt={'driver'}
-                              />
-                          </div>
-                          <div className="driver-item-content-list">
-                              <h2>{requestDetails.rider.username}</h2>
-                              <h3>
-                                  2 miles away
-                                  <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                              </h3>
-                          </div>
-                          <div className={"trip-destination-container"}>
-                              <div className={"trip-destination-left"}>
-                                  <h2>{requestDetails.endLocationAddress}</h2>
-                                  <span className={"tag white"}>{requestDetails.duration} mins</span>
-                                  <span className={"tag blue"}>{requestDetails.distance} mi</span>
-                                  <span className={"tag pink"}>${requestDetails.tripFare}</span>
-                              </div>
-                          </div>
-                          <div className={"driver-item-buttons-list"}>
-                              {
-                                  <div className={"action-icon-button-bar"}>
-                                      <IconButton className={"driver-item-icon-button"}>
-                                          <ChatBubbleIcon />
-                                      </IconButton>
-                                      <IconButton className={"driver-item-icon-button"}>
-                                          <PhoneIcon />
-                                      </IconButton>
-                                  </div>
-                              }
-                          </div>
-                      </div>
-                      <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
-                      <button className="main" onClick={this.handleDriveToUser}>PICKUP RIDER</button>
-                  </div>
-              )
-              case "pickup": return (
-                  <div className={'status-panel'}>
-                      <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                      <div
-                          className="driver-item-container-list"
-                      >
-                          <div className="driver-img-container-list">
-                              <img
-                                  src={requestDetails.rider.avatar}
-                                  alt={'driver'}
-                              />
-                          </div>
-                          <div className="driver-item-content-list">
-                              <h2>{requestDetails.rider.username}</h2>
-                              <h3>
-                                  2 miles away
-                                  <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                              </h3>
-                          </div>
-                          <div className={"trip-destination-container"}>
-                              <div className={"trip-destination-left"}>
-                                  <h2>{requestDetails.endLocationAddress}</h2>
-                                  <span className={"tag white"}>{requestDetails.duration} mins</span>
-                                  <span className={"tag blue"}>{requestDetails.distance} mi</span>
-                                  <span className={"tag pink"}>${requestDetails.tripFare}</span>
-                              </div>
-                          </div>
-                          <div className={"driver-item-buttons-list"}>
-                              {
-                                  <div className={"action-icon-button-bar"}>
-                                      <IconButton className={"driver-item-icon-button"}>
-                                          <ChatBubbleIcon />
-                                      </IconButton>
-                                      <IconButton className={"driver-item-icon-button"}>
-                                          <PhoneIcon />
-                                      </IconButton>
-                                  </div>
-                              }
-                          </div>
-                      </div>
-                      <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
-                      <button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>
-                  </div>
-              )
-              case "trip-ended": return (
-                  <div className={'status-panel'}>
-                      <h1 className={`drivers-nearby-header show-bg `}>{headerMessage}</h1>
-                      <div className="drivers-nearby-container-list">Trip Ended</div>
-                  </div>
-              )
-              default:      return <h1>No match</h1>
-          }
-      }
-    return (
-      <div className="map-wrapper ">
-          <div className="map-container">
-              <div
-                  className="map-wrapper driver"
-                  style={{ position: 'relative', display: 'flex' }}>
-                  <div
-                      ref={ this.mapContainer}
-                      className={`driver-map hide-direction`}
-                      style={{
-                          width: '100%',
-                          height: '100%',
-                      }}
-                  />
-                  {statusPanel()}
-              </div>
-          </div>
-      </div>
-    );
-  }
+    render() {
+        const { driverStatus, headerMessage } = this.state
+        const path = this.getStatePath(this.props.location.pathname)
+        
+        const requestDetails = JSON.parse( localStorage.getItem('requestDetails')) || null
+        
+        const statusPanel = () => {
+            switch(path) {
+                case "offline": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header`}>Ready to drive?</h1>
+                        <p>
+                        </p>
+                        <Button className={'request-ride-button main'} onClick={this.handleDriverGoOnline}>GO ONLINE</Button>
+                    </div>
+                )
+                case "standby": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                        <Loader type="Rings" color="#424B5A" height={100} width={100} />
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                    </div>
+                )
+                case "requestIncoming": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
+                        <div className="driver-item-container-list requesting">
+                            <div className="driver-img-container-list">
+                                <img
+                                    src={requestDetails.rider.avatar}
+                                    alt={'driver'}
+                                />
+                            </div>
+                            <div className="driver-item-content-list">
+                                <h2>{requestDetails.rider.username}</h2>
+                                <h3>
+                                    2 miles away
+                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
+                                </h3>
+                            </div>
+                        </div>
+                        <div className={"trip-destination-container"}>
+                            <div className={"trip-destination-left"}>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                <span className={"tag orange"}>{requestDetails.duration} mins</span>
+                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                            </div>
+                            <button className={"driver-item-accept-button requesting main"}
+                                    onClick={(e)=> this.handleAcceptTrip(e)}>
+                                <h2>${requestDetails.tripFare}</h2>
+                                <h3>OFFER</h3>
+                            </button>
+                        </div>
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                    </div>
+                )
+                
+                case "waitingForConfirmation": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
+                        <div className="driver-item-container-list requesting">
+                            <div className="driver-img-container-list">
+                                <img
+                                    src={requestDetails.rider.avatar}
+                                    alt={'driver'}
+                                />
+                            </div>
+                            <div className="driver-item-content-list">
+                                <h2>{requestDetails.rider.username}</h2>
+                                <h3>
+                                    2 miles away
+                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
+                                </h3>
+                            </div>
+                        </div>
+                        <div className={"trip-destination-container"}>
+                            <div className={"trip-destination-left"}>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                <span className={"tag orange"}>{requestDetails.duration} mins</span>
+                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                            </div>
+                            <button className={"driver-item-accept-button requesting main"}>
+                                <Loader type="ThreeDots" color="#fff" height={40} width={40} />
+                            </button>
+                        </div>
+                        
+                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                    </div>
+                )
+                case "confirmed": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                        <div
+                            className="driver-item-container-list"
+                        >
+                            <div className="driver-img-container-list">
+                                <img
+                                    src={requestDetails.rider.avatar}
+                                    alt={'driver'}
+                                />
+                            </div>
+                            <div className="driver-item-content-list">
+                                <h2>{requestDetails.rider.username}</h2>
+                                <h3>
+                                    2 miles away
+                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
+                                </h3>
+                            </div>
+                            <div className={"trip-destination-container"}>
+                                <div className={"trip-destination-left"}>
+                                    <h2>{requestDetails.endLocationAddress}</h2>
+                                    <span className={"tag white"}>{requestDetails.duration} mins</span>
+                                    <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                                    <span className={"tag pink"}>${requestDetails.tripFare}</span>
+                                </div>
+                            </div>
+                            <div className={"driver-item-buttons-list"}>
+                                {
+                                    <div className={"action-icon-button-bar"}>
+                                        <IconButton className={"driver-item-icon-button"}>
+                                            <ChatBubbleIcon />
+                                        </IconButton>
+                                        <IconButton className={"driver-item-icon-button"}>
+                                            <PhoneIcon />
+                                        </IconButton>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <button className="main" onClick={this.handleDriveToUser}>PICKUP RIDER</button>
+                    </div>
+                )
+                case "pickup": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                        <div
+                            className="driver-item-container-list"
+                        >
+                            <div className="driver-img-container-list">
+                                <img
+                                    src={requestDetails.rider.avatar}
+                                    alt={'driver'}
+                                />
+                            </div>
+                            <div className="driver-item-content-list">
+                                <h2>{requestDetails.rider.username}</h2>
+                                <h3>
+                                    2 miles away
+                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
+                                </h3>
+                            </div>
+                            <div className={"trip-destination-container"}>
+                                <div className={"trip-destination-left"}>
+                                    <h2>{requestDetails.endLocationAddress}</h2>
+                                    <span className={"tag white"}>{requestDetails.duration} mins</span>
+                                    <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                                    <span className={"tag pink"}>${requestDetails.tripFare}</span>
+                                </div>
+                            </div>
+                            <div className={"driver-item-buttons-list"}>
+                                {
+                                    <div className={"action-icon-button-bar"}>
+                                        <IconButton className={"driver-item-icon-button"}>
+                                            <ChatBubbleIcon />
+                                        </IconButton>
+                                        <IconButton className={"driver-item-icon-button"}>
+                                            <PhoneIcon />
+                                        </IconButton>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>
+                    </div>
+                )
+                case "trip-ended": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`drivers-nearby-header show-bg `}>{headerMessage}</h1>
+                        <div className="drivers-nearby-container-list">Trip Ended</div>
+                    </div>
+                )
+                default:      return <h1>No match</h1>
+            }
+        }
+        return (
+            <div className="map-wrapper ">
+                <div className="map-container">
+                    <div
+                        className="map-wrapper driver"
+                        style={{ position: 'relative', display: 'flex' }}>
+                        <div
+                            ref={ this.mapContainer}
+                            className={`driver-map hide-direction`}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                            }}
+                        />
+                        {statusPanel()}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = ({ driverReducer, tripReducer }, ownProps) => ({
@@ -536,11 +599,12 @@ const mapStateToProps = ({ driverReducer, tripReducer }, ownProps) => ({
 })
 
 export default connect(
-  mapStateToProps,
-  { updateDriverLocation,
-      driverGoOnline,
-      driverGoOffline,
-      acceptTrip,
-      driverCancelTrip,
-  }
+    mapStateToProps,
+    { updateDriverLocation,
+        driverGoOnline,
+        driverGoOffline,
+        acceptTrip,
+        driverCancelTrip,
+    }
 )(DriverHomePage);
+

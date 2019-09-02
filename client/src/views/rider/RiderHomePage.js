@@ -21,15 +21,13 @@ import {
 	requestTrip,
 	
 } from '../../actions'
-// import socket from "../../utils/socketConnection";
-
 import IconButton from "@material-ui/core/IconButton";
 import {withRouter} from "react-router";
 import Button from "@material-ui/core/Button";
-import io from "socket.io-client";
+import socket from "../../utils/socketConnection";
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
-let socket
 
 var geojson = {
 	type: 'FeatureCollection',
@@ -78,13 +76,14 @@ class RiderHomePage extends Component {
 			tripId:null,
 			acceptedDrivers:[],
 			currentDriver:null,
-			headerMessage:''
+			headerMessage:'',
+			
 		}
 		this.map = null
 		this.directions = null
 		this.geolocate = null
+		this.acceptedDriversMarkerMap =  new Map()
 		this.rider = JSON.parse(localStorage.getItem('user'))
-		socket = io.connect("http://localhost:7000")
 		
 		socket.on('ACCEPT_TRIP', data => {
 			console.log('ACCEPT_TRIP data', data)
@@ -97,6 +96,26 @@ class RiderHomePage extends Component {
 			}) //Save request details
 			console.log(
 				'A driver has accepted your trip \n' + JSON.stringify(data)
+			)
+			
+			const driverMarker = this.addMarker('driverMarker', data.driver._id,
+					{
+						type: 'Feature',
+						geometry: {
+							type: 'Point',
+							coordinates: data.driver.location.coordinates
+						},
+						properties: {
+							title: 'Pickup Location',
+							description: `<h3><strong>${data.driver.username}</strong></h3><p>`
+						}
+					}
+				)
+				
+				
+			this.acceptedDriversMarkerMap.set(data.driver.username, driverMarker)
+			console.log(
+				'acceptedDriversMarkerMap \n', this.acceptedDriversMarkerMap.get(data.driver.username)
 			)
 			this.props.history.push('/rider-home/driversFound')
 		})
@@ -142,16 +161,22 @@ class RiderHomePage extends Component {
 				tripStatus:"requesting",
 				headerMessage:"Finding drivers for you",
 			})
+			
+			this.acceptedDriversMarkerMap.get(data.driver.username).remove()
 		})
 	}
 	
-	
+	// addMarkers = () => {
+	// 	// geojson.features.forEach((marker)=> {
+	// 		this.addMarker()
+	// 	// }
+	// }
+
 	componentDidMount() {
-			const rider = JSON.parse(localStorage.getItem('user'))
-			if (!rider) this.props.history.push('/')
-			
-			navigator.geolocation.getCurrentPosition(position => {
-			
+		const rider = JSON.parse(localStorage.getItem('user'))
+		if (!rider) this.props.history.push('/')
+		
+		navigator.geolocation.getCurrentPosition(position => {
 			this.setState({
 				startLocation: [
 					position.coords.longitude,
@@ -182,18 +207,6 @@ class RiderHomePage extends Component {
 				.addTo(this.map);
 			});
 			
-			// add markers to map
-			geojson.features.forEach((marker)=> {
-				// create a HTML element for each feature
-				var el = document.createElement('div');
-				el.className = 'marker';
-				
-				// make a marker for each feature and add to the map
-				new mapboxgl.Marker(el)
-				.setLngLat(marker.geometry.coordinates)
-				.addTo(this.map);
-			});
-			
 			this.map.on('mouseenter', 'places',()=> {
 				this.map.getCanvas().style.cursor = 'pointer';
 				console.log('mouseenter')
@@ -202,43 +215,34 @@ class RiderHomePage extends Component {
 			this.map.on('mouseleave', 'places', ()=>{
 				this.map.getCanvas().style.cursor = '';
 				console.log('mouseleave')
-				
 			});
+			
 		
 			this.map.on('load', () => {
 				this.directions.setOrigin(this.state.startLocation)
-				this.map.addLayer({
-					"id": "places",
-					"type": "symbol",
-					"source": {
-						"type": "geojson",
-						"data": {
-							"type": "FeatureCollection",
-							"features": [{
-								"type": "Feature",
-								"properties": {
-									"description": "<h3><strong>Make it Mount Pleasant</strong></h3><p><a href=\"http://www.mtpleasantdc.com/makeitmtpleasant\" target=\"_blank\" title=\"Opens in a new window\">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>",
-									"icon": "music"
-								},
-								"geometry": {
-									"type": "Point",
-									"coordinates": [-122.03154,37.97109]
-								}
-							}]
+				var riderGeojson = {
+					
+						type: 'Feature',
+						geometry: {
+							type: 'Point',
+							coordinates: [position.coords.longitude, position.coords.latitude]
+						},
+						properties: {
+							title: 'Your are here',
+							description: '<h3><strong>Make it Mount Pleasant</strong></h3><p><a href=\"http://www.mtpleasantdc.com/makeitmtpleasant\" target=\"_blank\" title=\"Opens in a new window\">Make it Mount Pleasant</a'
 						}
-					},
-					"layout": {
-						"icon-image": "{icon}-15",
-						"icon-allow-overlap": true
-					}
-				});
+				}
+				
+				const riderMarker =  this.addMarker('marker',rider._id,
+					riderGeojson
+				)
 			})
 			
-			// Directions
 			this.directions = new MapboxDirections({
 				accessToken: mapboxgl.accessToken,
 				unit: 'imperial',
 				profile: 'mapbox/driving',
+				interactive:false
 			})
 			
 			this.directions.on('origin', e => {
@@ -262,12 +266,11 @@ class RiderHomePage extends Component {
 			this.directions.on('route', e => {
 				console.log('e',e)
 				if ( e.route && e.route.length){
-					
 					const {distance, legs, duration} = e.route[0]
 					this.setState({
 						endLocationAddress: legs[0].summary,
-						duration: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > span")[0].textContent.slice(0, -3) ,
-						distance: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > h1")[0].textContent.slice(0, -2) ,
+						// duration: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > span")[0].textContent.slice(0, -3) ,
+						// distance: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > h1")[0].textContent.slice(0, -2) ,
 					})
 				}
 			})
@@ -281,6 +284,8 @@ class RiderHomePage extends Component {
 			
 			this.map.addControl(this.directions, 'bottom-left')
 			this.map.addControl(this.geolocate, 'top-right')
+			
+			
 			
 		    this.props.updateThisRiderLocation(
 				socket,
@@ -302,7 +307,23 @@ class RiderHomePage extends Component {
 		}
 		socket.disconnect()
 	}
-
+	
+	addMarker = (markerStyle, markerId, marker) => {
+		// marker.features.forEach((marker)=> {
+			var el = document.createElement('div');
+			el.className = markerStyle;
+			el.id = markerId;
+			
+			const popup = new mapboxgl.Popup({ offset: 25 })
+			.setHTML(marker.properties.description)
+			
+			return new mapboxgl.Marker(el)
+			.setLngLat(marker.geometry.coordinates)
+			.setPopup(popup)
+			.addTo(this.map);
+		// })
+	};
+	
 	resetTrip = () => {
 		this.directions.removeRoutes();
 		this.directions.setOrigin(this.state.startLocation)

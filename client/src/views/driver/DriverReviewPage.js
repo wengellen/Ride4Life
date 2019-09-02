@@ -58,13 +58,11 @@ class DriverReviewPage extends Component {
 	}
 	
 	render() {
-		// console.log('this.props.findDriverByIdStarted',this.props.submitDriverReviewStarted)
 	   if(this.props.submitDriverReviewStarted){
 		   return (<Loader/>)
 	   }else{
 		   return (
 			   <div className="driver-review-container">
-				   {/*<Edit className="edit-btn-container" onClick={this.editProfile}/>*/}
 				 
 				   <main className="driver-profile-main review">
 						   <div className="driver-profile-img-container ">
