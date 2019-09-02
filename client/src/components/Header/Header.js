@@ -10,10 +10,12 @@ import Close from '@material-ui/icons/Close'
 // core components
 import headerStyle from 'assets/jss/material-kit-pro-react/components/headerStyle.jsx'
 import logo from 'assets/img/safe_logo.png'
+import placeholder from 'assets/img/placeholder.jpg'
 import { Avatar } from '@material-ui/core'
 import {connect} from "react-redux";
 import Face from '@material-ui/icons/Face'
 import Button from "@material-ui/core/Button";
+
 
 class Header extends React.Component {
     constructor(props) {
@@ -87,7 +89,7 @@ class Header extends React.Component {
                         <>
                             <div className="login-container">
                                 <IconButton className={`classes.titleNoUnder `}>
-                                    <Avatar src={user.avatar} color={"pink"} alt={"avatar"} />
+                                    <Avatar src={user.avatar ||  placeholder} color={"pink"} alt={"avatar"} />
                                 </IconButton>
                             </div>
                             <IconButton

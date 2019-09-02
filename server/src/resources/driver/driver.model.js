@@ -32,8 +32,7 @@ const driverSchema = new mongoose.Schema(
       default: "true"
     },
     avatar: {
-        type: String,
-        default:"person.svg"
+        type: String
     },
     memberSince: {
         type: Date

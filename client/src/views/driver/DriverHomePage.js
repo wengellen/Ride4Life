@@ -46,6 +46,7 @@ class DriverHomePage extends Component {
         this.startInput = null
         this.destInput = null
         this.instruction = null
+        this.mapContainer = React.createRef();
         this.driver=JSON.parse(localStorage.getItem('user'))
     
         socket = io.connect("http://localhost:7000")
@@ -143,10 +144,9 @@ class DriverHomePage extends Component {
     
     componentWillUnmount() {
         socket.disconnect()
-        if (this.map) {
-            setTimeout(() => this.map.remove())
+        if (this.map && !JSON.parse(localStorage.getItem('user'))) {
+            setTimeout(() => this.map.remove(), 3000)
         }
-        alert("Disconnecting Socket as component will unmount")
     }
 
     componentDidMount() {
@@ -164,14 +164,14 @@ class DriverHomePage extends Component {
                 role: 'driver',
                 username: driver.username,
                 driver: driver,
-            } )
+            })
         
             this.setState({
                 location: [position.coords.longitude, position.coords.latitude],
             })
         
             this.map = new mapboxgl.Map({
-                container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
+                container: this.mapContainer.current, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
                 style: 'mapbox://styles/mapbox/streets-v9',
                 center: [position.coords.longitude, position.coords.latitude],
                 zoom: 15,
@@ -501,7 +501,6 @@ class DriverHomePage extends Component {
                   <div className={'status-panel'}>
                       <h1 className={`drivers-nearby-header show-bg `}>{headerMessage}</h1>
                       <div className="drivers-nearby-container-list">Trip Ended</div>
-                      {/*<Button  className={'request-ride-button bordered'}  onClick={this.handleCancelRideRequest}></Button>*/}
                   </div>
               )
               default:      return <h1>No match</h1>
@@ -514,7 +513,7 @@ class DriverHomePage extends Component {
                   className="map-wrapper driver"
                   style={{ position: 'relative', display: 'flex' }}>
                   <div
-                      ref={el => (this.mapContainer = el)}
+                      ref={ this.mapContainer}
                       className={`driver-map hide-direction`}
                       style={{
                           width: '100%',

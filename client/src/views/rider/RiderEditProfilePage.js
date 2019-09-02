@@ -10,13 +10,11 @@ import loginPageStyle from '../../assets/jss/material-kit-pro-react/views/loginP
 import CustomInput from '../../components/CustomInput/CustomInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Email from '@material-ui/icons/Email'
-import Lock from '@material-ui/icons/Lock'
 import Phone from '@material-ui/icons/Phone'
 import Face from '@material-ui/icons/Face'
-import Place from '@material-ui/icons/Place'
 
 import { uploadRiderProfile } from '../../actions'
-import ImageInput from "../../components/ImageInput";
+import ImageInput from "../../components/ImageInput/ImageInput";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
 

@@ -14,9 +14,10 @@ import Phone from '@material-ui/icons/Phone'
 import Face from '@material-ui/icons/Face'
 import Place from '@material-ui/icons/Place'
 import { uploadProfile } from '../../actions'
-import ImageInput from "../../components/ImageInput";
+import ImageInput from "../../components/ImageInput/ImageInput";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import Button from "@material-ui/core/Button";
 
 class DriverEditProfilePage extends React.Component {
     state = {
@@ -70,15 +71,17 @@ class DriverEditProfilePage extends React.Component {
                                 className={classes.form}
                                 onSubmit={this.editDriverProfile}
                             >
-                                <div>
+                                <div className={"profile-header-container"} >
                                     <h1>Edit Driver Profile</h1>
                                     <br/>
-                                    <ImageInput
-                                        className='avatar-input'
-                                        name='avatar'
-                                        maxHeight={64}
-                                        value={user.avatar}
-                                    />
+                                    <div className={"avatar-input-container"}>
+                                        <ImageInput
+                                            className='avatar-input'
+                                            name='avatar'
+                                            maxValue={200}
+                                            value={user.avatar}
+                                        />
+                                    </div>
                                 </div>
                                 <p
                                     className={`${classes.description} ${classes.textCenter}`}

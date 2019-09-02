@@ -295,13 +295,12 @@ class RiderHomePage extends Component {
 					rider: rider,
 				})
 		})
-		
 	}
 	
 	componentWillUnmount = () => {
 		console.log('this.map', this.map)
 		if (this.map) {
-			setTimeout(() => this.map.remove())
+			setTimeout(() => this.map.remove(), 3000)
 		}
 		socket.disconnect()
 		alert("Disconnecting Socket as component will unmount")
@@ -315,8 +314,6 @@ class RiderHomePage extends Component {
 	
 	handleCancelRideRequest = () => {
 		this.resetTrip()
-		
-		const rider = JSON.parse(localStorage.getItem('user'))
 		
 		this.props.riderCancelRequest(socket,  {
 			rider: JSON.parse(localStorage.getItem('user')),
