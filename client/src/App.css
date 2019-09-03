@@ -28,16 +28,22 @@
    color:#454F63;
 }
 
- .app-content button{
+ .green-btn{
      width:140px;
-     height:40px;
-     border-radius: 20px;
+     border-radius:12px;
      color:white;
      font-weight: bold;
      background-color: #4C6A2D;
-     margin-top:30px;
+     margin-top:20px;
      font-size:0.9rem;
  }
+
+.green-btn.full{
+    width:100%;
+    padding:1rem 0;
+}
+
+
 
 /*
 HEADER

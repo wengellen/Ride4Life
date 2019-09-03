@@ -457,14 +457,14 @@ class RiderHomePage extends Component {
 		
 		const currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
 		
-		// let path = this.getStatePath(this.props.location.pathname)
+		let path = this.getStatePath(this.props.location.pathname)
 		// if(tripStatus !== path){
 		//   // NOT Allowed
 		//     console.log('tripStatus',tripStatus)
 		//     path = tripStatus
 		// }
-		
-		let path = tripStatus
+		//
+		// let path = tripStatus
 		const statusPanel = () => {
 			switch(path) {
 				case "standby": return (

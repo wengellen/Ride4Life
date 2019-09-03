@@ -107,7 +107,7 @@ class RiderLoginPage extends React.Component {
 										/>
 									</div>
 									<div className={classes.textCenter}>
-										<button className={classes.submitBtn} type="submit" >
+										<button className={"green-btn full"} type="submit" >
 											{this.props.loggingIn
 											? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
 											: "Log in"

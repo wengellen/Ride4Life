@@ -17,7 +17,7 @@ class HomePage extends Component {
                 </div>
                 <main className={"app-content"}>
                     <p>A RideSharing service for <br/>soon-to-be mothers <br/></p>
-                    <button onClick={()=> this.onRequestRide()}>Request Ride</button>
+                    <button className="green-btn" onClick={()=> this.onRequestRide()}>Request Ride</button>
                 </main>
           </div>
         );
