@@ -51,8 +51,9 @@ class DriverHomePage extends Component {
         this.instruction = null
         this.mapContainer = React.createRef();
         this.driver=JSON.parse(localStorage.getItem('user'))
-        socket = io.connect("http://localhost:7000")
+        const endpoint = process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`
     
+        socket = io.connect(endpoint)
     
         socket.on('REQUEST_TRIP', data => {
             const requestDetails = data
