@@ -322,32 +322,9 @@ class DriverHomePage extends Component {
                 }
             })
             summaryHeader.appendChild(btn)
-        },1000)
-        // this.startInput.value = "Your Location"
-        // document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
-        // setTimeout(() => {
-        //     document.querySelectorAll('.directions-control .mapbox-directions-instructions')[0].style.display = "none"
-        //     let summaryHeader = document.querySelectorAll('.mapbox-directions-route-summary')[0]
-        //     let btn = document.createElement('button');
-        //     btn.className = 'showDirectionBtn'
-        //     btn.textContent = "Show Direction"
-        //     btn.addEventListener('click', function () {
-        //         let dirInstruction = document.querySelectorAll('.directions-control .mapbox-directions-instructions')[0]
-        //         if (dirInstruction.style.display === 'none'){
-        //             dirInstruction.style.display = 'block'
-        //             this.textContent = "Hide Direction"
-        //         } else{
-        //             dirInstruction.style.display = 'none'
-        //             this.textContent = "Show Direction"
-        //         }
-        //
-        //     })
-        //     summaryHeader.appendChild(btn)
-        // },500)
-        
+        },3000)
         this.props.history.push('/driver-home/pickup')
     }
-    
     
     
     handleDriveToUser = (e) => {
@@ -378,7 +355,7 @@ class DriverHomePage extends Component {
             
             })
             summaryHeader.appendChild(btn)
-        },1000)
+        },3000)
      
         // document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
         this.props.history.push('/driver-home/pickup')

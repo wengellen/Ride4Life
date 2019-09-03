@@ -140,7 +140,8 @@ class RiderHomePage extends Component {
 				headerMessage:"Finding drivers for you",
 			})
 			
-			this.acceptedDriversMarkerMap.get(data.driver.username).remove()
+			this.acceptedDriversMarkerMap.get(data.driver.username) && this.acceptedDriversMarkerMap.get(data.driver.username).remove()
+			// this.acceptedDriversMarkerMap.get(data.driver.username).remove()
 		})
 	}
 	
@@ -431,14 +432,14 @@ class RiderHomePage extends Component {
 		
 		const currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
 		
-		// let path = this.getStatePath(this.props.location.pathname)
-		// if(tripStatus !== path){
-		//   // NOT Allowed
-		//     console.log('tripStatus',tripStatus)
-		//     path = tripStatus
-		// }
-		//
-		let path = tripStatus
+		let path = this.getStatePath(this.props.location.pathname)
+		if(tripStatus !== path){
+		  // NOT Allowed
+		    console.log('tripStatus',tripStatus)
+		    path = tripStatus
+		}
+
+		// let path = tripStatus
 		const statusPanel = () => {
 			switch(path) {
 				case "standby": return (
@@ -568,7 +569,7 @@ class RiderHomePage extends Component {
 					</div>
 				) : (
 					<div
-						className="map-wrapper "
+						className="map-wrapper rider"
 						style={{ position: 'relative', display: 'flex' }}
 					>
 						<div

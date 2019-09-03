@@ -3,6 +3,61 @@
     height:calc(100vh - 66px);
     overflow: hidden;
 }
+.map-wrapper.driver .mapbox-directions-origin{
+    display:block;
+}
+
+.map-wrapper.driver .mapboxgl-ctrl-geocoder input[type='text'] {
+    font-size:14px;
+    border:0;
+    background-color:transparent;
+    color:rgba(0,0,0,.5);
+    padding:10px 40px 10px 10px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+    font-weight: bold;
+    color: #454F63;
+    width:100%;
+    height: 40px;
+}
+
+.map-wrapper.driver .mapbox-directions-route-summary {
+    position: relative;
+    z-index:1;
+    width:100%;
+    background-color:rgba(0,0,0,0.75);
+    color:#fff;
+    padding:5px 10px;
+    font-size:15px;
+    line-height:28px;
+    display:block;
+}
+
+.map-wrapper.driver .mapbox-form-label {
+    position:absolute;
+    font-size: 1.2rem;
+    top:0;left:0;
+    background:#C2D1D9;
+    color:#fff;
+    padding:0;
+    width:40px;
+    height:100%;
+    text-align:center;
+    line-height:38px;
+    border-radius: 0  0 0 0;
+}
+
+.map-wrapper.driver .mapboxgl-ctrl-geocoder {
+    font:15px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    position:relative;
+    background-color:white;
+    width:calc(100% - 360px);;
+    min-width:calc(100% );;
+    max-width:calc(100% );;
+    margin-left:40px;
+    border-radius:0 0 3px 0;
+}
 
 .driver-map.hide-direction .mapboxgl-ctrl-top-left{
     display:none;
