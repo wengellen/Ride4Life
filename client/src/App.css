@@ -15,7 +15,7 @@
 
 .app-content {
     text-align:center;
-    margin-top:20px;
+    margin-top:10px;
     font-size:1rem;
     line-height:1.5rem;
     padding:30px;
@@ -38,8 +38,6 @@
      margin-top:30px;
      font-size:0.9rem;
  }
-
-
 
 /*
 HEADER
@@ -508,10 +506,30 @@ Button.sliding-panel-button a{
     top:140px;
 }
 
-.home-page-image-holder{
-    height:70%;
+.home-page-container{
+    width:100vw;
+    height:100vh;
 }
 
+.home-page-image-holder{
+    position:relative;
+    height:60%;
+    background-image: url('./assets/img/homepage-2.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-attachment: fixed;
+}
+
+.home-page-image-holder h1{
+    color:white;
+    left: 50%;
+    bottom:2.4rem;
+    transform: translateX(-50%);
+    position:absolute;
+    text-align: center;
+    line-height: 2.2rem;
+    font-size:1.6rem;
+}
 
 /* At the top level of your code */
 @media screen and (min-width: 600px) {

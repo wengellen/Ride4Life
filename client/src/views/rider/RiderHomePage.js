@@ -471,7 +471,7 @@ class RiderHomePage extends Component {
 					<div className={'status-panel standby'}>
 						<h1 className={`drivers-nearby-header}`}>Request a Ride?</h1>
 						<p>
-							Enter destination and name your fare!
+							Enter destination and <em>name your fare!</em>
 						</p>
 						<div className={"driver-name-your-fare-container"}>
 							<input pattern="[0-9]" name={"tripFare"} type={"text"} placeholder={"$ 0"}
