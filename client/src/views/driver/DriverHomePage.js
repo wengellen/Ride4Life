@@ -16,8 +16,13 @@ import {
 import IconButton from "@material-ui/core/IconButton";
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
-import socket from "../../utils/socketConnection";
+// import socket from "../../utils/socketConnection";
 import Button from "@material-ui/core/Button";
+import io from "socket.io-client"
+import {Avatar} from "@material-ui/core";
+import placeholder from 'assets/img/placeholder.jpg'
+
+let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 
@@ -46,8 +51,9 @@ class DriverHomePage extends Component {
         this.instruction = null
         this.mapContainer = React.createRef();
         this.driver=JSON.parse(localStorage.getItem('user'))
-        
-        
+        socket = io.connect("http://localhost:7000")
+    
+    
         socket.on('REQUEST_TRIP', data => {
             const requestDetails = data
             console.log('data',data)
@@ -126,7 +132,7 @@ class DriverHomePage extends Component {
                 'Rider has accept your service! \n' +
                 JSON.stringify(requestDetails)
             )
-            
+           
             this.props.history.push('/driver-home/confirmed')
         })
         
@@ -207,7 +213,6 @@ class DriverHomePage extends Component {
                 center: [position.coords.longitude, position.coords.latitude],
                 zoom: 15,
             })
-            
             driverGeojson.features.forEach((marker)=> {
                 var el = document.createElement('div');
                 el.className = 'driverMarker';
@@ -257,20 +262,13 @@ class DriverHomePage extends Component {
                 console.log("document.querySelectorAll(\".mapbox-directions-instructions\")", document.querySelectorAll(".mapbox-directions-instructions"))
             })
             
-            // this.map.on('click', 'driverMarker', () => {
-            //     console.log('mouserOver')
-            //     // el.on('mouseover', function (){
-            //     //     this.openPopup()
-            //     // })
-            // })
-            
             this.map.addControl(this.directions, 'top-left')
             this.map.addControl(new mapboxgl.NavigationControl());
         })
     }
     
     componentWillUnmount() {
-        socket.disconnect()
+        // socket.disconnect()
         if (this.map) {
             setTimeout(() => {
                 console.log('componentWillUnmount is called')
@@ -297,17 +295,59 @@ class DriverHomePage extends Component {
     }
     
     handleStartTrip = (e) => {
+        e.target.style.display = "none"
         this.setState({
             driverStatus:"tripStarted",
         })
         const requestDetails = JSON.parse( localStorage.getItem('requestDetails'))
         this.directions.setOrigin(requestDetails.startLocation.coordinates)
         this.directions.setDestination(requestDetails.endLocationAddress)
-        this.startInput.value = "Your Location"
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
-        e.target.style.display = "none"
+    
+        setTimeout(() => {
+            document.querySelectorAll('.directions-control .mapbox-directions-instructions')[0].style.display = "none"
+            let summaryHeader = document.querySelectorAll('.mapbox-directions-route-summary')[0]
+            let btn = document.createElement('button');
+            btn.className = 'showDirectionBtn'
+            btn.textContent = "Show Direction"
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation()
+                let dirInstruction = document.querySelectorAll('.mapbox-directions-route-summary + .mapbox-directions-instructions')[0]
+                if (dirInstruction.style.display === 'none'){
+                    dirInstruction.style.display = 'block'
+                    this.textContent = "Hide Direction"
+                } else{
+                    dirInstruction.style.display = 'none'
+                    this.textContent = "Show Direction"
+                }
+            })
+            summaryHeader.appendChild(btn)
+        },1000)
+        // this.startInput.value = "Your Location"
+        // document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
+        // setTimeout(() => {
+        //     document.querySelectorAll('.directions-control .mapbox-directions-instructions')[0].style.display = "none"
+        //     let summaryHeader = document.querySelectorAll('.mapbox-directions-route-summary')[0]
+        //     let btn = document.createElement('button');
+        //     btn.className = 'showDirectionBtn'
+        //     btn.textContent = "Show Direction"
+        //     btn.addEventListener('click', function () {
+        //         let dirInstruction = document.querySelectorAll('.directions-control .mapbox-directions-instructions')[0]
+        //         if (dirInstruction.style.display === 'none'){
+        //             dirInstruction.style.display = 'block'
+        //             this.textContent = "Hide Direction"
+        //         } else{
+        //             dirInstruction.style.display = 'none'
+        //             this.textContent = "Show Direction"
+        //         }
+        //
+        //     })
+        //     summaryHeader.appendChild(btn)
+        // },500)
+        
         this.props.history.push('/driver-home/pickup')
     }
+    
     
     
     handleDriveToUser = (e) => {
@@ -318,8 +358,29 @@ class DriverHomePage extends Component {
         this.directions.setOrigin(this.state.location)
         this.directions.setDestination(requestDetails.startLocation.coordinates)
         this.startInput.value = "Your Location"
-        
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
+        
+        setTimeout(() => {
+            document.querySelectorAll('.directions-control .mapbox-directions-instructions')[0].style.display = "none"
+            let summaryHeader = document.querySelectorAll('.mapbox-directions-route-summary')[0]
+            let btn = document.createElement('button');
+            btn.className = 'showDirectionBtn'
+            btn.textContent = "Show Direction"
+            btn.addEventListener('click', function () {
+                let dirInstruction = document.querySelectorAll('.mapbox-directions-route-summary + .mapbox-directions-instructions')[0]
+                if (dirInstruction.style.display === 'none'){
+                    dirInstruction.style.display = 'block'
+                    this.textContent = "Hide Direction"
+                } else{
+                    dirInstruction.style.display = 'none'
+                    this.textContent = "Show Direction"
+                }
+            
+            })
+            summaryHeader.appendChild(btn)
+        },1000)
+     
+        // document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
         this.props.history.push('/driver-home/pickup')
         
     }
@@ -353,16 +414,6 @@ class DriverHomePage extends Component {
             driverStatus:"standby",
             headerMessage:"Finding Trip for you..."
         })
-        
-        // socket.on('DRIVER_READY_TO_ACCEPT_TRIP', () => {
-        //     console.log(
-        //         'DRIVER_READY_TO_ACCEPT_TRIP! \n'
-        //     )
-        //     this.setState({
-        //         driverStatus:"standby",
-        //         headerMessage:"Finding Trip for you..."
-        //     })
-        // })
         this.props.history.push('/driver-home/standby')
     }
     
@@ -371,12 +422,6 @@ class DriverHomePage extends Component {
         this.props.driverGoOffline(socket, {
             driver: JSON.parse(localStorage.getItem('user'))
         } )
-        // socket.on('DRIVER_GONE_OFFLINE', () => {
-        //     console.log(
-        //         'DRIVER_GONE_OFFLINE! \n'
-        //     )
-        //     this.setState({driverStatus:"offline"})
-        // })
         this.setState({driverStatus:"offline"})
         // socket.disconnect()
         this.props.history.push('/driver-home/offline')
@@ -414,10 +459,7 @@ class DriverHomePage extends Component {
                         <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
                         <div className="driver-item-container-list requesting">
                             <div className="driver-img-container-list">
-                                <img
-                                    src={requestDetails.rider.avatar}
-                                    alt={'driver'}
-                                />
+                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
                             </div>
                             <div className="driver-item-content-list">
                                 <h2>{requestDetails.rider.username}</h2>
@@ -448,10 +490,7 @@ class DriverHomePage extends Component {
                         <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
                         <div className="driver-item-container-list requesting">
                             <div className="driver-img-container-list">
-                                <img
-                                    src={requestDetails.rider.avatar}
-                                    alt={'driver'}
-                                />
+                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
                             </div>
                             <div className="driver-item-content-list">
                                 <h2>{requestDetails.rider.username}</h2>
@@ -482,10 +521,7 @@ class DriverHomePage extends Component {
                             className="driver-item-container-list"
                         >
                             <div className="driver-img-container-list">
-                                <img
-                                    src={requestDetails.rider.avatar}
-                                    alt={'driver'}
-                                />
+                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
                             </div>
                             <div className="driver-item-content-list">
                                 <h2>{requestDetails.rider.username}</h2>
@@ -526,10 +562,7 @@ class DriverHomePage extends Component {
                             className="driver-item-container-list"
                         >
                             <div className="driver-img-container-list">
-                                <img
-                                    src={requestDetails.rider.avatar}
-                                    alt={'driver'}
-                                />
+                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
                             </div>
                             <div className="driver-item-content-list">
                                 <h2>{requestDetails.rider.username}</h2>

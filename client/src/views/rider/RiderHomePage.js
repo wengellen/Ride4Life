@@ -9,6 +9,8 @@ import { connect } from 'react-redux'
 import  RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
+import placeholder from 'assets/img/placeholder.jpg'
+
 import {
 	findDriversNearby,
 	getDriversById,
@@ -24,8 +26,9 @@ import {
 import IconButton from "@material-ui/core/IconButton";
 import {withRouter} from "react-router";
 import Button from "@material-ui/core/Button";
-import socket from "../../utils/socketConnection";
-
+import io from "socket.io-client"
+import {Avatar} from "@material-ui/core";
+let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 
@@ -84,6 +87,7 @@ class RiderHomePage extends Component {
 		this.geolocate = null
 		this.acceptedDriversMarkerMap =  new Map()
 		this.rider = JSON.parse(localStorage.getItem('user'))
+		socket = io.connect("http://localhost:7000")
 		
 		socket.on('ACCEPT_TRIP', data => {
 			console.log('ACCEPT_TRIP data', data)
@@ -305,7 +309,7 @@ class RiderHomePage extends Component {
 		if (this.map) {
 			setTimeout(() => this.map.remove(), 1000)
 		}
-		socket.disconnect()
+		// socket.disconnect()
 	}
 	
 	addMarker = (markerStyle, markerId, marker) => {
@@ -378,6 +382,9 @@ class RiderHomePage extends Component {
 		console.log('driver', driver)
 		this.props.getDriversById(driver._id).then(() => {
 			this.props.history.push(`/rider-home/driver/${driver._id}`)
+			this.props.history.push({
+				pathname:`/rider-home/driver/${driver._id}`,
+				state: { prevPath: this.props.location.pathname }})
 		})
 	}
 	
@@ -464,15 +471,14 @@ class RiderHomePage extends Component {
 					<div className={'status-panel standby'}>
 						<h1 className={`drivers-nearby-header}`}>Request a Ride?</h1>
 						<p>
-							Enter hospital and name your fare!
+							Enter destination and name your fare!
 						</p>
 						<div className={"driver-name-your-fare-container"}>
-							<h2>$</h2>
-							<input pattern="[0-9]" name={"tripFare"} type={"text"} placeholder={"Name your fare"}
+							<input pattern="[0-9]" name={"tripFare"} type={"text"} placeholder={"$ 0"}
 								   onChange={this.handleChange}
 								   onKeyPress={this.handleKeyPress}/>
+							<button className={"driver-item-accept-button main full"} onClick={(e)=> this.handleRequestRide(e)}>REQUEST</button>
 						</div>
-						<button className={"driver-item-accept-button main full"} onClick={(e)=> this.handleRequestRide(e)}>REQUEST RIDE</button>
 					</div>
 				)
 				case "requesting": return (
@@ -496,10 +502,7 @@ class RiderHomePage extends Component {
 										key={idx}
 									>
 										<div className="driver-img-container-list">
-											<img
-												src={driver.avatar}
-												alt={'driver'}
-											/>
+											<Avatar src={driver.avatar ||  placeholder}  alt={"driver"} />
 										</div>
 										<div className="driver-item-content-list">
 											<h2>{driver.username}</h2>
@@ -511,7 +514,6 @@ class RiderHomePage extends Component {
 										<div className={"driver-item-buttons-list"}>
 											<IconButton className={"driver-item-accept-button main"}
 														onClick={()=> this.handleConfirmRequest(idx)}>ACCEPT</IconButton>
-										
 										</div>
 										<IconButton className={"right-arrow-button "}
 													onClick={e =>
@@ -536,10 +538,7 @@ class RiderHomePage extends Component {
 									className="driver-item-container-list"
 								>
 									<div className="driver-img-container-list">
-										<img
-											src={currentDriver.avatar}
-											alt={'driver'}
-										/>
+										<Avatar src={currentDriver.avatar ||  placeholder}  alt={"driver"} />
 									</div>
 									<div className="driver-item-content-list">
 										<h2>{currentDriver.username}</h2>

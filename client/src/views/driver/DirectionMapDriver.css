@@ -101,6 +101,10 @@
     display:none;
 }
 
+.directions-control .mapbox-directions-instructions{
+    display:none;
+}
+
 /* Suggestions */
 .mapboxgl-ctrl-geocoder ul {
     background-color:#fff;
@@ -352,6 +356,7 @@
     line-height:28px;
 }
 .mapbox-directions-route-summary + .mapbox-directions-instructions {
+    display:none;
 }
 .mapbox-directions-route-summary h1 {
     font-weight:500;

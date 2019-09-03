@@ -172,6 +172,7 @@ export const uploadRiderProfile = (formValue) => dispatch =>{
 export const logoutUser = () => dispatch => {
 	localStorage.removeItem('token')
 	localStorage.removeItem('user')
+	socket.disconnect()
 	dispatch({type: LOGOUT_USER})
 }
 

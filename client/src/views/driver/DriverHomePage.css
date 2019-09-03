@@ -8,6 +8,19 @@
     display:none;
 }
 
+.mapbox-directions-route-summary + .mapbox-directions-instructions {
+    display:none;
+}
+
+.mapbox-directions-steps{
+    background-color: #424B5A;
+}
+
+.directions-control.directions-control-directions {
+    border-radius: 2px 2px 6px 6px;
+    display:block;
+}
+
 .trip-destination-container{
     background-color: #F2F5F7;
     display:flex;
@@ -76,4 +89,17 @@
 
 .driver-item-price.requesting{
     background-color: white;
+}
+
+
+/* Direction */
+.showDirectionBtn{
+    float:right;
+    font-size:0.9rem;
+    padding:4px 10px;
+    border-radius: 12px;
+    background-color:#424B5A;
+    color:white;
+    text-align: center;
+    outline:none;
 }

@@ -7,18 +7,14 @@ import Share from "@material-ui/icons/Share";
 import Edit from "@material-ui/icons/Edit";
 import Loader from 'react-loader-spinner'
 import Clear from  "@material-ui/icons/Clear";
-
+import placeholder from 'assets/img/placeholder.jpg'
 import {
 	getDriversById,
 } from '../../actions';
+import {Avatar} from "@material-ui/core";
 
 class DriverProfilePage extends Component {
 	state = {
-		activeId: null,
-		isDirty: true,
-		showEstimate:false,
-		profileBody: "I am trained in defensive driving and drive the ambulances. I hope to help you by providing a fair price and responding quickly.",
-		trip:{}
 	}
 	
 	componentWillMount() {
@@ -33,9 +29,9 @@ class DriverProfilePage extends Component {
 		})
 	}
 	
-	getFareEstimate = (e)=>{
-		e.preventDefault()
-	   this.setState({showEstimate: !this.state.showEstimate})
+	handleClose = () => {
+		let backUrl = this.props.location.state ? this.props.location.state.prevPath : '/rider-home/standby'
+		this.props.history.push(backUrl)
 	}
 	
 	render() {
@@ -46,6 +42,7 @@ class DriverProfilePage extends Component {
 	   }else{
 		   return (
 			   <div className="driver-profile-container">
+				   <Link className='close-create-contact' to='/'>Close</Link>
 				   <header>
 					   <div className="driver-profile-img-container ">
 						   <img src={currentDriver.avatar} className="round" alt={"driver avatar"}/>
@@ -73,7 +70,7 @@ class DriverProfilePage extends Component {
 							 onClick={this.editProfile}/>
 					   <header >
 						   <div className="driver-profile-img-avatar">
-							   <img src="http://lorempixel.com/100/100" alt={"driver avatar"}/>
+							   <Avatar src={currentDriver.avatar||  placeholder}  alt={"driver"} />
 						   </div>
 						   <div className="title">
 							   <h2>{currentDriver.username}</h2>
@@ -119,10 +116,10 @@ class DriverProfilePage extends Component {
 					   </div>
 				   </main>
 				
-				   <div className="cars-container">
-					   <h3>MY AMBULANCE</h3>
+				   <div className="cars-container"  style={{padding:"4px 0"}}>
+					   <h3>MY VEHICLE</h3>
 					   <div className="car-img-container">
-						   <img src={currentDriver.vehicle} alt="car"/>
+						   <img src={currentDriver.vehicle}  style={{width:"100%"}} alt="car"/>
 					   </div>
 				   </div>
 			   </div>

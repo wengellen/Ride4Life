@@ -23,19 +23,18 @@
 }
 
 .mapboxgl-ctrl-geocoder input[type='text'] {
-    font-size:15px;
+    font-size:1rem;
     font-weight:600;
     width:100%;
     border:0;
     background-color:transparent;
-    height:40px;
     margin:0;
     color:rgba(0,0,0,.7);
-    padding:10px 40px 10px 10px;
+    padding:14px 40px 14px 12px;
     text-overflow:ellipsis;
     white-space:nowrap;
     overflow:hidden;
-    border-radius: 0 12px 0 12px;
+    border-radius: 0 0 0 0;
 
 }
 .mapbox-directions-origin input[type='text'] {
@@ -84,8 +83,8 @@
 .map .mapboxgl-ctrl-bottom-left{
     width:100%;
     margin:0 ;
-    padding: 0 40px;
-    bottom:130px;
+    padding: 0 20px;
+    bottom:10px;
 }
 
 .map.hide-direction .mapboxgl-ctrl-bottom-left{
@@ -231,15 +230,16 @@
 
 .mapbox-form-label {
     position:absolute;
+    font-size: 1.2rem;
     top:0;left:0;
     background:#C2D1D9;
     color:#fff;
     padding:0;
     width:40px;
-    height:40px;
+    height:100%;
     text-align:center;
     line-height:38px;
-    border-radius:0 0 0 6px;
+    border-radius: 0  0 0 0;
 }
 .mapbox-form-label .directions-icon {
     background-position: center;
@@ -361,8 +361,10 @@
     padding:5px 10px;
     font-size:15px;
     line-height:28px;
+    display:none;
 }
 .mapbox-directions-route-summary + .mapbox-directions-instructions {
+    display:none;
 }
 .mapbox-directions-route-summary h1 {
     font-weight:500;
