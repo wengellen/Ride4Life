@@ -62,7 +62,6 @@ class RiderHomePage extends Component {
 		this.acceptedDriversMarkerMap =  new Map()
 		this.rider = JSON.parse(localStorage.getItem('user'))
 		const endpoint = process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`
-		
 		socket = io.connect(endpoint)
 		
 		socket.on('ACCEPT_TRIP', data => {

@@ -20,10 +20,13 @@ const httpServer = http.Server(app);
 const globalSocket = initialize(httpServer)
 let corsOptions = {}
 
-if (process.env.NODE_ENV==='production') {
+console.log('process.env.NODE_ENV',process.env.NODE_ENV)
+
+if (process.env.NODE_ENV ==='PRODUCTION') {
 	corsOptions = {
 		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
 	}
+	
 }else{
 	corsOptions = {
 		origin: 'http://localhost:3000'
