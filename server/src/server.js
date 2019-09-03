@@ -22,19 +22,19 @@ let corsOptions = {}
 
 console.log('process.env.NODE_ENV',process.env.NODE_ENV)
 
-if (process.env.NODE_ENV ==='PRODUCTION') {
-	corsOptions = {
-		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
-	}
-	
-}else{
-	corsOptions = {
-		origin: 'http://localhost:3000'
-	}
-}
+// if (process.env.NODE_ENV ==='PRODUCTION') {
+// 	corsOptions = {
+// 		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
+// 	}
+//
+// }else{
+// 	corsOptions = {
+// 		origin: 'http://localhost:3000'
+// 	}
+// }
 
 app.disable('x-powered-by')
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(json())
 
 app.use(formData.parse())
