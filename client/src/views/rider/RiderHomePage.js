@@ -31,32 +31,6 @@ import {Avatar} from "@material-ui/core";
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
-
-var geojson = {
-	type: 'FeatureCollection',
-	features: [{
-		type: 'Feature',
-		geometry: {
-			type: 'Point',
-			coordinates: [-77.032, 38.913]
-		},
-		properties: {
-			title: 'Mapbox',
-			description: 'Washington, D.C.'
-		}
-	},
-		{
-			type: 'Feature',
-			geometry: {
-				type: 'Point',
-				coordinates: [-122.414, 37.776]
-			},
-			properties: {
-				title: 'Mapbox',
-				description: 'San Francisco, California'
-			}
-		}]
-};
 class RiderHomePage extends Component {
 	constructor(props) {
 		super(props)
@@ -69,7 +43,7 @@ class RiderHomePage extends Component {
 			distance: 0,
 			longitude: 0,
 			searchResultLayer: null,
-			loadingMap: false,
+			loadingMap: true,
 			response: false,
 			showEstimate: false,
 			requestDetails: null,
@@ -457,21 +431,21 @@ class RiderHomePage extends Component {
 		
 		const currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
 		
-		let path = this.getStatePath(this.props.location.pathname)
+		// let path = this.getStatePath(this.props.location.pathname)
 		// if(tripStatus !== path){
 		//   // NOT Allowed
 		//     console.log('tripStatus',tripStatus)
 		//     path = tripStatus
 		// }
 		//
-		// let path = tripStatus
+		let path = tripStatus
 		const statusPanel = () => {
 			switch(path) {
 				case "standby": return (
 					<div className={'status-panel standby'}>
 						<h1 className={`drivers-nearby-header}`}>Request a Ride?</h1>
 						<p>
-							Enter destination and <em>name your fare!</em>
+							 Name your Fare!
 						</p>
 						<div className={"driver-name-your-fare-container"}>
 							<input pattern="[0-9]" name={"tripFare"} type={"text"} placeholder={"$ 0"}
@@ -582,40 +556,34 @@ class RiderHomePage extends Component {
 			}
 		}
 		
+		console.log('this.state.loadingMap ',this.state.loadingMap )
+		
 		return (
 			<div className="map-container ">
-			{/*this.state.loadingMap ? (*/}
-			{/*	<div*/}
-			{/*		style={{*/}
-			{/*			width: '100%',*/}
-			{/*			height: '100vh',*/}
-			{/*			display: 'flex',*/}
-			{/*			flexDirection: 'column',*/}
-			{/*			justifyContent: 'center',*/}
-			{/*			alignItems: 'center',*/}
-			{/*			backgroundColor: 'rgba(0,0,0,0.9)',*/}
-			{/*		}}*/}
-			{/*	>*/}
-			{/*		<Loader type="ThreeDots" color="white" height="50" width="50" />*/}
-			{/*		<h3>Loading...</h3>*/}
-			{/*	</div>*/}
-			{/*) : (*/}
-				<div
-					className="map-wrapper "
-					style={{ position: 'relative', display: 'flex' }}
-				>
+				{this.state.loadingMap
+				? (
+					<div className={"pageLoader"}>
+						<Loader type="ThreeDots" color="white" height="50" width="50" />
+						<h3>Loading...</h3>
+					</div>
+				) : (
 					<div
-						ref={el => (this.mapContainer = el)}
-						className={`map ${tripStatus!== "standby" &&  "hide-direction"}`}
-						style={{
-							width: '100%',
-							height: '100%',
-						}}
-					/>
-					{statusPanel()}
-				</div>
-			</div>
-		);
+						className="map-wrapper "
+						style={{ position: 'relative', display: 'flex' }}
+					>
+						<div
+							ref={el => (this.mapContainer = el)}
+							className={`map ${tripStatus!== "standby" &&  "hide-direction"}`}
+							style={{
+								width: '100%',
+								height: '100%',
+							}}
+						/>
+						{statusPanel()}
+					</div>)}
+			 </div>
+		)
+		
 	}
 }
 

@@ -13,9 +13,9 @@
     position:relative;
     background-color:white;
     width:calc(100% - 360px);;
-    min-width:calc(100% - 40px);;
-    max-width:calc(100% - 40px);;
-    margin-left:40px;
+    min-width:calc(100% );;
+    max-width:calc(100% );;
+    /*margin-left:40px;*/
     border-radius:0 0 3px 0;
 }
 .mapbox-directions-origin .mapboxgl-ctrl-geocoder {
@@ -35,7 +35,7 @@
     white-space:nowrap;
     overflow:hidden;
     border-radius: 0 0 0 0;
-
+    text-align: center;
 }
 .mapbox-directions-origin input[type='text'] {
     box-shadow:0 1px 0 0 #ddd;
@@ -83,8 +83,8 @@
 .map .mapboxgl-ctrl-bottom-left{
     width:100%;
     margin:0 ;
-    padding: 0 20px;
-    bottom:10px;
+    padding: 0;
+    bottom:0;
 }
 
 .map.hide-direction .mapboxgl-ctrl-bottom-left{
@@ -218,7 +218,15 @@
 }
 
 /* Mapbox Logo */
+.mapboxgl-ctrl{
+    margin-bottom:0;
+}
+
 .mapboxgl-ctrl .mapboxgl-ctrl-logo{
+    display:none;
+}
+
+.mapboxgl-ctrl-attrib-inner{
     display:none;
 }
 
@@ -226,6 +234,20 @@
 .mapbox-directions-origin,
 .mapbox-directions-destination {
     position:relative;
+}
+
+/*.mapbox-directions-destination:before{*/
+/*    content:'Where are you going?';*/
+/*    color:lightgrey;*/
+/*    padding-left:6px;*/
+/*}*/
+
+.mapbox-directions-origin{
+    display:none;
+}
+
+.directions-icon.directions-icon-reverse{
+    display:none;
 }
 
 .mapbox-form-label {
@@ -240,6 +262,7 @@
     text-align:center;
     line-height:38px;
     border-radius: 0  0 0 0;
+    display:none;
 }
 .mapbox-form-label .directions-icon {
     background-position: center;
