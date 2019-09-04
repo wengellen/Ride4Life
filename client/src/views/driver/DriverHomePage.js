@@ -101,7 +101,7 @@ class DriverHomePage extends Component {
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates: requestDetails.rider.startLocationAddress
+                        coordinates: requestDetails.rider.location.coordinates
                     },
                     properties: {
                         title: 'Pickup Location',
@@ -115,9 +115,9 @@ class DriverHomePage extends Component {
                 
                 const popup = new mapboxgl.Popup({ offset: 25 })
                 .setHTML(marker.properties.description)
-                
+                console.log('marker.geometry.coordinates',marker.geometry.coordinates)
                 new mapboxgl.Marker(el)
-                .setLngLat([marker.geometry.coordinates[0],marker.geometry.coordinates[1]])
+                .setLngLat(marker.geometry.coordinates)
                 .setPopup(popup)
                 .addTo(this.map);
             });
@@ -223,7 +223,7 @@ class DriverHomePage extends Component {
                 .setHTML(marker.properties.description)
                 
                 new mapboxgl.Marker(el)
-                .setLngLat([marker.geometry.coordinates[0], marker.geometry.coordinates[1]])
+                .setLngLat(marker.geometry.coordinates)
                 .setPopup(popup)
                 .addTo(this.map);
     
