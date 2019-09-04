@@ -201,7 +201,6 @@ class RiderHomePage extends Component {
 			this.map.on('load', () => {
 				this.directions.setOrigin(this.state.startLocation)
 				var riderGeojson = {
-					
 						type: 'Feature',
 						geometry: {
 							type: 'Point',
@@ -231,7 +230,6 @@ class RiderHomePage extends Component {
 					startLocation: e.feature.geometry.coordinates,
 					startLocationAddress:startInput.value
 				})
-				// startInput.value = "Your Location"
 			})
 			
 			this.directions.on('destination', e => {
@@ -396,7 +394,7 @@ class RiderHomePage extends Component {
 				coordinates: this.state.location,
 				type: 'Point',
 			},
-			startLocationAddress:this.state.startLocationAddress,
+			// startLocationAddress:this.state.startLocationAddress,
 			endLocationAddress:this.state.endLocationAddress,
 			distance: this.state.distance,
 			duration: this.state.duration,

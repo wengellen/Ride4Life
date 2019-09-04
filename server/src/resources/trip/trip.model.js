@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const tripSchema = new mongoose.Schema(
   {
+      location: {
+          address: {type:String},
+          coordinates: {
+              type: [Number]
+          }
+      },
       startLocation:{
           type: { type: String },
           address: {type:String},
