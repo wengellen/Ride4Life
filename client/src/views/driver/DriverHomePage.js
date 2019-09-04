@@ -101,7 +101,7 @@ class DriverHomePage extends Component {
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates: requestDetails.rider.location.coordinates
+                        coordinates: requestDetails.rider.startLocationAddress
                     },
                     properties: {
                         title: 'Pickup Location',
