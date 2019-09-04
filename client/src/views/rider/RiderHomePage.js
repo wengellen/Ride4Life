@@ -231,8 +231,7 @@ class RiderHomePage extends Component {
 					startLocation: e.feature.geometry.coordinates,
 					startLocationAddress:startInput.value
 				})
-				
-				startInput.value = "Your Location"
+				// startInput.value = "Your Location"
 			})
 			
 			this.directions.on('destination', e => {
