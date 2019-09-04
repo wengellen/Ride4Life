@@ -117,7 +117,7 @@ class DriverHomePage extends Component {
                 .setHTML(marker.properties.description)
                 
                 new mapboxgl.Marker(el)
-                .setLngLat(marker.geometry.coordinates)
+                .setLngLat([marker.geometry.coordinates[0],marker.geometry.coordinates[1]])
                 .setPopup(popup)
                 .addTo(this.map);
             });
@@ -223,7 +223,7 @@ class DriverHomePage extends Component {
                 .setHTML(marker.properties.description)
                 
                 new mapboxgl.Marker(el)
-                .setLngLat(marker.geometry.coordinates)
+                .setLngLat([marker.geometry.coordinates[0], marker.geometry.coordinates[1]])
                 .setPopup(popup)
                 .addTo(this.map);
     
