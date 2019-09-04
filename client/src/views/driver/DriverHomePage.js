@@ -92,7 +92,7 @@ class DriverHomePage extends Component {
             
         })
         
-        socket.on('CONFIRM_TRIP', data => {
+        socket.on('TRIP_CONFIRMED', data => {
             // clearTimeout(requestTimer)
             const requestDetails = data
             var riderGeojson = {
@@ -254,7 +254,7 @@ class DriverHomePage extends Component {
                 console.log('e.route.steps',steps)
                 console.log(document.querySelectorAll(".mapbox-directions-instructions")[0])
                 const instruction = document.querySelectorAll(".mapbox-directions-instructions")[0]
-                instruction && (document.querySelectorAll(".mapbox-directions-instructions")[0].style.display = "block")
+                // instruction && (document.querySelectorAll(".mapbox-directions-instructions")[0].style.display = "block")
             })
             
             this.map.on('load', () => {
@@ -306,7 +306,6 @@ class DriverHomePage extends Component {
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
     
         setTimeout(() => {
-            document.querySelectorAll('.directions-control .mapbox-directions-instructions')[0].style.display = "none"
             let summaryHeader = document.querySelectorAll('.mapbox-directions-route-summary')[0]
             let btn = document.createElement('button');
             btn.className = 'showDirectionBtn'
@@ -323,7 +322,7 @@ class DriverHomePage extends Component {
                 }
             })
             summaryHeader.appendChild(btn)
-        },3000)
+        },1000)
         this.props.history.push('/driver-home/pickup')
     }
     

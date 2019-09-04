@@ -31,7 +31,7 @@ export const driverCancelTrip = (socket, data) => dispatch => {
 
 export const acceptTrip = (socket, data) => dispatch => {
 	console.log('acceptTrip')
-	socket.emit('ACCEPT_TRIP', data)
+	socket.emit('DRIVER_ACCEPT_TRIP', data)
 }
 
 export const driverGoOnline = (socket, data) => dispatch => {

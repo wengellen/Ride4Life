@@ -386,7 +386,7 @@
     line-height:28px;
     display:none;
 }
-.mapbox-directions-route-summary + .mapbox-directions-instructions {
+.map-wrapper.rider .mapbox-directions-route-summary + .mapbox-directions-instructions {
     display:none;
 }
 .mapbox-directions-route-summary h1 {

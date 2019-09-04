@@ -48,19 +48,19 @@ const httpServer = _http.default.Server(app);
 
 const globalSocket = (0, _io.initialize)(httpServer);
 let corsOptions = {};
-
-if (process.env.NODE_ENV === 'production') {
-  corsOptions = {
-    origin: 'https://reverent-wozniak-c1db03.netlify.com/'
-  };
-} else {
-  corsOptions = {
-    origin: 'http://localhost:3000'
-  };
-}
+console.log('process.env.NODE_ENV', process.env.NODE_ENV); // if (process.env.NODE_ENV ==='PRODUCTION') {
+// 	corsOptions = {
+// 		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
+// 	}
+//
+// }else{
+// 	corsOptions = {
+// 		origin: 'http://localhost:3000'
+// 	}
+// }
 
 app.disable('x-powered-by');
-app.use((0, _cors.default)(corsOptions));
+app.use((0, _cors.default)());
 app.use((0, _bodyParser.json)());
 app.use(_expressFormData.default.parse());
 app.use((0, _bodyParser.urlencoded)({

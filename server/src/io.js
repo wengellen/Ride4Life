@@ -126,6 +126,7 @@ export const initialize = function(server) {
                 ).exec()
            
                 socketIo.to(tripId).emit('DRIVER_GO_OFFLINE', data)
+                
                 console.log('DRIVER_GO_OFFLINE data',data)
                 console.log('DRIVER_GO_OFFLINE driver',driver)
                 socketIo.sockets
@@ -311,7 +312,7 @@ export const initialize = function(server) {
         })
 
         // Driver can accept trip
-        socket.on('ACCEPT_TRIP', async data => {
+        socket.on('DRIVER_ACCEPT_TRIP', async data => {
             clearInterval(requestInterval)
             const { driver, rider } = data
             socket.join(data._id)
@@ -356,7 +357,7 @@ export const initialize = function(server) {
                 if (nearbyOnlineDrivers[i].username === driverUsername) {
                     socketIo.sockets
                         .in(driverUsername)
-                        .emit('CONFIRM_TRIP', data)
+                        .emit('TRIP_CONFIRMED', data)
                 } else {
                     socketIo.sockets
                         .in(nearbyOnlineDrivers[i].username)
