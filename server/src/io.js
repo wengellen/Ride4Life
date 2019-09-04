@@ -350,15 +350,27 @@ export const initialize = function(server) {
             }
 
             for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
-                console.log(
-                    'DISPATCHING RIDER_REQUEST_CANCELED TO DRIVER - ',
-                    nearbyOnlineDrivers[i].username
-                )
+          
                 if (nearbyOnlineDrivers[i].username === driverUsername) {
+                    console.log(
+                        'DISPATCHING TRIP_CONFIRMED to dirver - ',
+                        nearbyOnlineDrivers[i].username
+                    )
+                    logger.debug(
+                       `DISPATCHING TRIP_CONFIRMED to dirver -  ${data.driver.username}`
+                    )
                     socketIo.sockets
                         .in(driverUsername)
                         .emit('TRIP_CONFIRMED', data)
+                        
                 } else {
+                    console.log(
+                        'RIDER_REQUEST_CANCELED to dirver - ',
+                        nearbyOnlineDrivers[i].username
+                    )
+                    logger.debug(
+                        `RIDER_REQUEST_CANCELED to dirver -  ${data.driver.username}`
+                    )
                     socketIo.sockets
                         .in(nearbyOnlineDrivers[i].username)
                         .emit('RIDER_REQUEST_CANCELED', data)
