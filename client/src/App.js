@@ -18,6 +18,8 @@ import { logoutUser } from './actions'
 import DriverEditProfilePage from './views/driver/DriverEditProfilePage'
 import RiderEditProfilePage from './views/rider/RiderEditProfilePage'
 import PrivateRoute from './components/PrivateRoute'
+import { ThemeProvider } from "emotion-theming";
+
 
 class App extends React.Component {
     constructor() {
@@ -47,90 +49,100 @@ class App extends React.Component {
         const { user } = this.props
 
         return (
-            <div className="App">
-                <Header
-                    openPanel={this.openPanel}
-                    logoutUser={this.logout}
-                    fixed
-                    history={this.props.history}
-                />
-                <SelectRolePanel
-                    show={showSlidingPanel}
-                    type={slidingPanelComponent}
-                    closePanel={this.closePanel}
-                    history={this.props.history}
-                />
-                <Switch>
-                    <Route exact path="/" component={HomePage} />
-                    <Route path="/rider-login" component={RiderLoginPage} />
-                    <Route path="/rider-signup" component={RiderSignupPage} />
-                    <Route path="/driver-login" component={DriverLoginPage} />
-                    <Route path="/driver-signup" component={DriverSignupPage} />
-
-                    <PrivateRoute
-                        path="/driver/edit-profile"
-                        component={DriverEditProfilePage}
+            <ThemeProvider
+                theme={{
+                    colors: {
+                        primary: "hotpink",
+                        hover: "crimson",
+                        header: "dimgray"
+                    }
+                }}
+            >
+                <div className="App">
+                    <Header
+                        openPanel={this.openPanel}
+                        logoutUser={this.logout}
+                        fixed
+                        history={this.props.history}
                     />
-                    <PrivateRoute
-                        path="/rider-home/standby"
-                        component={RiderHomePage}
+                    <SelectRolePanel
+                        show={showSlidingPanel}
+                        type={slidingPanelComponent}
+                        closePanel={this.closePanel}
+                        history={this.props.history}
                     />
-                    <PrivateRoute
-                        path="/rider-home/requesting"
-                        component={RiderHomePage}
-                    />
-                    <PrivateRoute
-                        path="/rider-home/driversFound"
-                        component={RiderHomePage}
-                    />
-                    <PrivateRoute
-                        path="/rider-home/confirmed"
-                        component={RiderHomePage}
-                    />
-                    <PrivateRoute
-                        path="/rider-home/driver/:id"
-                        component={DriverProfilePage}
-                    />
-
-                    <PrivateRoute
-                        path="/rider/edit-profile"
-                        component={RiderEditProfilePage}
-                    />
-
-                    <PrivateRoute
-                        path="/driver-home/offline"
-                        component={DriverHomePage}
-                    />
-                    <PrivateRoute
-                        path="/driver-home/standby"
-                        component={DriverHomePage}
-                    />
-                    <PrivateRoute
-                        path="/driver-home/requestIncoming"
-                        component={DriverHomePage}
-                    />
-                    <PrivateRoute
-                        path="/driver-home/waitingForConfirmation"
-                        component={DriverHomePage}
-                    />
-                    <PrivateRoute
-                        path="/driver-home/confirmed"
-                        component={DriverHomePage}
-                    />
-                    <PrivateRoute
-                        path="/driver-home/pickup"
-                        component={DriverHomePage}
-                    />
-                    <PrivateRoute
-                        path="/drivers/:id"
-                        component={DriverProfilePage}
-                    />
-                    <PrivateRoute
-                        path="/driver/review"
-                        component={DriverReviewPage}
-                    />
-                </Switch>
-            </div>
+                    <Switch>
+                        <Route exact path="/" component={HomePage} />
+                        <Route path="/rider-login" component={RiderLoginPage} />
+                        <Route path="/rider-signup" component={RiderSignupPage} />
+                        <Route path="/driver-login" component={DriverLoginPage} />
+                        <Route path="/driver-signup" component={DriverSignupPage} />
+    
+                        <PrivateRoute
+                            path="/driver/edit-profile"
+                            component={DriverEditProfilePage}
+                        />
+                        <PrivateRoute
+                            path="/rider-home/standby"
+                            component={RiderHomePage}
+                        />
+                        <PrivateRoute
+                            path="/rider-home/requesting"
+                            component={RiderHomePage}
+                        />
+                        <PrivateRoute
+                            path="/rider-home/driversFound"
+                            component={RiderHomePage}
+                        />
+                        <PrivateRoute
+                            path="/rider-home/confirmed"
+                            component={RiderHomePage}
+                        />
+                        <PrivateRoute
+                            path="/rider-home/driver/:id"
+                            component={DriverProfilePage}
+                        />
+    
+                        <PrivateRoute
+                            path="/rider/edit-profile"
+                            component={RiderEditProfilePage}
+                        />
+    
+                        <PrivateRoute
+                            path="/driver-home/offline"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/driver-home/standby"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/driver-home/requestIncoming"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/driver-home/waitingForConfirmation"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/driver-home/confirmed"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/driver-home/pickup"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/drivers/:id"
+                            component={DriverProfilePage}
+                        />
+                        <PrivateRoute
+                            path="/driver/review"
+                            component={DriverReviewPage}
+                        />
+                    </Switch>
+                </div>
+            </ThemeProvider>
         )
     }
 }
