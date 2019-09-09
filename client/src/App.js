@@ -20,6 +20,9 @@ import RiderEditProfilePage from './views/rider/RiderEditProfilePage'
 import PrivateRoute from './components/PrivateRoute'
 import { ThemeProvider } from "emotion-theming";
 
+/** @jsx jsx */
+import { jsx, css } from "@emotion/core";
+
 
 class App extends React.Component {
     constructor() {
@@ -54,7 +57,9 @@ class App extends React.Component {
                     colors: {
                         primary: "hotpink",
                         hover: "crimson",
-                        header: "dimgray"
+                        header: "dimgray",
+                        black:"#525c65",
+                        buttonBg:"#78849E"
                     }
                 }}
             >

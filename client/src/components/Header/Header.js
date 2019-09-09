@@ -1,36 +1,106 @@
 import React from 'react'
 import { Link, NavLink, withRouter } from 'react-router-dom'
-import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
-import Menu from '@material-ui/icons/Menu'
-import Close from '@material-ui/icons/Close'
-// core components
-// import headerStyle from 'assets/jss/material-kit-pro-react/components/headerStyle.jsx'
 import logo from 'assets/img/safe_logo.png'
 import placeholder from 'assets/img/placeholder.jpg'
 import { Avatar } from '@material-ui/core'
 import { connect } from 'react-redux'
 import Face from '@material-ui/icons/Face'
 import Button from '@material-ui/core/Button'
-
+import styled from '@emotion/styled'
+import { minW } from '../../utils/helpers'
+import { Account, Menu, Close } from 'emotion-icons/material'
 /** @jsx jsx */
-import { jsx, css } from "@emotion/core";
+import { jsx, css } from '@emotion/core'
 
-// const useStyles = makeStyles({
-//     headerWrapper:{
-//
-//     },
-//     titleNoUnder:{
-//     },
-//     logoContainer:{
-//
-//     },
-//     icon-navbar:{
-//
-//     }
-// })
+const NavContainer = styled.nav`
+        width: 100%;
+        margin: 0 auto;
+        height: 4.5rem;
+        padding: 0 1em;
+        display: flex;
+        align-items: center;
+        & button{
+           color:white;
+        }
+        ${minW('small')} {
+            color: gray;
+            justify-content: flex-end;
+            & button {
+                color: gray;
+                display: none;
+            }
+        }
+`
+
+const LogoContainer = styled.div`
+        text-align:  center ;
+        display:  flex;
+        align-items:  center;
+        transition:  color 0.3s ease;
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        
+        & a{
+            color:white;
+            font-weight:700;
+            display:flex;
+            align-items:  center;
+            
+            & img{
+                width: 50px;
+                vertical-align:middle;
+                padding-right: 0.5rem;
+                display:none;
+            }
+        }
+
+        ${minW('small')}{
+             left:0;
+             transform:translate(0, -50%);
+             padding-left:20px;
+              & a img{
+                display:block;
+              }
+        }
+`
+const AuthButtonContainer = styled.div`
+    display:flex;
+    justify-content: flex-end;
+    
+    & button{
+        font-weight: bold;
+        font-size: 0.8rem;
+        outline: none;
+        border: none;
+        border-radius: 12px;
+        color: white;
+        padding: 10px 16px;
+        margin-right: 12px;
+        
+        &.primary {
+            background-color: #02b3e4;
+            box-shadow: 8px 10px 20px 0px rgba(46, 61, 73, 0.15);
+            border:0.125rem solid transparent;
+            letter-spacing: 0;
+            display:none;
+        }
+        
+        &.show {
+            display: block;
+        }
+     }
+ 
+     ${minW('small')}{
+        button.primary{
+           display:block;
+        }
+      }
+`
 
 class Header extends React.Component {
     constructor(props) {
@@ -68,48 +138,47 @@ class Header extends React.Component {
 
     render() {
         const { openPanel, user } = this.props
-        
+
         return (
-            <div
+            <header
+                className={'header'}
                 css={theme => ({
-                    display:"flex",
-                    height:"176px",
-                    padding: "20px",
-                    outline:"1px solid red"
+                    maxWidth: '100%',
+                    margin: '0 auto',
                 })}
             >
-                <Link  to="/">
-                    <div css={theme => ({
-                            color: "red",
-                        })}
-                        >
-                        <img src={logo} alt={'logo'} />
-                    </div>
-                </Link>
-                <div className="icon-navbar">
+                <NavContainer
+                    className={'header__navbar'}
+                >
+                    <button
+                        className={'header__navbar--toggle'}
+                        
+                        aria-label="open drawer"
+                        onClick={this.handleDrawerToggle}
+                    >
+                        <Menu style={{ fontSize: '45px' }} />
+                    </button>
+                    <LogoContainer className={'header__navbar--logo'}>
+                        <Link to="/">
+                            <img
+                                src={logo}
+                                alt={'logo'}
+                            />
+                            <span>RIDE FOR LIFE</span>
+                        </Link>
+                    </LogoContainer>
+
                     {user ? (
                         <>
-                            <div className="login-container">
-                                <IconButton
-                                    onClick={this.handleEditProfile}
-                                >
+                            <div>
+                                <IconButton onClick={this.handleEditProfile}>
                                     <Avatar
                                         src={user.avatar || placeholder}
                                         alt={'avatar'}
                                     />
                                 </IconButton>
                             </div>
-                            
-                            <IconButton
-                                // className={`menuButton show}`}
-                                css={theme => ({
-                                    display:"block"
-                                })}
-                                aria-label="open drawer"
-                                onClick={this.handleDrawerToggle}
-                            >
-                                <Menu/>
-                            </IconButton>
+
                             <Drawer
                                 open={this.state.mobileOpen}
                                 onClose={this.handleDrawerToggle}
@@ -147,63 +216,30 @@ class Header extends React.Component {
                             </Drawer>
                         </>
                     ) : (
-                        <div className={`login-container show}`}>
+                        <AuthButtonContainer className={`login-container show}`}>
                             <button
-                                className={'login'}
+                                className={'primary'}
                                 onClick={() => openPanel('login')}
                             >
                                 Sign In
                             </button>
-                            <button
-                                className={'signup'}
-                                onClick={() => openPanel('signup')}
-                            >
-                                Sign Up
-                            </button>
-                        </div>
+                            {/*<AuthButton*/}
+                            {/*    className={'primary'}*/}
+                            {/*    onClick={() => openPanel('signup')}*/}
+                            {/*>*/}
+                            {/*    Sign Up*/}
+                            {/*</AuthButton>*/}
+                        </AuthButtonContainer>
                     )}
-                </div>
-            </div>
+                </NavContainer>
+            </header>
         )
     }
 }
 
-Header.defaultProp = {
-    color: 'white',
-}
+Header.defaultProp = {}
 
-Header.propTypes = {
-    classes: PropTypes.object.isRequired,
-    color: PropTypes.oneOf([
-        'primary',
-        'info',
-        'success',
-        'warning',
-        'danger',
-        'transparent',
-        'white',
-        'rose',
-        'dark',
-    ]),
-    links: PropTypes.node,
-    brand: PropTypes.string,
-    fixed: PropTypes.bool,
-    absolute: PropTypes.bool,
-    changeColorOnScroll: PropTypes.shape({
-        height: PropTypes.number.isRequired,
-        color: PropTypes.oneOf([
-            'primary',
-            'info',
-            'success',
-            'warning',
-            'danger',
-            'transparent',
-            'white',
-            'rose',
-            'dark',
-        ]).isRequired,
-    }),
-}
+Header.propTypes = {}
 
 const mapStateToProps = ({ riderReducer, driverReducer }) => {
     return {
@@ -215,5 +251,5 @@ export default withRouter(
     connect(
         mapStateToProps,
         null
-    )( Header)
+    )(Header)
 )

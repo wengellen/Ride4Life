@@ -1,6 +1,10 @@
 .App {
   background: white;
   width: 100%;
+  backface-visibility:hidden;
+  overflow: hidden;
+  position:relative;
+  z-index:7000;
 }
 
 .leaflet-container {
@@ -57,43 +61,43 @@
 /*
 HEADER
 */
-button.menuButton.show{
-    display:block;
-}
+/*button.menuButton.show{*/
+/*    display:block;*/
+/*}*/
 
-button.menuButton.hide{
-    display:none;
-}
+/*button.menuButton.hide{*/
+/*    display:none;*/
+/*}*/
 
 /**
  NavBar
  */
- .login-container{
-    display:flex;
-    width: 100%;
-    padding-right:6px;
- }
+ /*.login-container{*/
+ /*   display:flex;*/
+ /*   width: 100%;*/
+ /*   padding-right:6px;*/
+ /*}*/
 
-.login-container button{
-    font-weight: bold;
-    font-size: 0.8rem;
-    outline:none;
-    border:none;
-    border-radius: 10px;
-    color: white;
-    padding:10px 16px;
-    margin-right:12px;
-}
+/*.login-container button{*/
+/*    font-weight: bold;*/
+/*    font-size: 0.8rem;*/
+/*    outline:none;*/
+/*    border:none;*/
+/*    border-radius: 10px;*/
+/*    color: white;*/
+/*    padding:10px 16px;*/
+/*    margin-right:12px;*/
+/*}*/
 
 
-.login-container .signup{
-     background-color:#78849E;
- }
+/*.login-container .signup{*/
+/*     background-color:#78849E;*/
+/* }*/
 
- .login-container .login{
-     border:1px solid #78849E;
-     color: #78849E;
- }
+/* .login-container .login{*/
+/*     border:1px solid #78849E;*/
+/*     color: #78849E;*/
+/* }*/
 
 
 /*
