@@ -64,12 +64,14 @@ class App extends React.Component {
                 }}
             >
                 <div className="App">
+                 
                     <Header
                         openPanel={this.openPanel}
                         logoutUser={this.logout}
                         fixed
                         history={this.props.history}
                     />
+                 
                     <SelectRolePanel
                         show={showSlidingPanel}
                         type={slidingPanelComponent}

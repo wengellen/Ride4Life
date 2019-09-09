@@ -16,18 +16,12 @@ body {
   /*font-size: 62.5%;*/
   margin: 0 auto;
   padding: 0;
-  -webkit-font-smoothing: antialiased;
-
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }
 
 h1, h2, h3, h4, h5, p{
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
 img{
@@ -36,4 +30,11 @@ img{
 
 a {
   text-decoration: none;
+  display:inline-block;
+}
+
+p{
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
 }

@@ -11,7 +11,7 @@ import Face from '@material-ui/icons/Face'
 import Button from '@material-ui/core/Button'
 import styled from '@emotion/styled'
 import { minW } from '../../utils/helpers'
-import { Account, Menu, Close } from 'emotion-icons/material'
+import { Menu, Close } from 'emotion-icons/material'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
 
@@ -22,13 +22,21 @@ const NavContainer = styled.nav`
         padding: 0 1em;
         display: flex;
         align-items: center;
-        & button{
-           color:white;
+        position:relative;
+
+        & .header__navbar--toggle{
+          background:transparent;
+          color:white;
+          
+          &:hover{
+             color:pink;
+          }
         }
+        
         ${minW('small')} {
             color: gray;
             justify-content: flex-end;
-            & button {
+            & .header__navbar--toggle {
                 color: gray;
                 display: none;
             }
@@ -72,7 +80,7 @@ const AuthButtonContainer = styled.div`
     display:flex;
     justify-content: flex-end;
     
-    & button{
+    & Button{
         font-weight: bold;
         font-size: 0.8rem;
         outline: none;
@@ -88,6 +96,11 @@ const AuthButtonContainer = styled.div`
             border:0.125rem solid transparent;
             letter-spacing: 0;
             display:none;
+            
+            &:hover{
+               color:#02b3e4;
+               background-color: white;
+            }
         }
         
         &.show {
@@ -96,11 +109,16 @@ const AuthButtonContainer = styled.div`
      }
  
      ${minW('small')}{
-        button.primary{
+        Button.primary{
            display:block;
         }
       }
 `
+
+const Navigation = styled.div`
+
+`
+
 
 class Header extends React.Component {
     constructor(props) {
@@ -113,6 +131,7 @@ class Header extends React.Component {
     }
 
     handleDrawerToggle() {
+        console.log('handleDrawerToggle')
         this.setState({ mobileOpen: !this.state.mobileOpen })
     }
 
@@ -145,92 +164,73 @@ class Header extends React.Component {
                 css={theme => ({
                     maxWidth: '100%',
                     margin: '0 auto',
-                })}
-            >
+                })}>
                 <NavContainer
-                    className={'header__navbar'}
-                >
-                    <button
+                    className={'header__navbar'}>
+                    <Button
                         className={'header__navbar--toggle'}
-                        
                         aria-label="open drawer"
-                        onClick={this.handleDrawerToggle}
-                    >
+                        onClick={this.handleDrawerToggle}>
                         <Menu style={{ fontSize: '45px' }} />
-                    </button>
+                    </Button>
                     <LogoContainer className={'header__navbar--logo'}>
                         <Link to="/">
                             <img
                                 src={logo}
-                                alt={'logo'}
-                            />
+                                alt={'logo'}/>
                             <span>RIDE FOR LIFE</span>
                         </Link>
                     </LogoContainer>
-
-                    {user ? (
-                        <>
-                            <div>
-                                <IconButton onClick={this.handleEditProfile}>
-                                    <Avatar
-                                        src={user.avatar || placeholder}
-                                        alt={'avatar'}
-                                    />
-                                </IconButton>
-                            </div>
-
-                            <Drawer
-                                open={this.state.mobileOpen}
-                                onClose={this.handleDrawerToggle}
-                            >
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="open drawer"
-                                    onClick={this.handleDrawerToggle}
-                                >
-                                    <Close />
-                                </IconButton>
-
-                                <div className="nav-drawer">
-                                    <ul className="nav-drawer-inner">
-                                        <li>
-                                            <Button
-                                                className={'drawer-button'}
-                                                onClick={this.handleOpenProfile}
-                                            >
-                                                <Face />
-                                                Profile
-                                            </Button>
-                                        </li>
-                                        <li>
-                                            <Button
-                                                className={'drawer-button'}
-                                                onClick={() => this.logout()}
-                                            >
-                                                <Face />
-                                                Logout
-                                            </Button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </Drawer>
-                        </>
-                    ) : (
-                        <AuthButtonContainer className={`login-container show}`}>
-                            <button
-                                className={'primary'}
-                                onClick={() => openPanel('login')}
-                            >
-                                Sign In
-                            </button>
-                            {/*<AuthButton*/}
-                            {/*    className={'primary'}*/}
-                            {/*    onClick={() => openPanel('signup')}*/}
-                            {/*>*/}
-                            {/*    Sign Up*/}
-                            {/*</AuthButton>*/}
-                        </AuthButtonContainer>
-                    )}
+                    <AuthButtonContainer className={'header__navbar--navigation '}>
+                        {/*<Button onClick={this.handleEditProfile}>*/}
+                        {/*    <Avatar*/}
+                        {/*        src={user.avatar || placeholder}*/}
+                        {/*        alt={'avatar'}*/}
+                        {/*    />*/}
+                        {/*</Button>*/}
+                        {/*<AuthButtonContainer className={`show`}>*/}
+                        <Button
+                            className={'primary'}
+                            onClick={() => openPanel('login')}>
+                            Sign In
+                        </Button>
+                        {/*</AuthButtonContainer>*/}
+                    </AuthButtonContainer>
+                  
+                    <Drawer className={'header__navbar--navigation'}
+                         open={this.state.mobileOpen}
+                         onClose={this.handleDrawerToggle}>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={this.handleDrawerToggle}
+                        >
+                            <Close />
+                        </IconButton>
+        
+                        <div className="nav-drawer">
+                            <ul className="nav-drawer-inner">
+                                <li>
+                                    <Button
+                                        className={'drawer-button'}
+                                        onClick={this.handleOpenProfile}
+                                    >
+                                        <Face />
+                                        Profile
+                                    </Button>
+                                </li>
+                                <li>
+                                    <Button
+                                        className={'drawer-button'}
+                                        onClick={() => this.logout()}
+                                    >
+                                        <Face />
+                                        Logout
+                                    </Button>
+                                </li>
+                            </ul>
+                        </div>
+                    </Drawer>
                 </NavContainer>
             </header>
         )

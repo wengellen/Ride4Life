@@ -733,3 +733,13 @@ status-panel
     background-size: 30px;
     font-size: 0;
 }
+
+
+/* Hero Homepage */
+.hero--homepage{
+    background-image: url('./assets/img/video-bg.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-size: 0;
+}
