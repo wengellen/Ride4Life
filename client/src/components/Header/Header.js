@@ -14,73 +14,91 @@ import { minW } from '../../utils/helpers'
 import { Menu, Close } from 'emotion-icons/material'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
+import Divider from '@material-ui/core/Divider'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import InboxIcon from '@material-ui/core/SvgIcon/SvgIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import MailIcon from '@material-ui/icons/Mail'
+import loginIcon from '../../assets/img/icons/Login.svg'
+import CarIcon from '../../assets/img/icons/car.svg'
+import RiderIcon from '../../assets/img/icons/rider.svg'
+
+const HeaderContainer = styled.header`
+    max-width: 100%;
+    margin: 0 auto;
+    //z-index:10000;
+`
 
 const NavContainer = styled.nav`
-        width: 100%;
-        margin: 0 auto;
-        height: 4.5rem;
-        padding: 0 1em;
-        display: flex;
-        align-items: center;
-        position:relative;
+    width: 100%;
+    margin: 0 auto;
+    height: 4.5rem;
+    padding: 0 1em;
+    display: flex;
+    align-items: center;
+    position: relative;
 
-        & .header__navbar--toggle{
-          background:transparent;
-          color:white;
-          
-          &:hover{
-             color:pink;
-          }
-        }
-        
-        ${minW('small')} {
+    & .header__navbar--toggle {
+        background: transparent;
+        color: white;
+        transition: all 0.3s ease-in-out;
+
+        //&:hover{
+        //   color:pink;
+        //   transform:scale(1)
+        //}
+    }
+
+    ${minW('small')} {
+        color: gray;
+        justify-content: flex-end;
+        & .header__navbar--toggle {
             color: gray;
-            justify-content: flex-end;
-            & .header__navbar--toggle {
-                color: gray;
-                display: none;
-            }
+            display: none;
         }
+    }
 `
 
 const LogoContainer = styled.div`
-        text-align:  center ;
-        display:  flex;
-        align-items:  center;
-        transition:  color 0.3s ease;
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%, -50%);
-        
-        & a{
-            color:white;
-            font-weight:700;
-            display:flex;
-            align-items:  center;
-            
-            & img{
-                width: 50px;
-                vertical-align:middle;
-                padding-right: 0.5rem;
-                display:none;
-            }
-        }
+    text-align: center;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-        ${minW('small')}{
-             left:0;
-             transform:translate(0, -50%);
-             padding-left:20px;
-              & a img{
-                display:block;
-              }
+    & a {
+        color: white;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+
+        & img {
+            width: 50px;
+            vertical-align: middle;
+            padding-right: 0.5rem;
+            display: none;
         }
+    }
+
+    ${minW('small')} {
+        left: 0;
+        transform: translate(0, -50%);
+        padding-left: 20px;
+        & a img {
+            display: block;
+        }
+    }
 `
 const AuthButtonContainer = styled.div`
-    display:flex;
+    display: flex;
     justify-content: flex-end;
-    
-    & Button{
+
+    & button {
         font-weight: bold;
         font-size: 0.8rem;
         outline: none;
@@ -89,36 +107,31 @@ const AuthButtonContainer = styled.div`
         color: white;
         padding: 10px 16px;
         margin-right: 12px;
-        
+
         &.primary {
             background-color: #02b3e4;
             box-shadow: 8px 10px 20px 0px rgba(46, 61, 73, 0.15);
-            border:0.125rem solid transparent;
+            border: 0.125rem solid transparent;
             letter-spacing: 0;
-            display:none;
-            
-            &:hover{
-               color:#02b3e4;
-               background-color: white;
+            display: none;
+
+            &:hover {
+                color: #02b3e4;
+                background-color: white;
             }
         }
-        
+
         &.show {
             display: block;
         }
-     }
- 
-     ${minW('small')}{
-        Button.primary{
-           display:block;
+    }
+
+    ${minW('small')} {
+        button.primary {
+            display: block;
         }
-      }
+    }
 `
-
-const Navigation = styled.div`
-
-`
-
 
 class Header extends React.Component {
     constructor(props) {
@@ -154,85 +167,111 @@ class Header extends React.Component {
         this.props.logoutUser()
         this.setState({ mobileOpen: false })
     }
+    
+    navigateToUrl(url){
+        this.handleDrawerToggle();
+        this.props.history.push(url)
+    }
+    
+    drawer = (
+        <div>
+            <div />
+            <Divider />
+            <img src={RiderIcon}/>Rider
+            <List>
+                <ListItem button onClick={() => this.navigateToUrl('/rider-login')}>
+                    <ListItemIcon >
+                        <img src={loginIcon} alt={'login icon'} />{' '}
+                    </ListItemIcon>
+                    <ListItemText primary={'Login'} />
+                </ListItem>
+                <ListItem button onClick={() => this.navigateToUrl('/rider-signup')}>
+                    <ListItemIcon >
+                        <Face />
+                    </ListItemIcon>
+                    <ListItemText primary={'Sign Up'} />
+                </ListItem>
+            </List>
+            <Divider />
+            <img src={CarIcon}/>Diver
+            <List>
+                <ListItem button onClick={() => this.navigateToUrl('/driver-login')}>
+                    <ListItemIcon >
+                        <img src={loginIcon} alt={'login icon'} />{' '}
+                    </ListItemIcon>
+                    <ListItemText primary={'Login'} />
+                </ListItem>
+                <ListItem button  onClick={() => this.navigateToUrl('/driver-signup')}>
+                    <ListItemIcon>
+                        <Face />
+                    </ListItemIcon>
+                    <ListItemText primary={'Sign Up'} />
+                </ListItem>
+            </List>
+        </div>
+    )
 
     render() {
         const { openPanel, user } = this.props
-
+        // console.log("user", user.avatar);
         return (
-            <header
-                className={'header'}
-                css={theme => ({
-                    maxWidth: '100%',
-                    margin: '0 auto',
-                })}>
-                <NavContainer
-                    className={'header__navbar'}>
+            <HeaderContainer className={'header'}>
+                <NavContainer className={'header__navbar'}>
                     <Button
                         className={'header__navbar--toggle'}
                         aria-label="open drawer"
-                        onClick={this.handleDrawerToggle}>
+                        onClick={this.handleDrawerToggle}
+                    >
                         <Menu style={{ fontSize: '45px' }} />
                     </Button>
                     <LogoContainer className={'header__navbar--logo'}>
                         <Link to="/">
-                            <img
-                                src={logo}
-                                alt={'logo'}/>
+                            <img src={logo} alt={'logo'} />
                             <span>RIDE FOR LIFE</span>
                         </Link>
                     </LogoContainer>
-                    <AuthButtonContainer className={'header__navbar--navigation '}>
-                        {/*<Button onClick={this.handleEditProfile}>*/}
-                        {/*    <Avatar*/}
-                        {/*        src={user.avatar || placeholder}*/}
-                        {/*        alt={'avatar'}*/}
-                        {/*    />*/}
-                        {/*</Button>*/}
-                        {/*<AuthButtonContainer className={`show`}>*/}
-                        <Button
-                            className={'primary'}
-                            onClick={() => openPanel('login')}>
-                            Sign In
-                        </Button>
-                        {/*</AuthButtonContainer>*/}
-                    </AuthButtonContainer>
-                  
-                    <Drawer className={'header__navbar--navigation'}
-                         open={this.state.mobileOpen}
-                         onClose={this.handleDrawerToggle}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={this.handleDrawerToggle}
-                        >
-                            <Close />
-                        </IconButton>
-        
-                        <div className="nav-drawer">
-                            <ul className="nav-drawer-inner">
-                                <li>
-                                    <Button
-                                        className={'drawer-button'}
-                                        onClick={this.handleOpenProfile}
-                                    >
-                                        <Face />
-                                        Profile
-                                    </Button>
-                                </li>
-                                <li>
-                                    <Button
-                                        className={'drawer-button'}
-                                        onClick={() => this.logout()}
-                                    >
-                                        <Face />
-                                        Logout
-                                    </Button>
-                                </li>
-                            </ul>
-                        </div>
-                    </Drawer>
+                    
+                    {
+                        user
+                        ? (
+                            <AuthButtonContainer>
+                                <Button onClick={this.handleEditProfile}>
+                                    <Avatar
+                                        src={user.avatar}
+                                        alt={'avatar'}
+                                    />
+                                </Button>
+                            </AuthButtonContainer>
+                        )
+                        : (
+                            <AuthButtonContainer className={`show`}>
+                                <Button
+                                    className={'primary'}
+                                    onClick={() => openPanel('login')}
+                                >
+                                    Sign In
+                                </Button>
+                            </AuthButtonContainer>
+                        )
+                    }
                 </NavContainer>
-            </header>
+
+                <Drawer
+                    className={'header__navbar--navigation'}
+                    style={{ zIndex: 9000, padding: '20px' }}
+                    open={this.state.mobileOpen}
+                    onClose={this.handleDrawerToggle}
+                >
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={this.handleDrawerToggle}
+                    >
+                        <Close />
+                    </IconButton>
+                    {this.drawer}
+                </Drawer>
+            </HeaderContainer>
         )
     }
 }

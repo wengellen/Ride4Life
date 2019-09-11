@@ -16,6 +16,8 @@ import { uploadProfile } from '../../actions'
 import ImageInput from "../../components/ImageInput/ImageInput";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import Button from "@material-ui/core/Button";
+import { uploadRiderProfile , logoutUser} from '../../actions'
 
 class DriverEditProfilePage extends React.Component {
     state = {
@@ -52,6 +54,11 @@ class DriverEditProfilePage extends React.Component {
         }else{
             return  null
         }
+    }
+    
+    logoutUser = e => {
+        e.preventDefault()
+        this.props.logoutUser()
     }
     
     handleClose = () => {
@@ -203,6 +210,17 @@ class DriverEditProfilePage extends React.Component {
                                     >
                                         Save Changes
                                     </button>
+                                    <Button
+                                        style={{
+                                            background: 'gray',
+                                            color: 'white',
+                                            padding: '10px 20px',
+                                            marginTop: 20,
+                                        }}
+                                        onClick={this.logoutUser}
+                                    >
+                                        Log Out
+                                    </Button>
                                 </div>
                             </form>
                     </GridItem>
@@ -224,5 +242,5 @@ const mapStateToProps = ({ driverReducer }) => {
 
 export default connect(
     mapStateToProps,
-    { uploadProfile }
+    { uploadProfile, logoutUser }
 )(withStyles(loginPageStyle)(DriverEditProfilePage))

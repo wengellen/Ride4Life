@@ -34,6 +34,7 @@ class App extends React.Component {
         }
     }
     openPanel = type => {
+        console.log('openPanel', type)
         this.setState({
             showSlidingPanel: true,
             slidingPanelComponent: type,
@@ -78,6 +79,7 @@ class App extends React.Component {
                         closePanel={this.closePanel}
                         history={this.props.history}
                     />
+                    
                     <Switch>
                         <Route exact path="/" component={HomePage} />
                         <Route path="/rider-login" component={RiderLoginPage} />

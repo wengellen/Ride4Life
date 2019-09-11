@@ -35,10 +35,11 @@ const HeroSection = styled.section`
       & .hero--homepage--video{
         width:100%;
         height:100%;
+        background-color: rgba(0,0,0,0.3);
       }
       
       & a.hero--homepage--content{
-         height:30rem;
+         height:24rem;
          color:white;
          
         & .content-inner{
@@ -90,7 +91,6 @@ class HomePage extends Component {
           <HeroSection className={"hero--homepage container"}>
                     <div className={"hero--homepage--video"}  >
                     </div>
-                  
                     <a className={'hero--homepage--content'}>
                         <span className={'content-inner'}>
                             <h6>Mothers Rideshare Service</h6>

@@ -674,14 +674,19 @@ status-panel
 
 
 /* HEADER */
-.nav-drawer-inner{
-    width:100%;
-    padding:10px;
-    display:flex;
-    flex-direction:column;
-    /*background-color:red;*/
-}
+/*.header__navbar--navigation{*/
+/*    background: white;*/
+/*    width:500px;*/
+/*    !*margin-left: 400px;*!*/
+/*    !*height:100vh;*!*/
+/*    transform:translateX(300px);*/
+/*}*/
 
+/*    padding:10px;*/
+/*    display:flex;*/
+/*    flex-direction:column;*/
+/*    z-index:8000;*/
+/*}*/
 .drawer-button{
     background:transparent;
 }
@@ -737,7 +742,7 @@ status-panel
 
 /* Hero Homepage */
 .hero--homepage{
-    background-image: url('./assets/img/video-bg.jpg');
+    background-image: url('./assets/img/homepage-2.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

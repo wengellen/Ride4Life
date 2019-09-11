@@ -583,7 +583,7 @@ class DriverHomePage extends Component {
             }
         }
         return (
-            <div className="map-wrapper ">
+            <div className="map-wrapper driver">
                 <div className="map-container">
                     <div
                         className="map-wrapper driver"
