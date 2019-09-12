@@ -15,6 +15,8 @@ import Face from "@material-ui/icons/Face";
 import Place from "@material-ui/icons/Place";
 
 import {Link} from "react-router-dom";
+import IconButton from "@material-ui/core/IconButton";
+import BackIcon from "../../assets/img/icons/arrow-back.svg";
 
 class DriverSingupPage extends React.Component {
   state = {
@@ -42,8 +44,11 @@ class DriverSingupPage extends React.Component {
             }
         });
     };
-  
-  signupDriver = e => {
+    handleBack = () => {
+        this.props.history.push('/');
+    }
+    
+    signupDriver = e => {
     e.preventDefault();
       this.setState({
           isEditing:false,
@@ -60,10 +65,18 @@ class DriverSingupPage extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-          <div className={classes.container}>
+          <div className={"form-container"}>
+              <IconButton
+                  color="inherit"
+                  aria-label="back"
+                  className={"back-arrow-button"}
+                  onClick={this.handleBack}
+              >
+                  <img src={BackIcon}/>
+              </IconButton>
             <GridContainer justify="center">
-              <GridItem xs={12} sm={12} md={4}>
-                  <form className={classes.form} onSubmit={this.signupDriver}>
+              <GridItem >
+                  <form style={{margin:"30px 60px 60px 60px"}} onSubmit={this.signupDriver}>
                       <div className={classes.cardHeadline}>
                           <h1 className={classes.cardTitle}>Driver</h1>
                           <h2 className={classes.cardSubhead}>Sign Up</h2>

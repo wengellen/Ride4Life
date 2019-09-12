@@ -13,6 +13,8 @@ import Phone from "@material-ui/icons/Phone";
 import Email from "@material-ui/icons/Email";
 import {Link} from "react-router-dom";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
+import BackIcon from "../../assets/img/icons/arrow-back.svg";
+import IconButton from "@material-ui/core/IconButton";
 
 class RiderSignupPage extends React.Component {
     state = {
@@ -36,6 +38,11 @@ class RiderSignupPage extends React.Component {
         });
     };
     
+    handleBack = () => {
+        this.props.history.push('/');
+    }
+    
+    
     signup = e => {
         e.preventDefault()
         this.setState({
@@ -55,10 +62,18 @@ class RiderSignupPage extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.container}>
+            <div className={"form-container"}>
+                <IconButton
+                    color="inherit"
+                    aria-label="back"
+                    className={"back-arrow-button"}
+                    onClick={this.handleBack}
+                >
+                    <img src={BackIcon}/>
+                </IconButton>
                 <GridContainer justify="center">
-                    <GridItem xs={12} sm={12} md={4}>
-                            <form className={classes.form} onSubmit={this.signup}>
+                    <GridItem>
+                            <form style={{margin:"30px 60px 60px 60px"}} onSubmit={this.signup}>
                                 <div className={classes.cardHeadline}>
                                     <h1 className={classes.cardTitle}>Rider</h1>
                                     <h2 className={classes.cardSubhead}>Sign Up</h2>

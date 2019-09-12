@@ -11,6 +11,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Lock from "@material-ui/icons/Lock";
 import {Link} from "react-router-dom";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
+import IconButton from "@material-ui/core/IconButton";
+import BackIcon from "../../assets/img/icons/arrow-back.svg";
 // import SearchableMap from "../map/SearchableMap";
 class RiderLoginPage extends React.Component {
 	state = {
@@ -33,6 +35,10 @@ class RiderLoginPage extends React.Component {
 		});
 	};
 	
+	handleBack = () => {
+		this.props.history.push('/');
+	}
+	
 	login = e => {
 		e.preventDefault();
 		this.setState({
@@ -50,10 +56,18 @@ class RiderLoginPage extends React.Component {
 	render() {
 		const { classes } = this.props;
 		return (
-				<div className={classes.container}>
+			<div className={"form-container"}>
+				<IconButton
+					color="inherit"
+					aria-label="back"
+					className={"back-arrow-button"}
+					onClick={this.handleBack}
+				>
+					<img src={BackIcon}/>
+				</IconButton>
 					<GridContainer justify="center">
-						<GridItem xs={12} sm={12} md={4}>
-								<form className={classes.form} onSubmit={this.login}>
+						<GridItem  >
+								<form style={{margin:"30px 60px 60px 60px"}} onSubmit={this.login}>
 									<div className={classes.cardHeadline}>
 										<h1 className={classes.cardTitle}>Rider</h1>
 										<h2 className={classes.cardSubhead}>Login</h2>
