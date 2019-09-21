@@ -141,10 +141,10 @@ class App extends React.Component {
                             path="/driver-home/pickup"
                             component={DriverHomePage}
                         />
-                        <PrivateRoute
-                            path="/drivers/:id"
-                            component={DriverProfilePage}
-                        />
+                        {/*<PrivateRoute*/}
+                        {/*    path="/drivers/:id"*/}
+                        {/*    component={DriverProfilePage}*/}
+                        {/*/>*/}
                         <PrivateRoute
                             path="/driver/review"
                             component={DriverReviewPage}

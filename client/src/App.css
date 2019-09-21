@@ -146,8 +146,13 @@ HEADER
   line-height:1rem;
   padding:90px 1rem;
   margin: 0 auto;
+  transition:all 0.3s ease-in-out;
+  transform:translateX(-2000px);
 }
 
+.driver-profile-container.slideInPopup{
+    transform:translateX(0);
+}
 
 .driver-profile-img-container img.round{
   width: 128px;

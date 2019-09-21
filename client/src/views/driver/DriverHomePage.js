@@ -93,15 +93,15 @@ class DriverHomePage extends Component {
         })
         
         socket.on('TRIP_CONFIRMED', data => {
-            // clearTimeout(requestTimer)
             const requestDetails = data
+            console.log('requestDetails', data)
             var riderGeojson = {
                 type: 'FeatureCollection',
                 features: [{
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates: requestDetails.rider.location.coordinates
+                        coordinates: requestDetails.location.coordinates
                     },
                     properties: {
                         title: 'Pickup Location',

@@ -12,6 +12,8 @@ import {
 	getDriversById,
 } from '../../actions';
 import {Avatar} from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import BackIcon from "../../assets/img/icons/arrow-back.svg";
 
 class DriverProfilePage extends Component {
 	state = {
@@ -29,20 +31,29 @@ class DriverProfilePage extends Component {
 		})
 	}
 	
-	handleClose = () => {
-		let backUrl = this.props.location.state ? this.props.location.state.prevPath : '/rider-home/standby'
-		this.props.history.push(backUrl)
+	handleBack = () => {
+		// let backUrl = this.props.location.state ? this.props.location.state.prevPath : '/rider-home/standby'
+		// console.log('previsouPath',  this.props.location)
+		// this.props.history.push(backUrl)
 	}
 	
 	render() {
 		const {currentDriver, findDriverByIdStarted} = this.props
 		console.log('currentDriver', currentDriver)
+		
 	   if(!currentDriver){
 		   return (<Loader/>)
 	   }else{
 		   return (
-			   <div className="driver-profile-container">
-				   <Link className='close-create-contact' to='/'>Close</Link>
+			   <div className={`driver-profile-container ${currentDriver && "slideInPopup"}`}>
+				   <IconButton
+					   color="inherit"
+					   aria-label="back"
+					   className={"back-arrow-button"}
+					   onClick={this.handleBack}
+				   >
+					   <img src={BackIcon}/>
+				   </IconButton>
 				   <header>
 					   <div className="driver-profile-img-container ">
 						   <img src={currentDriver.avatar} className="round" alt={"driver avatar"}/>

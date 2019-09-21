@@ -1,18 +1,9 @@
 import {acceptTrip} from "./driverAction";
+import {
+	OPEN_MODAL
+} from './actionTypes'
 
 export {
-    DRIVER_SIGNUP_STARTED,
-    DRIVER_SIGNUP_SUCCESS,
-    DRIVER_SIGNUP_FAILURE,
-    DRIVER_LOGIN_STARTED,
-    DRIVER_LOGIN_SUCCESS,
-    DRIVER_LOGIN_FAILURE,
-    UPLOAD_PROFILE_STARTED,
-    UPLOAD_PROFILE_SUCCESS,
-    UPLOAD_PROFILE_FAILURE,
-    UPDATE_PROFILE_STARTED,
-    UPDATE_PROFILE_SUCCESS,
-    UPDATE_PROFILE_FAILURE,
     updateDriverLocation,
     updateProfile,
     signup_driver,
@@ -25,33 +16,6 @@ export {
 } from './driverAction'
 
 export {
-    RIDER_SIGNUP_STARTED,
-    RIDER_SIGNUP_SUCCESS,
-    RIDER_SIGNUP_FAILURE,
-    RIDER_LOGIN_STARTED,
-    RIDER_LOGIN_SUCCESS,
-    RIDER_LOGIN_FAILURE,
-    FIND_DRIVERS_NEARBY_STARTED,
-    FIND_DRIVERS_NEARBY_SUCCESS,
-    FIND_DRIVERS_NEARBY_FAILURE,
-    FIND_DRIVER_BY_ID_STARTED,
-    FIND_DRIVER_BY_ID_SUCCESS,
-    FIND_DRIVER_BY_ID_FAILURE,
-    SEND_TRIP_REQUEST_STARTED,
-    SEND_TRIP_REQUEST_SUCCESS,
-    SEND_TRIP_REQUEST_FAILURE,
-    UPDATE_LOCATION_STARTED,
-    UPDATE_LOCATION_SUCCESS,
-    UPDATE_LOCATION_FAILURE,
-    CANCEL_TRIP_REQUEST,
-    SUBMIT_REVIEW_STARTED,
-    SUBMIT_REVIEW_SUCCESS,
-    SUBMIT_REVIEW_FAILURE,
-    LOGOUT_USER,
-    CONFIRM_TRIP_REQUEST,
-    UPDATE_RIDER_PROFILE_STARTED,
-    UPDATE_RIDER_PROFILE_SUCCESS,
-    UPDATE_RIDER_PROFILE_FAILURE,
     cancelTripRequest,
     riderCancelTrip,
     confirmTrip,
@@ -67,4 +31,10 @@ export {
     riderCancelRequest
 } from './riderAction'
 
-
+export function openModal({shouldOpen, component}) {
+    return {
+        type: OPEN_MODAL,
+        shouldOpen,
+        component
+    }
+}

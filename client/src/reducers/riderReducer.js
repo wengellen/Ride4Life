@@ -23,8 +23,11 @@ import {
 	UPDATE_RIDER_PROFILE_SUCCESS,
 	UPDATE_RIDER_PROFILE_FAILURE,
 	CANCEL_TRIP_REQUEST,
-	CONFIRM_TRIP_REQUEST, UPDATE_PROFILE_STARTED, UPDATE_PROFILE_SUCCESS, UPDATE_PROFILE_FAILURE
-} from '../actions'
+	CONFIRM_TRIP_REQUEST,
+	UPDATE_PROFILE_STARTED,
+	UPDATE_PROFILE_SUCCESS,
+	UPDATE_PROFILE_FAILURE
+} from '../actions/actionTypes'
 
 
 const initialState = {
@@ -121,14 +124,14 @@ export const riderReducer = (state = initialState, action)=>{
 				driversNearby:[],
 				tripStatus: "standby"
 			}
-			
+		
 		case CONFIRM_TRIP_REQUEST:
 			return {...state,
 				findNearbyDriverMessage: 'Your rider is on the way',
 				driversNearby:[action.payload],
 				tripStatus:"pickup"
 			}
-			
+
 		case LOGOUT_USER:
 			return {...state,
 				user: null

@@ -10,6 +10,7 @@ import  RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import  PhoneIcon from '@material-ui/icons/Phone'
 import placeholder from 'assets/img/placeholder.jpg'
+import Modal from 'react-modal'
 
 import {
 	findDriversNearby,
@@ -77,22 +78,24 @@ class RiderHomePage extends Component {
 				'A driver has accepted your trip \n' + JSON.stringify(data)
 			)
 			
-			const driverMarker = this.addMarker('driverMarker', data.driver._id,
-					{
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							coordinates: data.driver.location.coordinates
-						},
-						properties: {
-							title: 'Pickup Location',
-							description: `<h3><strong>${data.driver.username}</strong></h3><p>`
-						}
-					}
-				)
-				
-				
-			this.acceptedDriversMarkerMap.set(data.driver.username, driverMarker)
+			
+			
+			// const driverMarker = this.addMarker('driverMarker', data.driver._id,
+			// 		{
+			// 			type: 'Feature',
+			// 			geometry: {
+			// 				type: 'Point',
+			// 				coordinates: data.driver.location.coordinates
+			// 			},
+			// 			properties: {
+			// 				title: 'Pickup Location',
+			// 				description: `<h3><strong>${data.driver.username}</strong></h3><p>`
+			// 			}
+			// 		}
+			// 	)
+			//
+			//
+			// this.acceptedDriversMarkerMap.set(data.driver.username, driverMarker)
 			console.log(
 				'acceptedDriversMarkerMap \n', this.acceptedDriversMarkerMap.get(data.driver.username)
 			)
@@ -156,7 +159,9 @@ class RiderHomePage extends Component {
 		const rider = JSON.parse(localStorage.getItem('user'))
 		if (!rider) this.props.history.push('/')
 		
+		
 		navigator.geolocation.getCurrentPosition(position => {
+			let path = (this.props.location.pathname).split('/rider-home/')[1]
 			this.setState({
 				startLocation: [
 					position.coords.longitude,
@@ -164,6 +169,7 @@ class RiderHomePage extends Component {
 				],
 				location: [position.coords.longitude, position.coords.latitude],
 				loadingMap: false,
+				tripStatus:path,
 			})
 			
 			this.map = new mapboxgl.Map({
@@ -354,10 +360,9 @@ class RiderHomePage extends Component {
 	loadDriverProfile = driver => {
 		console.log('driver', driver)
 		this.props.getDriversById(driver._id).then(() => {
-			this.props.history.push(`/rider-home/driver/${driver._id}`)
-			this.props.history.push({
-				pathname:`/rider-home/driver/${driver._id}`,
-				state: { prevPath: this.props.location.pathname }})
+			// this.props.history.push({
+			// 	pathname:`/rider-home/driver/${driver._id}`,
+			// 	state: { prevPath: this.props.location.pathname }})
 		})
 	}
 	
@@ -420,9 +425,6 @@ class RiderHomePage extends Component {
 		})
 	}
 	
-	getStatePath = (path) => {
-		return path.split('/rider-home/')[1]
-	}
 	
 	render() {
 		const { findNearbyDriverMessage, driversNearby,  } = this.props
@@ -430,16 +432,20 @@ class RiderHomePage extends Component {
 		
 		const currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
 		
-		let path = this.getStatePath(this.props.location.pathname)
-		if(tripStatus !== path){
+	
+		// console.log("this.props.location.pathname",path)
+		
+		// console.log('tripStatus',tripStatus)
+		// if(tripStatus !== path){
 		  // NOT Allowed
-		    console.log('tripStatus',tripStatus)
-		    path = tripStatus
-		}
+		  //   console.log('tripStatus',tripStatus)
+		  //   tripStatus = path
+		// }
 
 		// let path = tripStatus
 		const statusPanel = () => {
-			switch(path) {
+			console.log('tripStatus', tripStatus)
+			switch(tripStatus) {
 				case "standby": return (
 					<div className={'status-panel standby'}>
 						<h1 className={`drivers-nearby-header}`}>Request a Ride?</h1>
@@ -555,7 +561,6 @@ class RiderHomePage extends Component {
 			}
 		}
 		
-		console.log('this.state.loadingMap ',this.state.loadingMap )
 		
 		return (
 			<div className="map-container ">
