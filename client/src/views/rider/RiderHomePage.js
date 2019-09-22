@@ -56,6 +56,7 @@ class RiderHomePage extends Component {
             currentDriver: null,
             headerMessage: '',
         }
+        this.priceInput = React.createRef()
         this.map = null
         this.directions = null
         this.geolocate = null
@@ -244,6 +245,9 @@ class RiderHomePage extends Component {
                 let destInput = document.querySelectorAll(
                     '.mapbox-directions-destination input'
                 )[0]
+    
+                this.priceInput.current.focus();
+                
                 this.setState({
                     endLocation: e.feature.geometry.coordinates,
                     endLocationAddress: destInput.value,
@@ -372,8 +376,8 @@ class RiderHomePage extends Component {
     }
 
     handleKeyPress = e => {
-        if (e.which < 48 || e.which > 57) {
-            e.preventDefault()
+        if(e.which === 13){
+           this.handleRequestRide()
         }
     }
 
@@ -424,6 +428,7 @@ class RiderHomePage extends Component {
             this.setState({ tripId: data })
             console.log('TRIP_ID \n' + JSON.stringify(data))
         })
+     
     }
 
     render() {
@@ -455,9 +460,9 @@ class RiderHomePage extends Component {
                     return (
                         <div className={'status-panel standby'}>
                             <h1 className={`drivers-nearby-header}`}>
-                                Request a Ride?
+                                {!this.state.endLocation ? `Where are you going?` : 'Name your fare!'}
                             </h1>
-                            <p>Name your Fare!</p>
+                          
                             <div
                                 className={'driver-name-your-fare-container'}
                                 css={css`
@@ -480,6 +485,7 @@ class RiderHomePage extends Component {
                                 `}
                             >
                                 <input
+                                    ref={this.priceInput}
                                     pattern="[0-9]"
                                     name={'tripFare'}
                                     type={'text'}
@@ -493,6 +499,7 @@ class RiderHomePage extends Component {
                                     }
                                     disabled={!this.state.tripFare}
                                     onClick={e => this.handleRequestRide(e)}
+                                    onKeyPress={e => this.handleKeyPress(e)}
                                 >
                                     REQUEST
                                 </button>
