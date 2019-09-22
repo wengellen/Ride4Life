@@ -1,11 +1,5 @@
 // RIDER
 import API from "../utils/axiosAuth";
-import {
-	DRIVER_LOGIN_SUCCESS,
-	UPDATE_PROFILE_FAILURE,
-	UPDATE_PROFILE_STARTED,
-	UPDATE_PROFILE_SUCCESS
-} from "./driverAction";
 import socket from "../utils/socketConnection";
 
 import {
@@ -132,13 +126,11 @@ export const login_rider = (rider) => dispatch => {
 
 export const uploadRiderProfile = (formValue) => dispatch =>{
 	dispatch({type:UPDATE_RIDER_PROFILE_STARTED})
-	console.log('uploadProfilePhoto formData', formValue)
 	
 	return (
 		API().post(`/api/rider/uploadProfile`, formValue)
 		.then(res =>{
 			console.log('uploadProfilePhoto res', res)
-			// localStorage.setItem('user', JSON.stringify(res.data.user))
 			dispatch({type: UPDATE_RIDER_PROFILE_SUCCESS, payload: res.data})
 			return res.data
 		})

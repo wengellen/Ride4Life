@@ -105,7 +105,7 @@ class DriverHomePage extends Component {
                     },
                     properties: {
                         title: 'Pickup Location',
-                        description: '<h3><strong>Pickup Location</strong></h3><p><a href=\"http://www.mtpleasantdc.com/makeitmtpleasant\" target=\"_blank\" title=\"Opens in a new window\">Make it Mount Pleasant</a'
+                        description: '<h3><strong>Pickup Location</strong></h3><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a'
                     }
                 }]
             }
@@ -174,9 +174,7 @@ class DriverHomePage extends Component {
     }
     
     componentDidMount() {
-        let  geolocate
         const driver = JSON.parse(localStorage.getItem('user'))
-        let requestTimer
         navigator.geolocation.getCurrentPosition(position => {
             var driverGeojson = {
                 type: 'FeatureCollection',

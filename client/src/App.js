@@ -19,6 +19,7 @@ import DriverEditProfilePage from './views/driver/DriverEditProfilePage'
 import RiderEditProfilePage from './views/rider/RiderEditProfilePage'
 import PrivateRoute from './components/PrivateRoute'
 import { ThemeProvider } from "emotion-theming";
+import ModalContainer  from "./components/ModalContainer";
 
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
@@ -65,14 +66,15 @@ class App extends React.Component {
                 }}
             >
                 <div className="App" >
-                 
                     <Header
                         openPanel={this.openPanel}
                         logoutUser={this.logout}
                         fixed
                         history={this.props.history}
+                        style={{color:'red'}}
                     />
-                 
+                    <ModalContainer />
+    
                     <SelectRolePanel
                         show={showSlidingPanel}
                         type={slidingPanelComponent}
@@ -152,6 +154,7 @@ class App extends React.Component {
                     </Switch>
                 </div>
             </ThemeProvider>
+     
         )
     }
 }

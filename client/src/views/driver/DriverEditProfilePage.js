@@ -12,12 +12,13 @@ import Email from '@material-ui/icons/Email'
 import Phone from '@material-ui/icons/Phone'
 import Face from '@material-ui/icons/Face'
 import Place from '@material-ui/icons/Place'
-import { uploadProfile } from '../../actions'
 import ImageInput from "../../components/ImageInput/ImageInput";
 import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
-import { uploadRiderProfile , logoutUser} from '../../actions'
+import { uploadProfile , logoutUser, openModal} from '../../actions'
+/** @jsx jsx */
+import { jsx, css } from "@emotion/core";
 
 class DriverEditProfilePage extends React.Component {
     state = {
@@ -62,15 +63,17 @@ class DriverEditProfilePage extends React.Component {
     }
     
     handleClose = () => {
-        let backUrl = this.props.location.state ? this.props.location.state.prevPath : '/rider-home/standby'
-        this.props.history.push(backUrl)
+        this.props.openModal({shouldOpen:false})
     }
 
     render() {
         const { classes, user } = this.props
         const { profile} = this.state
        return  (
-            <div className={classes.container}>
+           <div css={css`
+                width:100%;
+                background-color:white;
+            `}>
                 <GridContainer justify="center">
                     <GridItem xs={12} sm={12} md={4}>
                             <form
@@ -226,7 +229,7 @@ class DriverEditProfilePage extends React.Component {
                     </GridItem>
                 </GridContainer>
                 <IconButton className="sliding-panel-close-button" onClick={this.handleClose}>
-                    <CloseIcon color="#353A50" />
+                    <CloseIcon />
                 </IconButton>
             </div>
         )
@@ -242,5 +245,5 @@ const mapStateToProps = ({ driverReducer }) => {
 
 export default connect(
     mapStateToProps,
-    { uploadProfile, logoutUser }
+    { uploadProfile, logoutUser, openModal }
 )(withStyles(loginPageStyle)(DriverEditProfilePage))

@@ -1,4 +1,3 @@
-import {acceptTrip} from "./driverAction";
 import {
 	OPEN_MODAL
 } from './actionTypes'

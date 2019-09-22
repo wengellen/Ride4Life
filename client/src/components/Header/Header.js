@@ -1,10 +1,9 @@
 import React from 'react'
-import { Link, NavLink, withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
 import logo from 'assets/img/safe_logo.png'
-import placeholder from 'assets/img/placeholder.jpg'
 import { Avatar } from '@material-ui/core'
 import { connect } from 'react-redux'
 import Face from '@material-ui/icons/Face'
@@ -12,18 +11,18 @@ import Button from '@material-ui/core/Button'
 import styled from '@emotion/styled'
 import { minW } from '../../utils/helpers'
 import { Menu, Close } from 'emotion-icons/material'
-/** @jsx jsx */
-import { jsx, css } from '@emotion/core'
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import InboxIcon from '@material-ui/core/SvgIcon/SvgIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import MailIcon from '@material-ui/icons/Mail'
 import loginIcon from '../../assets/img/icons/Login.svg'
 import CarIcon from '../../assets/img/icons/car.svg'
 import RiderIcon from '../../assets/img/icons/rider.svg'
+import DriverEditProfilePage from "../../views/driver/DriverEditProfilePage";
+import RiderEditProfilePage from "../../views/rider/RiderEditProfilePage";
+import {openModal} from "../../actions";
+
 
 const HeaderContainer = styled.header`
     max-width: 100%;
@@ -148,20 +147,20 @@ class Header extends React.Component {
         this.setState({ mobileOpen: !this.state.mobileOpen })
     }
 
-    handleOpenProfile = () => {
-        this.handleDrawerToggle()
-        this.props.history.push({
-            pathname: `/${this.props.user.role}/edit-profile`,
-            state: { prevPath: this.props.location.pathname },
-        })
-    }
+    // handleOpenProfile = () => {
+    //     this.handleDrawerToggle()
+    //     this.props.history.push({
+    //         pathname: `/${this.props.user.role}/edit-profile`,
+    //         state: { prevPath: this.props.location.pathname },
+    //     })
+    // }
 
-    handleEditProfile = () => {
-        this.props.history.push({
-            pathname: `/${this.props.user.role}/edit-profile`,
-            state: { prevPath: this.props.location.pathname },
-        })
-    }
+    // handleEditProfile = () => {
+    //     this.props.history.push({
+    //         pathname: `/${this.props.user.role}/edit-profile`,
+    //         state: { prevPath: this.props.location.pathname },
+    //     })
+    // }
 
     logout() {
         this.props.logoutUser()
@@ -212,7 +211,7 @@ class Header extends React.Component {
     )
 
     render() {
-        const { openPanel, user } = this.props
+        const { handleOpenProfile, openPanel, user } = this.props
         // console.log("user", user.avatar);
         return (
             <HeaderContainer className={'header'}>
@@ -235,7 +234,7 @@ class Header extends React.Component {
                         user
                         ? (
                             <AuthButtonContainer>
-                                <Button onClick={this.handleEditProfile}>
+                                <Button onClick={()=> handleOpenProfile(user.role)}>
                                     <Avatar
                                         src={user.avatar}
                                         alt={'avatar'}
@@ -285,10 +284,15 @@ const mapStateToProps = ({ riderReducer, driverReducer }) => {
         user: driverReducer.user || riderReducer.user,
     }
 }
-
+const mapDispatchToProps = dispatch => ({
+    handleOpenProfile: (role) => {
+        console.log('role', role)
+        dispatch(openModal({shouldOpen:true, component: role ==='driver' ? DriverEditProfilePage : RiderEditProfilePage}))
+    },
+});
 export default withRouter(
     connect(
         mapStateToProps,
-        null
+        mapDispatchToProps
     )(Header)
 )

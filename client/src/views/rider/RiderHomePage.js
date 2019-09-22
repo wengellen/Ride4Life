@@ -12,7 +12,6 @@ import PhoneIcon from '@material-ui/icons/Phone'
 import placeholder from 'assets/img/placeholder.jpg'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
-import Modal from 'react-modal'
 
 import {
     findDriversNearby,
@@ -217,11 +216,11 @@ class RiderHomePage extends Component {
                     },
                 }
 
-                const riderMarker = this.addMarker(
-                    'marker',
-                    rider._id,
-                    riderGeojson
-                )
+                // const riderMarker = this.addMarker(
+                //     'marker',
+                //     rider._id,
+                //     riderGeojson
+                // )
             })
 
             this.directions = new MapboxDirections({

@@ -12,8 +12,6 @@ import Lock from "@material-ui/icons/Lock";
 import {Link} from "react-router-dom";
 import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 import IconButton from "@material-ui/core/IconButton";
-import {Close} from "emotion-icons/material";
-import Drawer from "@material-ui/core/Drawer";
 import BackIcon from '../../assets/img/icons/arrow-back.svg'
 
 class DriverLoginPage extends React.Component {

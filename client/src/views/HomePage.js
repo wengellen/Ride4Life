@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import '../App.css';
 import styled from '@emotion/styled'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
-import {mediaQ} from '../utils/helpers'
 import Button from "@material-ui/core/Button";
 
 const container = css`

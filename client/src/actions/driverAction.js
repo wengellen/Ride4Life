@@ -1,8 +1,6 @@
 
 // DRIVER
 import API  from "../utils/axiosAuth";
-import {CONFIRM_TRIP_REQUEST} from "./riderAction";
-import socket from "../utils/socketConnection";
 
 import {
 	DRIVER_SIGNUP_STARTED,
@@ -98,11 +96,8 @@ export const login_driver= (driver) => dispatch =>{
 
 export const uploadProfile = (formValue) => dispatch =>{
 	dispatch({type:UPDATE_PROFILE_STARTED})
-	console.log('uploadProfilePhoto formData', formValue)
-	console.log('uploadProfilePhoto token', localStorage.getItem('token'))
 	return (
 		API().post(`/api/driver/uploadProfile`, formValue)
-		// API.post(`/image-upload`, formData)
 		.then(res =>{
 			console.log('uploadProfile', res)
 			dispatch({type: UPDATE_PROFILE_SUCCESS, payload: res.data})
