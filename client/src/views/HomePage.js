@@ -1,9 +1,11 @@
 import { Component } from 'react';
+import { connect } from 'react-redux'
 import '../App.css';
 import styled from '@emotion/styled'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
 import Button from "@material-ui/core/Button";
+import {logoutUser} from "../actions";
 
 const container = css`
     max-width: 73.75rem;
@@ -80,6 +82,11 @@ const HeroSection = styled.section`
 `
 
 class HomePage extends Component {
+    componentDidMount() {
+      console.log('')
+      this.props.logoutUser();
+    }
+    
     onRequestRide = () => {
     	this.props.history.push('/rider-login')
     }
@@ -103,4 +110,13 @@ class HomePage extends Component {
   }
 }
 
-export default HomePage
+const mapStateToProps = ({ riderReducer }) => ({
+    serverMessage: riderReducer.serverMessage,
+    user: riderReducer.user,
+})
+
+export default connect(
+    mapStateToProps,
+    { logoutUser}
+)(HomePage)
+

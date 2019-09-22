@@ -1,6 +1,9 @@
 import {
-	OPEN_MODAL
+    LOGOUT_USER,
+    OPEN_MODAL
 } from './actionTypes'
+
+import socket from "../utils/socketConnection";
 
 export {
     updateDriverLocation,
@@ -19,7 +22,6 @@ export {
     riderCancelTrip,
     confirmTrip,
     requestTrip,
-    logoutUser,
     getDriversById,
     findDriversNearby,
     signup_rider,
@@ -29,6 +31,14 @@ export {
     updateThisRiderLocation,
     riderCancelRequest
 } from './riderAction'
+
+export const logoutUser = () => dispatch => {
+    console.log('logoutUser',logoutUser)
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    socket.disconnect()
+    dispatch({type: LOGOUT_USER})
+}
 
 export function openModal({shouldOpen, component}) {
     return {

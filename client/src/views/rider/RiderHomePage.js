@@ -289,9 +289,8 @@ class RiderHomePage extends Component {
 
     componentWillUnmount = () => {
         if (this.map) {
-            setTimeout(() => this.map.remove(), 1000)
+            setTimeout(() => this.map.remove(), 3000)
         }
-        // socket.disconnect()
     }
 
     addMarker = (markerStyle, markerId, marker) => {

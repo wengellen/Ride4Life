@@ -45,12 +45,13 @@ class RiderEditProfilePage extends React.Component {
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
         this.props.uploadRiderProfile(values).then(res => {
-            this.handleClose()
+            // this.handleClose()
         })
     }
     
     logoutUser = e => {
         e.preventDefault()
+        this.handleClose()
         this.props.logoutUser()
     }
 
@@ -93,7 +94,7 @@ class RiderEditProfilePage extends React.Component {
                                         className="avatar-input"
                                         name="avatar"
                                         maxValue={200}
-                                        value={user.avatar}
+                                        value={user && user.avatar}
                                     />
                                 </div>
                             </div>

@@ -1,9 +1,7 @@
 // RIDER
 import API from "../utils/axiosAuth";
-import socket from "../utils/socketConnection";
 
 import {
-	LOGOUT_USER,
 	RIDER_SIGNUP_STARTED,
 	RIDER_SIGNUP_SUCCESS,
 	RIDER_SIGNUP_FAILURE,
@@ -144,13 +142,13 @@ export const uploadRiderProfile = (formValue) => dispatch =>{
 		})
 	)
 }
-
-export const logoutUser = () => dispatch => {
-	localStorage.removeItem('token')
-	localStorage.removeItem('user')
-	socket.disconnect()
-	dispatch({type: LOGOUT_USER})
-}
+//
+// export const logoutUser = () => dispatch => {
+// 	localStorage.removeItem('token')
+// 	localStorage.removeItem('user')
+// 	socket.disconnect()
+// 	dispatch({type: LOGOUT_USER})
+// }
 
 export const cancelTripRequest = () => dispatch => {
 	console.log('cancelTripRequest')

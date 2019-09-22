@@ -13,10 +13,11 @@ import Lock from "@material-ui/icons/Lock";
 import Phone from "@material-ui/icons/Phone";
 import Face from "@material-ui/icons/Face";
 import Place from "@material-ui/icons/Place";
-
 import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import BackIcon from "../../assets/img/icons/arrow-back.svg";
+import CarIcon from '../../assets/img/icons/car.svg'
+import RiderIcon from "../../assets/img/icons/rider.svg";
 
 class DriverSingupPage extends React.Component {
   state = {
@@ -78,7 +79,10 @@ class DriverSingupPage extends React.Component {
               <GridItem >
                   <form style={{margin:"30px 60px 60px 60px"}} onSubmit={this.signupDriver}>
                       <div className={classes.cardHeadline}>
-                          <h1 className={classes.cardTitle}>Driver</h1>
+                          <img src={CarIcon} alt={"driver icon"} style={{
+                              width:'120px',
+                              marginBottom:'14px'
+                          }}/>                          <h1 className={classes.cardTitle}>Driver</h1>
                           <h2 className={classes.cardSubhead}>Sign Up</h2>
                       </div>
                         <h4 className={classes.cardSubtitle}> Already Sign Up?

@@ -13,6 +13,7 @@ import {Link} from "react-router-dom";
 import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 import IconButton from "@material-ui/core/IconButton";
 import BackIcon from '../../assets/img/icons/arrow-back.svg'
+import CarIcon from '../../assets/img/icons/car.svg'
 
 class DriverLoginPage extends React.Component {
 	state = {
@@ -74,8 +75,11 @@ class DriverLoginPage extends React.Component {
 					<GridContainer justify="center">
 						<GridItem >
 								<form  style={{margin:"30px 60px 60px 60px"}} onSubmit={this.login}>
-								
 										<div className={classes.cardHeadline}>
+											<img src={CarIcon} alt={"driver icon"} style={{
+												width:'120px',
+												marginBottom:'14px'
+											}}/>
 											<h1 className={classes.cardTitle}>Driver</h1>
 											<h2 className={classes.cardSubhead}>Login</h2>
 										</div>

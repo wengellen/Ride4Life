@@ -15,6 +15,7 @@ import {Link} from "react-router-dom";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 import BackIcon from "../../assets/img/icons/arrow-back.svg";
 import IconButton from "@material-ui/core/IconButton";
+import RiderIcon from '../../assets/img/icons/rider.svg'
 
 class RiderSignupPage extends React.Component {
     state = {
@@ -73,22 +74,15 @@ class RiderSignupPage extends React.Component {
                 </IconButton>
                 <GridContainer justify="center">
                     <GridItem>
-                            <form style={{margin:"30px 60px 60px 60px"}} onSubmit={this.signup}>
-                                <div className={classes.cardHeadline}>
+                        <form style={{margin:"60px 60px 60px 60px"}} onSubmit={this.login}>
+                            <div className={classes.cardHeadline} style={{marginBottom:0}}>
+                                    <img src={RiderIcon} alt={"rider icon"} style={{
+                                        height:'100px',
+                                        marginBottom:'14px'
+                                    }}/>
                                     <h1 className={classes.cardTitle}>Rider</h1>
                                     <h2 className={classes.cardSubhead}>Sign Up</h2>
                                 </div>
-                                
-                                <h4 className={classes.cardSubtitle}>Already Sign Up?
-                                    < Link
-                                        to="/rider-login">
-                                        LOGIN
-                                    </Link>
-                                </h4>
-                                <p
-                                    className={`${classes.description} ${classes.textCenter}`}
-                                >
-                                </p>
                                 <div>
                                     <CustomInput
                                         id="username"
@@ -165,12 +159,27 @@ class RiderSignupPage extends React.Component {
                                     />
                                 </div>
                                 <div className={classes.textCenter}>
-                                    <button className={classes.submitBtn} type="submit" >
+                                    <button className={"green-btn full"} style={{background:"#858fc9", fontSize:"1.2rem"}} type="submit" >
                                         {this.props.loggingIn
                                             ? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
                                             : "SIGN UP"
                                         }
                                    </button>
+                                </div>
+                                <div style={{
+                                    display:"flex",
+                                    justifyContent:'center',
+                                    alignItems:'center',
+                                    fontWeight:500,
+                                    marginTop:'20px',
+                                    color:"#aaa"}}>
+                                    <h4 style={{marginRight:'1rem'}}>
+                                        Already Sign Up?
+                                    </h4>
+                                    <Link
+                                        to="/rider-login">
+                                        LOGIN
+                                    </Link>
                                 </div>
                             </form>
                     </GridItem>

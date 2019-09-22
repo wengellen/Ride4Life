@@ -19,6 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import loginIcon from '../../assets/img/icons/Login.svg'
 import CarIcon from '../../assets/img/icons/car.svg'
 import RiderIcon from '../../assets/img/icons/rider.svg'
+import LogoutIcon from "../../assets/img/icons/Logout.svg";
 import DriverEditProfilePage from "../../views/driver/DriverEditProfilePage";
 import RiderEditProfilePage from "../../views/rider/RiderEditProfilePage";
 import {openModal} from "../../actions";
@@ -27,7 +28,7 @@ import {openModal} from "../../actions";
 const HeaderContainer = styled.header`
     max-width: 100%;
     margin: 0 auto;
-    //z-index:10000;
+    background:linear-gradient(160deg, #02ccba 0%, #AA7ECD 100%);
 `
 
 const NavContainer = styled.nav`
@@ -43,11 +44,6 @@ const NavContainer = styled.nav`
         background: transparent;
         color: white;
         transition: all 0.3s ease-in-out;
-
-        //&:hover{
-        //   color:pink;
-        //   transform:scale(1)
-        //}
     }
 
     ${minW('small')} {
@@ -147,72 +143,68 @@ class Header extends React.Component {
         this.setState({ mobileOpen: !this.state.mobileOpen })
     }
 
-    // handleOpenProfile = () => {
-    //     this.handleDrawerToggle()
-    //     this.props.history.push({
-    //         pathname: `/${this.props.user.role}/edit-profile`,
-    //         state: { prevPath: this.props.location.pathname },
-    //     })
-    // }
-
-    // handleEditProfile = () => {
-    //     this.props.history.push({
-    //         pathname: `/${this.props.user.role}/edit-profile`,
-    //         state: { prevPath: this.props.location.pathname },
-    //     })
-    // }
-
     logout() {
+        this.handleDrawerToggle()
         this.props.logoutUser()
         this.setState({ mobileOpen: false })
     }
     
-    navigateToUrl(url){
-        this.handleDrawerToggle();
-        this.props.history.push(url)
+    handleLogIn(){
+        this.handleDrawerToggle()
+        this.props.openPanel('login')
     }
     
-    drawer = (
-        <div>
-            <div />
-            <Divider />
-            <img src={RiderIcon}/>Rider
-            <List>
-                <ListItem button onClick={() => this.navigateToUrl('/rider-login')}>
-                    <ListItemIcon >
-                        <img src={loginIcon} alt={'login icon'} />{' '}
-                    </ListItemIcon>
-                    <ListItemText primary={'Login'} />
-                </ListItem>
-                <ListItem button onClick={() => this.navigateToUrl('/rider-signup')}>
-                    <ListItemIcon >
-                        <Face />
-                    </ListItemIcon>
-                    <ListItemText primary={'Sign Up'} />
-                </ListItem>
-            </List>
-            <Divider />
-            <img src={CarIcon}/>Diver
-            <List>
-                <ListItem button onClick={() => this.navigateToUrl('/driver-login')}>
-                    <ListItemIcon >
-                        <img src={loginIcon} alt={'login icon'} />{' '}
-                    </ListItemIcon>
-                    <ListItemText primary={'Login'} />
-                </ListItem>
-                <ListItem button  onClick={() => this.navigateToUrl('/driver-signup')}>
-                    <ListItemIcon>
-                        <Face />
-                    </ListItemIcon>
-                    <ListItemText primary={'Sign Up'} />
-                </ListItem>
-            </List>
-        </div>
-    )
+    handleSignup(){
+        this.handleDrawerToggle()
+        this.props.openPanel('signup')
+    }
 
     render() {
         const { handleOpenProfile, openPanel, user } = this.props
-        // console.log("user", user.avatar);
+    
+        const drawer = (
+            <div>
+                { ! localStorage.getItem('token')
+                    ?   <>
+                        <Divider />
+                        <List>
+                            <ListItem button onClick={() => this.handleLogIn()}>
+                                <ListItemIcon >
+                                    <img src={loginIcon} alt={'login icon'} />{' '}
+                                </ListItemIcon>
+                                <ListItemText primary={'Login'} />
+                            </ListItem>
+                            <ListItem button onClick={() => this.handleSignup()}>
+                                <ListItemIcon >
+                                    <Face />
+                                </ListItemIcon>
+                                <ListItemText primary={'Sign Up'} />
+                            </ListItem>
+                        </List>
+                    </>
+                    :   <>
+                        <Divider />
+                        <List>
+                            <ListItem button onClick={() => {
+                                this.handleDrawerToggle();
+                                handleOpenProfile();}}>
+                                <ListItemIcon >
+                                    <Face />
+                                </ListItemIcon>
+                                <ListItemText primary={'Profile'}  />
+                            </ListItem>
+                            <ListItem button onClick={() => this.logout()}>
+                                <ListItemIcon >
+                                    <img src={LogoutIcon} alt={'logout icon'} />
+                                </ListItemIcon>
+                                <ListItemText primary={'Logout'}  />
+                            </ListItem>
+                        </List>
+                    </>
+                }
+            </div>
+        )
+        
         return (
             <HeaderContainer className={'header'}>
                 <NavContainer className={'header__navbar'}>
@@ -229,7 +221,6 @@ class Header extends React.Component {
                             <span>RIDE FOR LIFE</span>
                         </Link>
                     </LogoContainer>
-                    
                     {
                         user
                         ? (
@@ -254,21 +245,20 @@ class Header extends React.Component {
                         )
                     }
                 </NavContainer>
-
                 <Drawer
                     className={'header__navbar--navigation'}
-                    style={{ zIndex: 9000, padding: '20px' }}
+                    style={{ zIndex: 9000,}}
                     open={this.state.mobileOpen}
                     onClose={this.handleDrawerToggle}
                 >
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={this.handleDrawerToggle}
-                    >
-                        <Close />
-                    </IconButton>
-                    {this.drawer}
+                    {/*<IconButton*/}
+                    {/*    color="inherit"*/}
+                    {/*    aria-label="open drawer"*/}
+                    {/*    onClick={this.handleDrawerToggle}*/}
+                    {/*>*/}
+                    {/*    <Close />*/}
+                    {/*</IconButton>*/}
+                    {drawer}
                 </Drawer>
             </HeaderContainer>
         )
@@ -286,7 +276,6 @@ const mapStateToProps = ({ riderReducer, driverReducer }) => {
 }
 const mapDispatchToProps = dispatch => ({
     handleOpenProfile: (role) => {
-        console.log('role', role)
         dispatch(openModal({shouldOpen:true, component: role ==='driver' ? DriverEditProfilePage : RiderEditProfilePage}))
     },
 });
