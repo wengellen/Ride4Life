@@ -16,10 +16,8 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import loginIcon from '../../assets/img/icons/Login.svg'
-import CarIcon from '../../assets/img/icons/car.svg'
-import RiderIcon from '../../assets/img/icons/rider.svg'
-import LogoutIcon from "../../assets/img/icons/Logout.svg";
+import LoginIcon from '../../assets/img/icons/Login.svg'
+import LogoutIcon from '../../assets/img/icons/Logout.svg'
 import DriverEditProfilePage from "../../views/driver/DriverEditProfilePage";
 import RiderEditProfilePage from "../../views/rider/RiderEditProfilePage";
 import {openModal} from "../../actions";
@@ -170,7 +168,7 @@ class Header extends React.Component {
                         <List>
                             <ListItem button onClick={() => this.handleLogIn()}>
                                 <ListItemIcon >
-                                    <img src={loginIcon} alt={'login icon'} />{' '}
+                                    <img src={LoginIcon} alt={'login icon'} />
                                 </ListItemIcon>
                                 <ListItemText primary={'Login'} />
                             </ListItem>
@@ -251,13 +249,6 @@ class Header extends React.Component {
                     open={this.state.mobileOpen}
                     onClose={this.handleDrawerToggle}
                 >
-                    {/*<IconButton*/}
-                    {/*    color="inherit"*/}
-                    {/*    aria-label="open drawer"*/}
-                    {/*    onClick={this.handleDrawerToggle}*/}
-                    {/*>*/}
-                    {/*    <Close />*/}
-                    {/*</IconButton>*/}
                     {drawer}
                 </Drawer>
             </HeaderContainer>
