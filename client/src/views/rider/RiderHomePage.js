@@ -4,12 +4,14 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
 import './DirectionMap.css'
 import './RiderHomePage.css'
+import {openModal} from "../../actions";
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import PhoneIcon from '@material-ui/icons/Phone'
 import placeholder from 'assets/img/placeholder.jpg'
+import DriverProfilePage from '../driver/DriverProfilePage'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
 
@@ -367,6 +369,8 @@ class RiderHomePage extends Component {
     loadDriverProfile = driver => {
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
+            this.props.openModal({shouldOpen:true, DriverProfilePage})
+    
             // this.props.history.push({
             // 	pathname:`/rider-home/driver/${driver._id}`,
             // 	state: { prevPath: this.props.location.pathname }})
@@ -752,8 +756,8 @@ export default withRouter(
             riderCancelRequest,
             confirmTrip,
             riderCancelTrip,
-
             cancelTripRequest,
+            openModal,
         }
     )(RiderHomePage)
 )
