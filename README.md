@@ -1,4 +1,4 @@
-## Ride-For-Life Front End: A Motorcycle Ambulance service app (Lambda Build Week)
+## Ride-For-Life Front End: A Motorcycle Ambulance service app  
 
 This is a React-redux project created for Lambda School's Build Week. 
 One of the biggest obstacles women face while pregnant is getting to a health facility to safely deliver. 
