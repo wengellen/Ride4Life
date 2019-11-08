@@ -1,10 +1,9 @@
 import React from 'react'
-import { Link, NavLink, withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
 import logo from 'assets/img/safe_logo.png'
-import placeholder from 'assets/img/placeholder.jpg'
 import { Avatar } from '@material-ui/core'
 import { connect } from 'react-redux'
 import Face from '@material-ui/icons/Face'
@@ -12,23 +11,22 @@ import Button from '@material-ui/core/Button'
 import styled from '@emotion/styled'
 import { minW } from '../../utils/helpers'
 import { Menu, Close } from 'emotion-icons/material'
-/** @jsx jsx */
-import { jsx, css } from '@emotion/core'
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import InboxIcon from '@material-ui/core/SvgIcon/SvgIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import MailIcon from '@material-ui/icons/Mail'
-import loginIcon from '../../assets/img/icons/Login.svg'
-import CarIcon from '../../assets/img/icons/car.svg'
-import RiderIcon from '../../assets/img/icons/rider.svg'
+import LoginIcon from '../../assets/img/icons/Login.svg'
+import LogoutIcon from '../../assets/img/icons/Logout.svg'
+import DriverEditProfilePage from "../../views/driver/DriverEditProfilePage";
+import RiderEditProfilePage from "../../views/rider/RiderEditProfilePage";
+import {openModal} from "../../actions";
+
 
 const HeaderContainer = styled.header`
     max-width: 100%;
     margin: 0 auto;
-    //z-index:10000;
+    background:linear-gradient(160deg, #02ccba 0%, #AA7ECD 100%);
 `
 
 const NavContainer = styled.nav`
@@ -44,11 +42,6 @@ const NavContainer = styled.nav`
         background: transparent;
         color: white;
         transition: all 0.3s ease-in-out;
-
-        //&:hover{
-        //   color:pink;
-        //   transform:scale(1)
-        //}
     }
 
     ${minW('small')} {
@@ -148,72 +141,68 @@ class Header extends React.Component {
         this.setState({ mobileOpen: !this.state.mobileOpen })
     }
 
-    handleOpenProfile = () => {
-        this.handleDrawerToggle()
-        this.props.history.push({
-            pathname: `/${this.props.user.role}/edit-profile`,
-            state: { prevPath: this.props.location.pathname },
-        })
-    }
-
-    handleEditProfile = () => {
-        this.props.history.push({
-            pathname: `/${this.props.user.role}/edit-profile`,
-            state: { prevPath: this.props.location.pathname },
-        })
-    }
-
     logout() {
+        this.handleDrawerToggle()
         this.props.logoutUser()
         this.setState({ mobileOpen: false })
     }
     
-    navigateToUrl(url){
-        this.handleDrawerToggle();
-        this.props.history.push(url)
+    handleLogIn(){
+        this.handleDrawerToggle()
+        this.props.openPanel('login')
     }
     
-    drawer = (
-        <div>
-            <div />
-            <Divider />
-            <img src={RiderIcon}/>Rider
-            <List>
-                <ListItem button onClick={() => this.navigateToUrl('/rider-login')}>
-                    <ListItemIcon >
-                        <img src={loginIcon} alt={'login icon'} />{' '}
-                    </ListItemIcon>
-                    <ListItemText primary={'Login'} />
-                </ListItem>
-                <ListItem button onClick={() => this.navigateToUrl('/rider-signup')}>
-                    <ListItemIcon >
-                        <Face />
-                    </ListItemIcon>
-                    <ListItemText primary={'Sign Up'} />
-                </ListItem>
-            </List>
-            <Divider />
-            <img src={CarIcon}/>Diver
-            <List>
-                <ListItem button onClick={() => this.navigateToUrl('/driver-login')}>
-                    <ListItemIcon >
-                        <img src={loginIcon} alt={'login icon'} />{' '}
-                    </ListItemIcon>
-                    <ListItemText primary={'Login'} />
-                </ListItem>
-                <ListItem button  onClick={() => this.navigateToUrl('/driver-signup')}>
-                    <ListItemIcon>
-                        <Face />
-                    </ListItemIcon>
-                    <ListItemText primary={'Sign Up'} />
-                </ListItem>
-            </List>
-        </div>
-    )
+    handleSignup(){
+        this.handleDrawerToggle()
+        this.props.openPanel('signup')
+    }
 
     render() {
-        const { openPanel, user } = this.props
-        // console.log("user", user.avatar);
+        const { handleOpenProfile, openPanel, user } = this.props
+    
+        const drawer = (
+            <div>
+                { ! localStorage.getItem('token')
+                    ?   <>
+                        <Divider />
+                        <List>
+                            <ListItem button onClick={() => this.handleLogIn()}>
+                                <ListItemIcon >
+                                    <img src={LoginIcon} alt={'login icon'} />
+                                </ListItemIcon>
+                                <ListItemText primary={'Login'} />
+                            </ListItem>
+                            <ListItem button onClick={() => this.handleSignup()}>
+                                <ListItemIcon >
+                                    <Face />
+                                </ListItemIcon>
+                                <ListItemText primary={'Sign Up'} />
+                            </ListItem>
+                        </List>
+                    </>
+                    :   <>
+                        <Divider />
+                        <List>
+                            <ListItem button onClick={() => {
+                                this.handleDrawerToggle();
+                                handleOpenProfile();}}>
+                                <ListItemIcon >
+                                    <Face />
+                                </ListItemIcon>
+                                <ListItemText primary={'Profile'}  />
+                            </ListItem>
+                            <ListItem button onClick={() => this.logout()}>
+                                <ListItemIcon >
+                                    <img src={LogoutIcon} alt={'logout icon'} />
+                                </ListItemIcon>
+                                <ListItemText primary={'Logout'}  />
+                            </ListItem>
+                        </List>
+                    </>
+                }
+            </div>
+        )
+        
         return (
             <HeaderContainer className={'header'}>
                 <NavContainer className={'header__navbar'}>
@@ -230,12 +219,11 @@ class Header extends React.Component {
                             <span>RIDE FOR LIFE</span>
                         </Link>
                     </LogoContainer>
-                    
                     {
                         user
                         ? (
                             <AuthButtonContainer>
-                                <Button onClick={this.handleEditProfile}>
+                                <Button onClick={()=> handleOpenProfile(user.role)}>
                                     <Avatar
                                         src={user.avatar}
                                         alt={'avatar'}
@@ -255,21 +243,13 @@ class Header extends React.Component {
                         )
                     }
                 </NavContainer>
-
                 <Drawer
                     className={'header__navbar--navigation'}
-                    style={{ zIndex: 9000, padding: '20px' }}
+                    style={{ zIndex: 9000,}}
                     open={this.state.mobileOpen}
                     onClose={this.handleDrawerToggle}
                 >
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={this.handleDrawerToggle}
-                    >
-                        <Close />
-                    </IconButton>
-                    {this.drawer}
+                    {drawer}
                 </Drawer>
             </HeaderContainer>
         )
@@ -285,10 +265,14 @@ const mapStateToProps = ({ riderReducer, driverReducer }) => {
         user: driverReducer.user || riderReducer.user,
     }
 }
-
+const mapDispatchToProps = dispatch => ({
+    handleOpenProfile: (role) => {
+        dispatch(openModal({shouldOpen:true, component: role ==='driver' ? DriverEditProfilePage : RiderEditProfilePage}))
+    },
+});
 export default withRouter(
     connect(
         mapStateToProps,
-        null
+        mapDispatchToProps
     )(Header)
 )

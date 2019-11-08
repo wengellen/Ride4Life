@@ -1,28 +1,19 @@
 
 // DRIVER
 import API  from "../utils/axiosAuth";
-import {CONFIRM_TRIP_REQUEST} from "./riderAction";
-import socket from "../utils/socketConnection";
 
-export const DRIVER_SIGNUP_STARTED = 'DRIVER_SIGNUP_STARTED'
-export const DRIVER_SIGNUP_SUCCESS = 'DRIVER_SIGNUP_SUCCESS'
-export const DRIVER_SIGNUP_FAILURE = 'DRIVER_SIGNUP_FAILURE'
-
-export const DRIVER_LOGIN_STARTED = 'DRIVER_LOGIN_STARTED'
-export const DRIVER_LOGIN_SUCCESS = 'DRIVER_LOGIN_SUCCESS'
-export const DRIVER_LOGIN_FAILURE = 'DRIVER_LOGIN_FAILURE'
-
-export const UPDATE_LOCATION_STARTED = 'UPDATE_LOCATION_STARTED'
-export const UPDATE_LOCATION_SUCCESS = 'UPDATE_LOCATION_SUCCESS'
-export const UPDATE_LOCATION_FAILURE = 'UPDATE_LOCATION_FAILURE'
-
-export const UPDATE_PROFILE_STARTED = 'UPDATE_PROFILE_STARTED'
-export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS'
-export const UPDATE_PROFILE_FAILURE = 'UPDATE_PROFILE_FAILURE'
-
-export const UPLOAD_PROFILE_STARTED = 'UPLOAD_PROFILE_STARTED'
-export const UPLOAD_PROFILE_SUCCESS = 'UPLOAD_PROFILE_SUCCESS'
-export const UPLOAD_PROFILE_FAILURE = 'UPLOAD_PROFILE_FAILURE'
+import {
+	DRIVER_SIGNUP_STARTED,
+	DRIVER_SIGNUP_SUCCESS,
+	DRIVER_SIGNUP_FAILURE,
+	DRIVER_LOGIN_STARTED,
+	DRIVER_LOGIN_SUCCESS,
+	DRIVER_LOGIN_FAILURE,
+	UPDATE_PROFILE_STARTED,
+	UPDATE_PROFILE_SUCCESS,
+	UPDATE_PROFILE_FAILURE,
+	
+} from "./actionTypes";
 
 export const driverCancelTrip = (socket, data) => dispatch => {
 	console.log('driverCancelTrip')
@@ -105,11 +96,8 @@ export const login_driver= (driver) => dispatch =>{
 
 export const uploadProfile = (formValue) => dispatch =>{
 	dispatch({type:UPDATE_PROFILE_STARTED})
-	console.log('uploadProfilePhoto formData', formValue)
-	console.log('uploadProfilePhoto token', localStorage.getItem('token'))
 	return (
 		API().post(`/api/driver/uploadProfile`, formValue)
-		// API.post(`/image-upload`, formData)
 		.then(res =>{
 			console.log('uploadProfile', res)
 			dispatch({type: UPDATE_PROFILE_SUCCESS, payload: res.data})

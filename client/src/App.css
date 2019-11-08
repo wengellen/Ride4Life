@@ -1,11 +1,11 @@
 .App {
-  background: white;
-  width: 100%;
-  height: 100vh;
-  backface-visibility:hidden;
-  overflow: hidden;
-  position:relative;
-  z-index:7000;
+    background: white;
+    width: 100%;
+    height: 100vh;
+    backface-visibility:hidden;
+    overflow: hidden;
+    position:relative;
+    z-index:7000;
 }
 
 
@@ -51,20 +51,20 @@
 }
 
 .app-content h1{
-   margin-bottom:20px;
-   font-size: 1.8rem;
-   color:#454F63;
+    margin-bottom:20px;
+    font-size: 1.8rem;
+    color:#454F63;
 }
 
- .green-btn{
-     width:140px;
-     border-radius:12px;
-     color:white;
-     font-weight: bold;
-     background-color: #4C6A2D;
-     margin-top:20px;
-     font-size:0.9rem;
- }
+.green-btn{
+    width:140px;
+    border-radius:12px;
+    color:white;
+    font-weight: bold;
+    background-color: #4C6A2D;
+    margin-top:20px;
+    font-size:0.9rem;
+}
 
 .green-btn.full{
     width:100%;
@@ -96,11 +96,11 @@ HEADER
 /**
  NavBar
  */
- /*.login-container{*/
- /*   display:flex;*/
- /*   width: 100%;*/
- /*   padding-right:6px;*/
- /*}*/
+/*.login-container{*/
+/*   display:flex;*/
+/*   width: 100%;*/
+/*   padding-right:6px;*/
+/*}*/
 
 /*.login-container button{*/
 /*    font-weight: bold;*/
@@ -140,22 +140,28 @@ HEADER
 /* Driver Profile
  */
 .driver-profile-container{
-  text-align: center;
-  width:100%;
-  background-image: linear-gradient(to right, rgba(255,255,255,1), #F7F7FA);
-  line-height:1rem;
-  padding:90px 1rem;
-  margin: 0 auto;
+    text-align: center;
+    width:100%;
+    height:100vh;
+    background-image: linear-gradient(to right, rgba(255,255,255,1), #F7F7FA);
+    line-height:1rem;
+    padding:90px 1rem;
+    margin: 0 auto;
+    transition:all 0.3s ease-in-out;
+    transform:translateX(-2000px);
 }
 
+.driver-profile-container.slideInPopup{
+    transform:translateX(0);
+}
 
 .driver-profile-img-container img.round{
-  width: 128px;
-  height: 124px;
-  border-radius:16px;
- }
+    width: 128px;
+    height: 124px;
+    border-radius:16px;
+}
 
- .driver-profile-main{
+.driver-profile-main{
     color:white;
     background-color: #353A50;
     width: 100%;
@@ -163,7 +169,7 @@ HEADER
     border-radius: 16px;
     position: relative;
     margin-bottom:1rem;
- }
+}
 
 .driver-profile-main textArea {
     width:100%;
@@ -182,86 +188,86 @@ HEADER
 }
 
 .driver-profile-main header{
-   align-items: center;
-   display:flex;
-   text-align: left;
+    align-items: center;
+    display:flex;
+    text-align: left;
 }
 
 .driver-profile-container > header > h1{
-   padding-top:1rem;
-   font-size: 1.4rem;
-   color:#454F63;
+    padding-top:1rem;
+    font-size: 1.4rem;
+    color:#454F63;
 }
 .driver-profile-container > header > h3{
-   padding-top:0.5rem;
-   color:#78849E;
+    padding-top:0.5rem;
+    color:#78849E;
 }
 
 .driver-profile-main .title{
-   margin: 20px;
+    margin: 20px;
 }
 
 .driver-profile-main p{
-  text-align: left;
-  font-size: 1rem;
-  line-height:1.5rem;
-  padding: 0.6rem 2px 1.2rem 2px;
-  /*padding:2px 0;*/
+    text-align: left;
+    font-size: 1rem;
+    line-height:1.5rem;
+    padding: 0.6rem 2px 1.2rem 2px;
+    /*padding:2px 0;*/
 }
 
 .driver-profile-img-avatar{
-  width:40px;
-  height:40px;
- }
+    width:40px;
+    height:40px;
+}
 
 .driver-profile-img-avatar img{
-  height: 100%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius:50%;
+    height: 100%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius:50%;
 }
 
 .fav-button-bar {
-  display: flex;
-  width: 100%;
-  height: 40px;
-  border-top: 1px solid rgba(100,100,100, 0.4);
-  position: relative;
-  padding-top:0.8rem;
+    display: flex;
+    width: 100%;
+    height: 40px;
+    border-top: 1px solid rgba(100,100,100, 0.4);
+    position: relative;
+    padding-top:0.8rem;
 }
 
 .fav-button-bar a{
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: white;
-  opacity: 0.6;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    opacity: 0.6;
 }
 
 .fav-button-bar strong{
-  margin-right: 6px;
-  font-size: 0.7rem;
+    margin-right: 6px;
+    font-size: 0.7rem;
 }
 
 .fav-button-bar .fav{
-  position: absolute;
-  right: 0;
+    position: absolute;
+    right: 0;
 }
 
 .fav-button-bar .chat{
-  position: absolute;
-  right: 70px;
+    position: absolute;
+    right: 70px;
 }
 
 .fav-button-bar .share{
-  position: absolute;
-  left: 0;
+    position: absolute;
+    left: 0;
 }
 
 /*
 *  Stats Container
  */
- .stats-container{
+.stats-container{
     display:flex;
     height: 88px;
     border-radius: 20px;
@@ -269,59 +275,59 @@ HEADER
     background-color:white;
     box-shadow: 0 2px 6px 0 rgba(0,0,0, 0.1);
     margin: 1rem 0;
- }
+}
 .stats-container div{
-  width:33%;
-  padding: 10px 20px;
-  border-right: 1px solid #eee;
-  font-size: 0.8rem;
+    width:33%;
+    padding: 10px 20px;
+    border-right: 1px solid #eee;
+    font-size: 0.8rem;
 }
 .stats-container div:last-of-type{
-  border-right: none
+    border-right: none
 }
 .stats-container h2{
-  color:#454F63;
+    color:#454F63;
 }
 .stats-container p{
-  color:#78849E;
-  font-size: 0.4rem;
+    color:#78849E;
+    font-size: 0.4rem;
 }
 
 /**
   Cars Container
  */
- .cars-container{
-   text-align: left;
-   width: 100%;
- }
+.cars-container{
+    text-align: left;
+    width: 100%;
+}
 .cars-container h3{
-  margin: 1.2rem;
-  color:#78849E;
+    margin: 1.2rem;
+    color:#78849E;
 }
 .car-img-container{
-  width: 100%;
-  height: 100px;
+    width: 100%;
+    height: 100px;
 }
 .car-img-container img{
-  max-width: 100%;
-  border-radius: 12px;
+    max-width: 100%;
+    border-radius: 12px;
 }
 
 
 /**
 Edit Button
  */
- .edit-btn-container{
-   position: absolute;
-   top: 20px;
-   right: 20px;
-   color: #bbb;
-   transition: all 0.6s ease;
- }
+.edit-btn-container{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #bbb;
+    transition: all 0.6s ease;
+}
 
 .edit-btn-container:hover{
-  color: white;
-  transform: scale(1.2);
+    color: white;
+    transform: scale(1.2);
 }
 
 
@@ -329,7 +335,7 @@ Edit Button
 Review Container
  */
 
- .review-container{
+.review-container{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -339,26 +345,26 @@ Review Container
     border-radius: 10px;
     padding: 14px;
     line-height:1.2rem;
- }
+}
 
 .review-container > h2{
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  border-radius: 10px;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
 }
 
 .star-container{
-  position: absolute;
-  right: 20px;
-  top: 14px;
-  justify-self : flex-start ;
+    position: absolute;
+    right: 20px;
+    top: 14px;
+    justify-self : flex-start ;
 }
 
 .review-container p{
-   margin-top: 2px;
-   padding:0 2px;
-   text-align: left;
-   font-size: 1rem;
+    margin-top: 2px;
+    padding:0 2px;
+    text-align: left;
+    font-size: 1rem;
 }
 
 .Star {
@@ -429,11 +435,11 @@ Review Container
  REVIEW
  */
 .driver-review-container.review {
-     display:flex;
-     flex-direction: column;
-     align-items: center;
-     width: 90%;
- }
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+}
 
 .driver-profile-main.review > h1{
     margin-top: 20px;
@@ -464,29 +470,29 @@ Review Container
     text-align: center;
 }
 
- /**
-    Appbar
-  */
-  .icon-navbar{
+/**
+   Appbar
+ */
+.icon-navbar{
     display:flex;
     justify-content: space-between;
     margin-right:20px;
-  }
+}
 
 /* Sliding Panel */
 .sliding-panel{
-      color:white;
-      position:absolute;
-      display:flex;
-      align-items: center;
-      flex-direction: column;
-      width:100%;
-      padding:20px;
-      /*height: 100vh;*/
-      transform: translateY(-2000px);
-      transition: all 0.5s ease-in-out;
-      z-index:3;
-      box-shadow: 0 2px 6px 0 rgba(0,0,0, 0.2);
+    color:white;
+    position:absolute;
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    width:100%;
+    padding:20px;
+    /*height: 100vh;*/
+    transform: translateY(-2000px);
+    transition: all 0.5s ease-in-out;
+    z-index:3;
+    box-shadow: 0 2px 6px 0 rgba(0,0,0, 0.2);
 }
 
 .sliding-panel h1{

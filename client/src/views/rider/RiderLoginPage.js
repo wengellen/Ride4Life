@@ -13,6 +13,9 @@ import {Link} from "react-router-dom";
 import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.jsx";
 import IconButton from "@material-ui/core/IconButton";
 import BackIcon from "../../assets/img/icons/arrow-back.svg";
+import RiderIcon from '../../assets/img/icons/rider.svg'
+import CarIcon from "../../assets/img/icons/car.svg";
+
 // import SearchableMap from "../map/SearchableMap";
 class RiderLoginPage extends React.Component {
 	state = {
@@ -23,7 +26,6 @@ class RiderLoginPage extends React.Component {
 		isEditing: false,
 		user:null
 	};
-	unsubscribeFromAuth = null;
 	
 	handleChange = e => {
 		this.setState({
@@ -46,6 +48,7 @@ class RiderLoginPage extends React.Component {
 		})
 		this.props.login_rider(this.state.credentials)
 		.then(res => {
+			console.log(res)
 			if(res && res.message){
 				this.props.history.push('/rider-home/standby');
 			}else{
@@ -67,21 +70,15 @@ class RiderLoginPage extends React.Component {
 				</IconButton>
 					<GridContainer justify="center">
 						<GridItem  >
-								<form style={{margin:"30px 60px 60px 60px"}} onSubmit={this.login}>
-									<div className={classes.cardHeadline}>
+								<form style={{margin:"60px 60px 60px 60px"}} onSubmit={this.login}>
+									<div className={classes.cardHeadline} style={{marginBottom:0}}>
+										<img src={RiderIcon} alt={"rider icon"} style={{
+											height:'100px',
+											marginBottom:'14px'
+										}}/>
 										<h1 className={classes.cardTitle}>Rider</h1>
 										<h2 className={classes.cardSubhead}>Login</h2>
 									</div>
-									<h4 className={classes.cardSubtitle}>No Account?
-										<Link
-											to="/rider-signup">
-											Sign Up
-										</Link>
-									</h4>
-									<p
-										className={`${classes.description} ${classes.textCenter}`}
-									>
-									</p>
 									<div>
 										<CustomInput
 											id="username"
@@ -121,12 +118,27 @@ class RiderLoginPage extends React.Component {
 										/>
 									</div>
 									<div className={classes.textCenter}>
-										<button className={"green-btn full"} type="submit" >
+										<button className={"green-btn full"} style={{background:"#858fc9", fontSize:"1.2rem"}} type="submit" >
 											{this.props.loggingIn
 											? <Loader type="ThreeDots" color="#1f2a38" height="12" width="26" />
 											: "Log in"
 											}
 										</button>
+									</div>
+									<div style={{
+										display:"flex",
+										justifyContent:'center',
+										alignItems:'center',
+										fontWeight:500,
+										marginTop:'20px',
+										color:"#aaa"}}>
+										<h4 style={{marginRight:'1rem'}}>
+											No Account?
+										</h4>
+										<Link
+											to="/rider-signup">
+											SIGN UP
+										</Link>
 									</div>
 								</form>
 						</GridItem>
