@@ -27,7 +27,7 @@
     font-weight:600;
     width:100%;
     border:0;
-    background-color:transparent;
+    /*background-color:transparent;*/
     margin:0;
     color:rgba(0,0,0,.7);
     padding:14px 40px 14px 12px;
@@ -36,6 +36,9 @@
     overflow:hidden;
     border-radius: 0 0 0 0;
     text-align: center;
+    color:white;
+    background-color:#444F63;
+
 }
 .mapbox-directions-origin input[type='text'] {
     box-shadow:0 1px 0 0 #ddd;
@@ -48,7 +51,10 @@
     outline:thin dotted\8;
 }
 
-.mapboxgl-ctrl-geocoder .geocoder-icon-search {
+.mapboxgl-ctrl-geocoder .geocoder-icon-search
+ {
+    background: url("../../assets/img/search.svg");
+    width:50px;
     position:absolute;
     top:10px;
     left:10px;
@@ -61,7 +67,7 @@
     cursor:pointer;
 }
 .mapboxgl-ctrl-geocoder .geocoder-pin-right * {
-    background-color:#fff;
+    /*background-color:#fff;*/
     z-index:2;
     position:absolute;
     right:10px;
@@ -153,7 +159,11 @@
     display:none;
 }
 .geocoder-icon-close {
-    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgdmVyc2lvbj0iMS4xIiBoZWlnaHQ9IjIwIiB3aWR0aD0iMjAiPg0KICA8cGF0aCBkPSJtNSA1IDAgMS41IDMuNSAzLjUtMy41IDMuNSAwIDEuNSAxLjUgMCAzLjUtMy41IDMuNSAzLjUgMS41IDAgMC0xLjUtMy41LTMuNSAzLjUtMy41IDAtMS41LTEuNSAwLTMuNSAzLjUtMy41LTMuNS0xLjUgMHoiIGZpbGw9IiMwMDAiLz4NCjwvc3ZnPg==);
+    background-image:url("../../assets/img/x.svg");
+    background-color: transparent;
+    color:white;
+    /*width:40px;*/
+    /*height:40px;*/
 }
 .geocoder-icon-loading {
     background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiB2aWV3Qm94PSIwIDAgMjAgMjAiPjxwYXRoIGQ9Im0xMCAyIDAgMy4zYzIuNiAwIDQuNyAyLjEgNC43IDQuN2wzLjMgMGMwLTQuNC0zLjYtOC04LTh6IiBmaWxsPSIjMDAwIi8+PHBhdGggZD0iTTEwIDJDNi44IDIgMy43IDQuMSAyLjYgNy4xIDEuNCAxMCAyLjEgMTMuNiA0LjUgMTUuOGMyLjQgMi40IDYuNCAyLjkgOS40IDEuMiAyLjUtMS40IDQuMi00LjIgNC4yLTctMS4xIDAtMi4yIDAtMy4zIDAgMC4xIDIuMi0xLjcgNC4zLTMuOCA0LjZDOC43IDE1IDYuNCAxMy44IDUuNyAxMS43IDQuOCA5LjcgNS42IDcuMSA3LjYgNiA4LjMgNS42IDkuMSA1LjMgMTAgNS4zYzAtMS4xIDAtMi4yIDAtMy4zeiIgc3R5bGU9ImZpbGw6IzAwMDtvcGFjaXR5OjAuMiIvPjwvc3ZnPg==);
@@ -165,13 +175,11 @@
 
 /* Basics */
 .mapboxgl-ctrl-directions {
-
     width: 100%;
     max-width:100%;
     border-radius: 12px;
     background-color:white;
     padding:0;
-
 }
 
 
@@ -209,7 +217,6 @@
     bottom:0;
     overflow:auto;
     overflow-x:hidden;
-    border-radius: 12px;
     /*display:none;*/
 }
 .directions-control.directions-control-inputs {
@@ -240,6 +247,7 @@
 /*    content:'Where are you going?';*/
 /*    color:lightgrey;*/
 /*    padding-left:6px;*/
+/*    background-color: #2A2E43;*/
 /*}*/
 
 .map-wrapper.rider .mapbox-directions-origin{
@@ -298,7 +306,7 @@
 .mapbox-directions-inputs button {
     padding:0;
     margin:0;
-    background-color:#fff;
+    background-color:transparent;
     border:none;
     cursor:pointer;
 }
@@ -442,9 +450,12 @@
 }
 
 .mapbox-directions-error {
-    padding:20px;
-    font-size:20px;
-    line-height:25px;
+    padding:0px;
+    font-size:16px;
+    text-align:center;
+    background-color:#2A2E43;
+    /*padding-top:*/
+    color: #FF4F9A;
 }
 .mapbox-directions-step-distance {
     color:rgba(255,255,255,.5);

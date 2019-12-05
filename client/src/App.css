@@ -9,6 +9,7 @@
 }
 
 
+
 /** Form Sign up {age */
 .form-container{
     max-width: 500px;
@@ -389,21 +390,38 @@ Review Container
     box-shadow: 0 2px 20px 0 rgba(0,0,0,0.18) ;
     bottom:-600px;
     position:absolute;
-    /*display:none;*/
-    /*position: absolute;*/
-    /*z-index:100;*/
     transition: all 1s cubic-bezier(0, 1, 0.5, 1);
-    /*bottom:0;*/
-    /*transform: translateY(-500px);*/
 }
 
 .trip-estimate-container.show{
-    /*display:block;*/
     bottom:50px;
-    /*bottom:300px;*/
-    /*transform: translateY(-500px);*/
 }
 
+.icon-box {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color:#2A2E43;
+    border-radius: 12px;
+    width:134px;
+    height:120px;
+    margin-right:2rem;
+    border:1px solid #222;
+}
+
+.icon-box h3{
+    font-size:13px;
+    color:white;
+
+}
+
+.icon-box img{
+    display:inline-block;
+    width:50px;
+    height:50px;
+    margin-bottom:8px;
+}
 
 .brown-btn{
     background: #A39280;
@@ -620,32 +638,48 @@ status-panel
 .status-panel{
     width:100%;
     text-align: center;
-    padding-bottom:24px;
+    padding-top: 2rem;
+    /*padding-bottom:24px;*/
+    padding-bottom:2rem;
+
     /*padding-top:24px;*/
     position:absolute;
-    bottom:0;
-    background-color: white;
+    background-color: #2A2E43;
+    border-radius: 12px 12px 0 0;
     z-index:0;
+    bottom:-30px;
+    /*padding-top: 1rem;*/
+    /*padding-bottom:60px;*/
 }
 
-.status-panel.standby{
-    bottom:0;
-    padding-top: 1rem;
-    padding-bottom:60px;
+.status-panel__header{
+    font-size:1.2rem;
+    margin-top:2rem;
+    margin-bottom: 1rem;
+    color:white;
 }
 
-.status-panel.standby h1{
-    margin-bottom: 0.8rem;
+.status-panel__standby{
+    padding-bottom:100px;
 }
 
 .driver-name-your-fare-container{
     display:flex;
     flex-direction: column;
     align-items: center;
-    padding: 0px 40px 0px 40px;
-    margin-top: 1rem;
+    /*padding: 0px 40px 0px 40px;*/
+    /*margin-top: 2rem;*/
     margin-bottom: 1rem;
     justify-content: center;
+    border: none;
+    border-radius: 20px;
+    margin-top: 0;
+    padding: 2px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    width: 100%;
+    overflow:hidden;
+    transition:all 0.3s ease-in-out;
 }
 .driver-name-your-fare-container h2{
     font-size: 2rem;
@@ -655,11 +689,11 @@ status-panel
     margin-top:1rem;
 }
 
-.status-panel h1{
-    font-size:1.4rem;
-    color:#505D68;
-    margin-bottom:12px;
-}
+/*.status-panel h1{*/
+/*    font-size:1.4rem;*/
+/*    color:#505D68;*/
+/*    margin-bottom:12px;*/
+/*}*/
 
 .status-panel p{
     font-size:1rem;
@@ -678,6 +712,7 @@ status-panel
 }
 .status-panel button:disabled{
     background-color:#C2D1D9;
+    color:#2A2E43;
 }
 
 
@@ -685,8 +720,8 @@ status-panel
     border-radius: 0 0 16px 16px;
     width:120px;
     padding: 1rem 1rem;
-    border:1px solid #505D68;
-    /*box-shadow: inset 0 0 15px 20px #eff;*/
+    background-color: #3ACCE1;
+    font-weight:900;
 }
 
 /* DriverEditProfilePage */

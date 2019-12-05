@@ -253,7 +253,7 @@ class RiderHomePage extends Component {
                     endLocationAddress: destInput.value,
                 })
     
-                if(this.priceInput){
+                if(this.priceInput && this.priceInput.current){
                     this.priceInput.current.focus();
                 }
 			})
@@ -388,7 +388,6 @@ class RiderHomePage extends Component {
 
     cancelTrip = () => {
         this.resetTrip()
-
         this.props.riderCancelTrip(socket, {
             rider: JSON.parse(localStorage.getItem('user')),
             tripId: this.state.tripId,
@@ -447,9 +446,7 @@ class RiderHomePage extends Component {
         } = this.state
 
         const currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
-
         // console.log("this.props.location.pathname",path)
-
         // console.log('tripStatus',tripStatus)
         // if(tripStatus !== path){
         // NOT Allowed
@@ -463,27 +460,14 @@ class RiderHomePage extends Component {
             switch (tripStatus) {
                 case 'standby':
                     return (
-                        <div className={'status-panel standby'}>
-                            <h1 className={`drivers-nearby-header}`}>
+                        <div className={'status-panel status-panel__standby'}>
+                            <h1 className={`status-panel__header`}>
                                 {!this.state.endLocation ? `Where are you going?` : 'Name your fare!'}
                             </h1>
                           
                             <div
                                 className={'driver-name-your-fare-container'}
                                 css={css`
-                                    align-items: center;
-                                    border: none;
-                                    border-radius: 20px;
-                                    margin-top: 0;
-                                    padding: 2px 12px;
-                                    font-size: 0.8rem;
-                                    font-weight: 500;
-                                    width: 100%;
-                                    overflow:hidden;
-                                    transition:all 0.3s ease-in-out;
-                                    height: ${this.state.endLocation
-                                        ? '120px'
-                                        : '0px'};
                                     display: ${this.state.endLocation
 									? 'flex'
 									: 'none'};
@@ -500,7 +484,7 @@ class RiderHomePage extends Component {
                                 />
                                 <button
                                     className={
-                                        'driver-item-accept-button main full'
+                                        'driver-name-your-fare__button'
                                     }
                                     disabled={!this.state.tripFare}
                                     onClick={e => this.handleRequestRide(e)}
@@ -514,27 +498,27 @@ class RiderHomePage extends Component {
                 case 'requesting':
                     return (
                         <div className={'status-panel'}>
-                            <h1 className={`drivers-nearby-header show-bg`}>
+                            <h1 className={`status-panel__header`}>
                                 {headerMessage}
                             </h1>
                             <Loader
                                 type="Rings"
-                                color="#424B5A"
+                                color="#3ACCE1"
                                 height={100}
                                 width={100}
                             />
-                            <Button
-                                className={'request-ride-button bordered'}
+                            <button
+                                className={'request-ride-button'}
                                 onClick={this.handleCancelRideRequest}
                             >
                                 CANCEL REQUEST
-                            </Button>
+                            </button>
                         </div>
                     )
                 case 'driversFound':
                     return (
                         <div className={'status-panel'}>
-                            <h1 className={`drivers-nearby-header show-bg`}>
+                            <h1 className={`status-panel__header`}>
                                 {headerMessage}
                             </h1>
                             <p></p>
@@ -611,7 +595,7 @@ class RiderHomePage extends Component {
                 case 'confirmed':
                     return (
                         <div className={'status-panel'}>
-                            <h1 className={`drivers-nearby-header show-bg `}>
+                            <h1 className={`status-panel__header`}>
                                 {headerMessage}
                             </h1>
                             <div className="drivers-nearby-container-list">
@@ -687,7 +671,7 @@ class RiderHomePage extends Component {
                 case 'trip-ended':
                     return (
                         <div className={'status-panel'}>
-                            <h1 className={`drivers-nearby-header show-bg `}>
+                            <h1 className={`status-panel__header`}>
                                 {headerMessage}
                             </h1>
                             <div className="drivers-nearby-container-list"></div>

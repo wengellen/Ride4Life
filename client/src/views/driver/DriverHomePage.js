@@ -15,6 +15,9 @@ import {
 } from '../../actions'
 import IconButton from "@material-ui/core/IconButton";
 import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
+import CarIcon from '../../assets/img/icons/icons-car-front.svg'
+import RiderIcon from '../../assets/img/icons/rider.svg'
+
 import  PhoneIcon from '@material-ui/icons/Phone'
 // import socket from "../../utils/socketConnection";
 import Button from "@material-ui/core/Button";
@@ -411,22 +414,22 @@ class DriverHomePage extends Component {
             switch(path) {
                 case "offline": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header`}>Ready to drive?</h1>
+                        <h1 className={`status-panel__header`}>Ready to drive?</h1>
                         <p>
                         </p>
-                        <Button className={'request-ride-button main'} onClick={this.handleDriverGoOnline}>GO ONLINE</Button>
+                        <button className={'request-ride-button'} onClick={this.handleDriverGoOnline}>GO ONLINE</button>
                     </div>
                 )
                 case "standby": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
-                        <Loader type="Rings" color="#424B5A" height={100} width={100} />
-                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
+                        <Loader type="Rings" color="#3ACCE1" height={100} width={100} />
+                        <button  className={'request-ride-button'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</button>
                     </div>
                 )
                 case "requestIncoming": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
+                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
                         <div className="driver-item-container-list requesting">
                             <div className="driver-img-container-list">
                                 <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
@@ -440,24 +443,28 @@ class DriverHomePage extends Component {
                             </div>
                         </div>
                         <div className={"trip-destination-container"}>
-                            <div className={"trip-destination-left"}>
-                                <h2>{requestDetails.endLocationAddress}</h2>
-                                <span className={"tag orange"}>{requestDetails.duration} mins</span>
-                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                            <div className={"icon-box"}>
+                                <img src={CarIcon} alt={"rider icon"}/>
+                                <h3>24 miles</h3>
                             </div>
-                            <button className={"driver-item-accept-button requesting main"}
+                            
+                            <div className={"trip-destination-left"}>
+                                <h1>Destination</h1>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                            </div>
+                            <button className={"driver-item-accept-button"}
                                     onClick={(e)=> this.handleAcceptTrip(e)}>
                                 <h2>${requestDetails.tripFare}</h2>
                                 <h3>OFFER</h3>
                             </button>
                         </div>
-                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                        <button  className={'request-ride-button'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</button>
                     </div>
                 )
                 
                 case "waitingForConfirmation": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header  show-bg`}>{headerMessage}</h1>
+                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
                         <div className="driver-item-container-list requesting">
                             <div className="driver-img-container-list">
                                 <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
@@ -471,22 +478,36 @@ class DriverHomePage extends Component {
                             </div>
                         </div>
                         <div className={"trip-destination-container"}>
-                            <div className={"trip-destination-left"}>
-                                <h2>{requestDetails.endLocationAddress}</h2>
-                                <span className={"tag orange"}>{requestDetails.duration} mins</span>
-                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                            <div className={"icon-box"}>
+                                <img src={CarIcon} alt={"rider icon"}/>
+                                <h3>24 miles</h3>
                             </div>
-                            <button className={"driver-item-accept-button requesting main"}>
-                                <Loader type="ThreeDots" color="#fff" height={40} width={40} />
+        
+                            <div className={"trip-destination-left"}>
+                                <h1>Destination</h1>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                            </div>
+                            <button className={"driver-item-accept-button"}>
+                                <Loader type="ThreeDots" color="#2A2E43" height={40} width={40} />
                             </button>
                         </div>
+                        {/*<div className={"trip-destination-container"}>*/}
+                        {/*    <div className={"trip-destination-left"}>*/}
+                        {/*        <h2>{requestDetails.endLocationAddress}</h2>*/}
+                        {/*        <span className={"tag orange"}>{requestDetails.duration} mins</span>*/}
+                        {/*        <span className={"tag blue"}>{requestDetails.distance} mi</span>*/}
+                        {/*    </div>*/}
+                        {/*    <button className={"driver-item-accept-button"}>*/}
+                        {/*        <Loader type="ThreeDots" color="#2A2E43" height={40} width={40} />*/}
+                        {/*    </button>*/}
+                        {/*</div>*/}
                         
-                        <Button  className={'request-ride-button bordered'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</Button>
+                        <button  className={'request-ride-button'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</button>
                     </div>
                 )
                 case "confirmed": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
                         <div
                             className="driver-item-container-list"
                         >
@@ -503,6 +524,7 @@ class DriverHomePage extends Component {
                             <div className={"trip-destination-container"}>
                                 <div className={"trip-destination-left"}>
                                     <h2>{requestDetails.endLocationAddress}</h2>
+                                 
                                     <span className={"tag white"}>{requestDetails.duration} mins</span>
                                     <span className={"tag blue"}>{requestDetails.distance} mi</span>
                                     <span className={"tag pink"}>${requestDetails.tripFare}</span>
@@ -521,13 +543,13 @@ class DriverHomePage extends Component {
                                 }
                             </div>
                         </div>
-                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <button className={'request-ride-button'} onClick={this.cancelTrip}>CANCEL TRIP</button>
                         <button className="main" onClick={this.handleDriveToUser}>PICKUP RIDER</button>
                     </div>
                 )
                 case "pickup": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header show-bg`}>{headerMessage}</h1>
+                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
                         <div
                             className="driver-item-container-list"
                         >
@@ -562,13 +584,13 @@ class DriverHomePage extends Component {
                                 }
                             </div>
                         </div>
-                        <Button className={'request-ride-button bordered'} onClick={this.cancelTrip}>CANCEL TRIP</Button>
+                        <button className={'request-ride-button'} onClick={this.cancelTrip}>CANCEL TRIP</button>
                         <button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>
                     </div>
                 )
                 case "trip-ended": return (
                     <div className={'status-panel'}>
-                        <h1 className={`drivers-nearby-header show-bg `}>{headerMessage}</h1>
+                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
                         <div className="drivers-nearby-container-list">Trip Ended</div>
                     </div>
                 )
@@ -576,8 +598,8 @@ class DriverHomePage extends Component {
             }
         }
         return (
-            <div className="map-wrapper driver">
-                <div className="map-container">
+            <div className="map-wrapper ">
+                <div className="map-container driver">
                     <div
                         className="map-wrapper driver"
                         style={{ position: 'relative', display: 'flex' }}>

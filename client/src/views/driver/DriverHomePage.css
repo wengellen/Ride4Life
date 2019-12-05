@@ -82,25 +82,25 @@
 }
 
 .trip-destination-container{
-    background-color: #F2F5F7;
+    background-color:#353A50;
     display:flex;
     justify-content: space-between;
     align-items: center;
     margin:1.2rem;
     border-radius:12px ;
-    padding:0.6rem 1.2rem;
+    padding:2rem;
     line-height: 1.2rem;
+    border:1px solid #111;
 }
 
 .driver-item-container-list.requesting {
     border-bottom: none;
     justify-content: flex-start;
-    padding: 0.5rem 1rem;
     border-bottom: none;
 }
 
-.driver-item-accept-button.requesting{
-    border-radius: 16px;
+.driver-item-accept-button{
+    border-radius: 12px;
     display:flex;
     flex-flow:column wrap;
     font-size:0.7rem;
@@ -109,6 +109,17 @@
     line-height: 1.4rem;
     outline: none;
     margin-left:1rem;
+    background-color:#ADE6EE;
+    padding:8px 16px;
+    border:none;
+}
+.driver-name-your-fare__button{
+    border-radius: 0 0 16px 16px;
+    width: 120px;
+    padding: 1rem 1rem;
+    background-color: #3ACCE1;
+    font-weight: 900;
+    font-size:16px;
 }
 
 .driver-item-accept-button.requesting div{
@@ -120,10 +131,21 @@
     text-align: left;
 }
 
+.trip-destination-left > h1{
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    margin-bottom:1rem;
+    color:rgba(255,255,255,0.2);
+    font-weight: 700;
+}
+
 .trip-destination-left > h2{
-    font-size: 0.9rem;
-    color:#4A4A4A;
-    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    margin-bottom:10px;
+    color:#ADE6EE;
+    font-weight: 700;
+    line-height:1.6rem;
 }
 .trip-destination-left > span{
     float:left;
@@ -131,20 +153,24 @@
     margin-right:0.5rem;
 }
 .tag{
-    padding:0px 8px;
+    padding:1px 12px;
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.8rem;
     left:0;
+    color:white;
 }
 .tag.blue{
-    background-color: #ADE6EE;
+    /*background-color: #ADE6EE;*/
 }
 .tag.white{
-    background-color: white;
+    /*background-color: white;*/
 }
 .tag.pink{
-    background-color: pink;
+    /*background-color: pink;*/
+}
+.tag.orange{
+    /*background-color:#ADE6EE;*/
 }
 
 .driver-item-price.requesting{

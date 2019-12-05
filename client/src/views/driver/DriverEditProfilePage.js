@@ -68,7 +68,7 @@ class DriverEditProfilePage extends React.Component {
     }
 
     render() {
-        const { classes, user } = this.props
+        const { classes } = this.props
         const { profile} = this.state
        return  (
            <div css={css`
