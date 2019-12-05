@@ -266,16 +266,11 @@ class DriverHomePage extends Component {
         })
     }
     
-    componentWillUnmount() {
-        // socket.disconnect()
+    componentWillUnmount = () => {
         if (this.map) {
-            setTimeout(() => {
-                console.log('componentWillUnmount is called')
-                return this.map.remove()
-            }, 1000)
+            setTimeout(() => this.map.remove(), 3000)
         }
     }
-    
     
     resetTrip = () => {
         this.directions.removeRoutes();

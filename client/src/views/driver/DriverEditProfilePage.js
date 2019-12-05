@@ -23,6 +23,7 @@ import { jsx, css } from "@emotion/core";
 class DriverEditProfilePage extends React.Component {
     state = {
         isEditing: false,
+        isLoggingOut:false,
         profile: null,
         prevPath:null
     }
@@ -88,7 +89,7 @@ class DriverEditProfilePage extends React.Component {
                                             className='avatar-input'
                                             name='avatar'
                                             maxValue={200}
-                                            value={user.avatar}
+                                            // value={user.avatar}
                                         />
                                     </div>
                                 </div>
@@ -117,28 +118,6 @@ class DriverEditProfilePage extends React.Component {
                                             ),
                                         }}
                                     />
-                                    {/*<CustomInput*/}
-                                    {/*    id="password"*/}
-                                    {/*    formControlProps={{*/}
-                                    {/*        fullWidth: true,*/}
-                                    {/*    }}*/}
-                                    {/*    inputProps={{*/}
-                                    {/*        placeholder: 'Password',*/}
-                                    {/*        type: 'password',*/}
-                                    {/*        onChange: this.handleChange,*/}
-                                    {/*        value:  profile.password,*/}
-                                    {/*        name: 'password',*/}
-                                    {/*        startAdornment: (*/}
-                                    {/*            <InputAdornment position="start">*/}
-                                    {/*                <Lock*/}
-                                    {/*                    className={*/}
-                                    {/*                        classes.inputIconsColor*/}
-                                    {/*                    }*/}
-                                    {/*                />*/}
-                                    {/*            </InputAdornment>*/}
-                                    {/*        ),*/}
-                                    {/*    }}*/}
-                                    {/*/>*/}
                                     <CustomInput
                                         id="email"
                                         formControlProps={{
@@ -235,7 +214,7 @@ class DriverEditProfilePage extends React.Component {
         )
     }
 }
-const mapStateToProps = ({ driverReducer }) => {
+const mapStateToProps = ({ driverReducer }, ) => {
     return  {
         driverSignupStarted: driverReducer.driverSignupStarted,
         serverMessage: driverReducer.serverMessage,

@@ -247,14 +247,16 @@ class RiderHomePage extends Component {
                 let destInput = document.querySelectorAll(
                     '.mapbox-directions-destination input'
                 )[0]
-    
-                this.priceInput.current.focus();
-                
+			
                 this.setState({
                     endLocation: e.feature.geometry.coordinates,
                     endLocationAddress: destInput.value,
                 })
-            })
+    
+                if(this.priceInput){
+                    this.priceInput.current.focus();
+                }
+			})
 
             this.directions.on('route', e => {
                 console.log('e', e)
@@ -262,8 +264,6 @@ class RiderHomePage extends Component {
                     const { distance, legs, duration } = e.route[0]
                     this.setState({
                         endLocationAddress: legs[0].summary,
-                        // duration: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > span")[0].textContent.slice(0, -3) ,
-                        // distance: document.querySelectorAll(".mapbox-directions-component.mapbox-directions-route-summary > h1")[0].textContent.slice(0, -2) ,
                     })
                 }
             })
@@ -362,7 +362,7 @@ class RiderHomePage extends Component {
         this.setState({
             showEstimate: false,
             currentDriver: driver,
-            headerMessage: 'Your driver is on his way',
+            headerMessage: 'Your driver is on the way',
             tripStatus: 'confirmed',
         })
 
@@ -371,7 +371,7 @@ class RiderHomePage extends Component {
     loadDriverProfile = driver => {
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
-            console.log('getDriverByIdeSuccess')
+            console.log('getDriverByIdeSuccess', driver._id)
             this.props.openModal({shouldOpen:true, component:DriverProfilePage});
     
             // this.props.history.push({
