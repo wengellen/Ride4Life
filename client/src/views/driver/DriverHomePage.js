@@ -14,16 +14,14 @@ import {
     driverCancelTrip,
 } from '../../actions'
 import IconButton from "@material-ui/core/IconButton";
-import  ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import CarIcon from '../../assets/img/icons/icons-car-front.svg'
 import RiderIcon from '../../assets/img/icons/rider.svg'
-
-import  PhoneIcon from '@material-ui/icons/Phone'
 // import socket from "../../utils/socketConnection";
-import Button from "@material-ui/core/Button";
 import io from "socket.io-client"
 import {Avatar} from "@material-ui/core";
 import placeholder from 'assets/img/placeholder.jpg'
+import IconMessage from 'assets/img/message-square.svg'
+import IconPhone from 'assets/img/phone.svg'
 
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
@@ -70,7 +68,7 @@ class DriverHomePage extends Component {
             this.setState({
                 driverStatus:"requestIncoming",
                 requestDetails: data,
-                headerMessage:"You have 1 request. Offer ride?",
+                headerMessage:"You have 1 request. Accept Now?",
             })
             console.log(
                 'You have a new request! \n' +
@@ -324,6 +322,7 @@ class DriverHomePage extends Component {
     
     
     handleDriveToUser = (e) => {
+       console.log("handleDriveToUser")
         this.setState({
             driverStatus:"pickup",
         })
@@ -353,7 +352,6 @@ class DriverHomePage extends Component {
             summaryHeader.appendChild(btn)
         },3000)
      
-        // document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
         this.props.history.push('/driver-home/pickup')
         
     }
@@ -361,7 +359,6 @@ class DriverHomePage extends Component {
     handleAcceptTrip = (e) => {
         console.log('ACCEPT_TRIP', )
         if (e.target.disabled ) return
-        // e.currentTarget.disabled = true;
         
         this.props.acceptTrip(socket, {
             driver: JSON.parse(localStorage.getItem('user')),
@@ -430,24 +427,15 @@ class DriverHomePage extends Component {
                 case "requestIncoming": return (
                     <div className={'status-panel'}>
                         <h1 className={`status-panel__header`}>{headerMessage}</h1>
-                        <div className="driver-item-container-list requesting">
-                            <div className="driver-img-container-list">
-                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
-                            </div>
-                            <div className="driver-item-content-list">
-                                <h2>{requestDetails.rider.username}</h2>
-                                <h3>
-                                    2 miles away
-                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                                </h3>
-                            </div>
-                        </div>
                         <div className={"trip-destination-container"}>
+                            <div className={"icon-box"}>
+                                <img className={"icon-box-image"} src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
+                                <h3> {`${requestDetails.rider.rating} `}stars</h3>
+                            </div>
                             <div className={"icon-box"}>
                                 <img src={CarIcon} alt={"rider icon"}/>
                                 <h3>24 miles</h3>
                             </div>
-                            
                             <div className={"trip-destination-left"}>
                                 <h1>Destination</h1>
                                 <h2>{requestDetails.endLocationAddress}</h2>
@@ -465,127 +453,86 @@ class DriverHomePage extends Component {
                 case "waitingForConfirmation": return (
                     <div className={'status-panel'}>
                         <h1 className={`status-panel__header`}>{headerMessage}</h1>
-                        <div className="driver-item-container-list requesting">
-                            <div className="driver-img-container-list">
-                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
-                            </div>
-                            <div className="driver-item-content-list">
-                                <h2>{requestDetails.rider.username}</h2>
-                                <h3>
-                                    2 miles away
-                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                                </h3>
-                            </div>
-                        </div>
                         <div className={"trip-destination-container"}>
+                            <div className={"icon-box"}>
+                                <img className={"icon-box-image"} src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
+                                <h3> {`${requestDetails.rider.rating} `}stars</h3>
+                            </div>
                             <div className={"icon-box"}>
                                 <img src={CarIcon} alt={"rider icon"}/>
                                 <h3>24 miles</h3>
                             </div>
-        
                             <div className={"trip-destination-left"}>
                                 <h1>Destination</h1>
                                 <h2>{requestDetails.endLocationAddress}</h2>
                             </div>
                             <button className={"driver-item-accept-button"}>
-                                <Loader type="ThreeDots" color="#2A2E43" height={40} width={40} />
+                                <Loader type="ThreeDots" color="#2A2E43" height={20} width={40} />
                             </button>
                         </div>
-                        {/*<div className={"trip-destination-container"}>*/}
-                        {/*    <div className={"trip-destination-left"}>*/}
-                        {/*        <h2>{requestDetails.endLocationAddress}</h2>*/}
-                        {/*        <span className={"tag orange"}>{requestDetails.duration} mins</span>*/}
-                        {/*        <span className={"tag blue"}>{requestDetails.distance} mi</span>*/}
-                        {/*    </div>*/}
-                        {/*    <button className={"driver-item-accept-button"}>*/}
-                        {/*        <Loader type="ThreeDots" color="#2A2E43" height={40} width={40} />*/}
-                        {/*    </button>*/}
-                        {/*</div>*/}
-                        
                         <button  className={'request-ride-button'}  onClick={this.handleDriverGoOffline}>GO OFFLINE</button>
                     </div>
                 )
                 case "confirmed": return (
                     <div className={'status-panel'}>
-                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
-                        <div
-                            className="driver-item-container-list"
-                        >
-                            <div className="driver-img-container-list">
-                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
+                            <h1 className={`status-panel__header inline`}>Trip Confirmed. Drive to rider</h1>
+                            <div className={'action-icon-button-bar right'}>
+                                <IconButton className={'driver-item-icon-button'}>
+                                    <img src={IconMessage}/>
+                                </IconButton>
+                                <IconButton className={'driver-item-icon-button'}>
+                                    <img src={IconPhone} />
+                                </IconButton>
                             </div>
-                            <div className="driver-item-content-list">
-                                <h2>{requestDetails.rider.username}</h2>
-                                <h3>
-                                    2 miles away
-                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                                </h3>
+                        <div className={"trip-destination-container"}>
+                            <div className={"icon-box bordered"}>
+                                <img className={"icon-box-image"} src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
+                                <h3> {`${requestDetails.rider.rating} `}stars</h3>
                             </div>
-                            <div className={"trip-destination-container"}>
-                                <div className={"trip-destination-left"}>
-                                    <h2>{requestDetails.endLocationAddress}</h2>
-                                 
-                                    <span className={"tag white"}>{requestDetails.duration} mins</span>
-                                    <span className={"tag blue"}>{requestDetails.distance} mi</span>
-                                    <span className={"tag pink"}>${requestDetails.tripFare}</span>
-                                </div>
+                            <div className={"icon-box bordered"}>
+                                <img src={CarIcon} alt={"rider icon"}/>
+                                <h3>24 miles</h3>
                             </div>
-                            <div className={"driver-item-buttons-list"}>
-                                {
-                                    <div className={"action-icon-button-bar"}>
-                                        <IconButton className={"driver-item-icon-button"}>
-                                            <ChatBubbleIcon />
-                                        </IconButton>
-                                        <IconButton className={"driver-item-icon-button"}>
-                                            <PhoneIcon />
-                                        </IconButton>
-                                    </div>
-                                }
+                            <div className={"trip-destination-left"}>
+                                <h1>Destination</h1>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                {/*<span className={"tag pink"}>${requestDetails.tripFare}</span>*/}
+
                             </div>
+                            
+                            <button className={"driver-item-accept-button "}
+                                    onClick={this.handleDriveToUser}>
+                                    Pick Up Rider
+                            </button>
                         </div>
                         <button className={'request-ride-button'} onClick={this.cancelTrip}>CANCEL TRIP</button>
-                        <button className="main" onClick={this.handleDriveToUser}>PICKUP RIDER</button>
                     </div>
                 )
                 case "pickup": return (
                     <div className={'status-panel'}>
-                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
-                        <div
-                            className="driver-item-container-list"
-                        >
-                            <div className="driver-img-container-list">
-                                <Avatar src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
+                        <h1 className={`status-panel__header`}>Trip Started</h1>
+                        <div className={"trip-destination-container"}>
+                            <div className={"icon-box"}>
+                                <img className={"icon-box-image"} src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
+                                <h3> {`${requestDetails.rider.rating} `}stars</h3>
                             </div>
-                            <div className="driver-item-content-list">
-                                <h2>{requestDetails.rider.username}</h2>
-                                <h3>
-                                    2 miles away
-                                    <span> {`, ${requestDetails.rider.rating} `}stars</span>
-                                </h3>
+                            <div className={"icon-box"}>
+                                <img src={CarIcon} alt={"rider icon"}/>
+                                <h3>24 miles</h3>
                             </div>
-                            <div className={"trip-destination-container"}>
-                                <div className={"trip-destination-left"}>
-                                    <h2>{requestDetails.endLocationAddress}</h2>
-                                    <span className={"tag white"}>{requestDetails.duration} mins</span>
-                                    <span className={"tag blue"}>{requestDetails.distance} mi</span>
-                                    <span className={"tag pink"}>${requestDetails.tripFare}</span>
-                                </div>
+                            <div className={"trip-destination-left"}>
+                                <h1>Destination</h1>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                <span className={"tag white"}>{requestDetails.duration} mins</span>
+                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                                <span className={"tag pink"}>${requestDetails.tripFare}</span>
                             </div>
-                            <div className={"driver-item-buttons-list"}>
-                                {
-                                    <div className={"action-icon-button-bar"}>
-                                        <IconButton className={"driver-item-icon-button"}>
-                                            <ChatBubbleIcon />
-                                        </IconButton>
-                                        <IconButton className={"driver-item-icon-button"}>
-                                            <PhoneIcon />
-                                        </IconButton>
-                                    </div>
-                                }
-                            </div>
+                            <button className={"driver-item-accept-button"} onClick={this.handleStartTrip}>
+                                START TRIP
+                            </button>
                         </div>
                         <button className={'request-ride-button'} onClick={this.cancelTrip}>CANCEL TRIP</button>
-                        <button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>
+                        {/*<button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>*/}
                     </div>
                 )
                 case "trip-ended": return (

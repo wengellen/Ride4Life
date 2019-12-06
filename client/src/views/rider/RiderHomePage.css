@@ -41,7 +41,7 @@
 
 }
 .driver-img-container-list img{
-    border-radius: 50%;
+    border-radius: 16px;
 }
 
 .driver-item-content-list{
@@ -89,29 +89,16 @@
     padding: 2px 12px;
 }
 
-/*.driver-item-buttons-list .driver-name-your-fare-container{*/
-    /*align-items: center;*/
-    /*border:none;*/
-    /*border-radius: 20px;*/
-    /*margin-top: 0;*/
-    /*padding: 2px 12px;*/
-    /*font-size: 0.8rem;*/
-    /*font-weight: 500;*/
-    /*height:30px;*/
-    /*width:100%;*/
-    /*background-color: #00b8d4;*/
-/*}*/
-
 .driver-name-your-fare-container .driver-item-accept-button{
     border:none;
     background-color: #3ACCE1;
     width:100%;
     text-align: center;
+
 }
 
 .driver-name-your-fare-container input{
     border-radius: 16px 16px 0 0 ;
-    /*margin-top: 1rem;*/
     padding: 1rem 1rem;
     font-size: 1.5rem;
     font-weight: 800;
@@ -121,7 +108,6 @@
     outline:none;
     width:120px;
     text-align: center;
-    /*margin-bottom:94px;*/
 }
 
 .driver-item-buttons-list .driver-item-accept-button:hover{
@@ -129,11 +115,17 @@
 }
 
 .driver-item-buttons-list .driver-item-icon-button{
-    width: 45px;
-    height: 45px;
+    width: 70px;
+    height: 70px;
     margin-top:0;
     border-radius: 50%;
-    margin-right:10px;
+    margin-right:2rem;
+    background-color:#2A2E43;
+    border:1px solid #111111;
+}
+
+.driver-item-buttons-list .driver-item-icon-button:hover{
+    background-color:#3ACCE1;
 }
 
 .driver-item-container-list .right-arrow-button{
@@ -141,6 +133,23 @@
     width:40px;
     background-color: white;
     color:black;
+}
+
+.driver-item-container-list .right-arrow-button:hover{
+    background-color:#3ACCE1;
+}
+
+.action-icon-button-bar.right .driver-item-icon-button{
+    background-color:#2A2E43;
+    border:1px solid gray;
+    border-radius: 10px;
+    margin-left:12px;
+}
+
+.action-icon-button-bar.right{
+    position:absolute;
+    right:2rem;
+    top:2rem;
 }
 
 .request-ride-button{

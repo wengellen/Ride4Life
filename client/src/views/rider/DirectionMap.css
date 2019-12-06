@@ -27,10 +27,9 @@
     font-weight:600;
     width:100%;
     border:0;
-    /*background-color:transparent;*/
     margin:0;
     color:rgba(0,0,0,.7);
-    padding:14px 40px 14px 12px;
+    padding:1rem 40px 1rem 12px;
     text-overflow:ellipsis;
     white-space:nowrap;
     overflow:hidden;
@@ -89,7 +88,7 @@
 .map .mapboxgl-ctrl-bottom-left{
     width:100%;
     margin:0 ;
-    padding: 0;
+    padding: 0 1.6rem;
     bottom:0;
 }
 

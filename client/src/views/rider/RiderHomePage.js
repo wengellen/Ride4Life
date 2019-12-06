@@ -11,6 +11,9 @@ import RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
 import PhoneIcon from '@material-ui/icons/Phone'
 import placeholder from 'assets/img/placeholder.jpg'
+import IconArrowRight from 'assets/img/arrow-right.png'
+import IconMessage from 'assets/img/message-square.svg'
+import IconPhone from 'assets/img/phone.svg'
 import DriverProfilePage from '../driver/DriverProfilePage'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
@@ -31,6 +34,7 @@ import Button from '@material-ui/core/Button'
 import io from 'socket.io-client'
 import { Avatar } from '@material-ui/core'
 import DriverEditProfilePage from "../driver/DriverEditProfilePage";
+import CarIcon from "../../assets/img/icons/icons-car-front.svg";
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
@@ -362,7 +366,7 @@ class RiderHomePage extends Component {
         this.setState({
             showEstimate: false,
             currentDriver: driver,
-            headerMessage: 'Your driver is on the way',
+            headerMessage: `Your driver is on the way`,
             tripStatus: 'confirmed',
         })
 
@@ -373,7 +377,7 @@ class RiderHomePage extends Component {
         this.props.getDriversById(driver._id).then(() => {
             console.log('getDriverByIdeSuccess', driver._id)
             this.props.openModal({shouldOpen:true, component:DriverProfilePage});
-    
+            
             // this.props.history.push({
             // 	pathname:`/rider-home/driver/${driver._id}`,
             // 	state: { prevPath: this.props.location.pathname }})
@@ -518,46 +522,33 @@ class RiderHomePage extends Component {
                 case 'driversFound':
                     return (
                         <div className={'status-panel'}>
-                            <h1 className={`status-panel__header`}>
-                                {headerMessage}
-                            </h1>
-                            <p></p>
-                            <div className="drivers-nearby-container-list">
-                                {acceptedDrivers &&
+                            <h1 className={`status-panel__header`}>{headerMessage}</h1>
+                            {acceptedDrivers &&
                                     acceptedDrivers.map((driver, idx) => {
                                         return (
                                             <div
-                                                className="driver-item-container-list"
+                                                className="trip-destination-container"
                                                 key={idx}
-                                            >
-                                                <div className="driver-img-container-list">
-                                                    <Avatar
-                                                        src={
-                                                            driver.avatar ||
-                                                            placeholder
-                                                        }
-                                                        alt={'driver'}
-                                                    />
+                                                 >
+                                                <div className={"icon-box"}>
+                                                    <img className={"icon-box-image"}
+                                                            src={
+                                                                driver.avatar ||
+                                                                placeholder
+                                                            } alt={"driver"} />
+                                                    <h3>2 miles away</h3>
                                                 </div>
-                                                <div className="driver-item-content-list">
-                                                    <h2>{driver.username}</h2>
-                                                    <h3>
-                                                        2 miles away
-                                                        <span>
-                                                            {' '}
-                                                            {`, ${driver.rating} `}
-                                                            stars
-                                                        </span>
-                                                    </h3>
+                                                <div className={"icon-box"}>
+                                                    <img src={CarIcon} alt={"rider icon"}/>
+                                                    <h3>BMW</h3>
                                                 </div>
-                                                <div
-                                                    className={
-                                                        'driver-item-buttons-list'
-                                                    }
-                                                >
-                                                    <IconButton
+                                                <div className={"trip-destination-left"}>
+                                                    <h3 className={"text-blue"}>{driver.username}</h3>
+                                                    <h3 className={"text-blue"}>{driver.rating} star</h3>
+                                                </div>
+                                                    <button
                                                         className={
-                                                            'driver-item-accept-button main'
+                                                            'driver-item-accept-button rider'
                                                         }
                                                         onClick={() =>
                                                             this.handleConfirmRequest(
@@ -566,60 +557,47 @@ class RiderHomePage extends Component {
                                                         }
                                                     >
                                                         ACCEPT
-                                                    </IconButton>
-                                                </div>
-                                                <IconButton
-                                                    className={
-                                                        'right-arrow-button '
-                                                    }
+                                                    </button>
+                                                <img src={IconArrowRight}
                                                     onClick={e =>
                                                         this.loadDriverProfile(
                                                             driver
                                                         )
                                                     }
                                                 >
-                                                    <RightArrowIcon />
-                                                </IconButton>
+                                                </img>
                                             </div>
                                         )
                                     })}
-                            </div>
-                            <Button
+                            <button
                                 className={'request-ride-button bordered'}
                                 onClick={this.handleCancelRideRequest}
                             >
                                 CANCEL REQUEST
-                            </Button>
+                            </button>
                         </div>
                     )
                 case 'confirmed':
                     return (
                         <div className={'status-panel'}>
                             <h1 className={`status-panel__header`}>
-                                {headerMessage}
+                                Your Driver <span className={"text-blue"}>{currentDriver.username}</span> is on the way
                             </h1>
-                            <div className="drivers-nearby-container-list">
                                 {currentDriver && (
-                                    <div className="driver-item-container-list">
-                                        <div className="driver-img-container-list">
-                                            <Avatar
-                                                src={
-                                                    currentDriver.avatar ||
-                                                    placeholder
-                                                }
-                                                alt={'driver'}
-                                            />
+                                    <div
+                                        className="trip-destination-container"
+                                    >
+                                        <div className={"icon-box bordered"}>
+                                            <img className={"icon-box-image"}
+                                                 src={
+                                                     currentDriver.avatar ||
+                                                     placeholder
+                                                 } alt={"driver"} />
+                                            <h3>2 miles away</h3>
                                         </div>
-                                        <div className="driver-item-content-list">
-                                            <h2>{currentDriver.username}</h2>
-                                            <h3>
-                                                2 miles away
-                                                <span>
-                                                    {' '}
-                                                    {`, ${currentDriver.rating} `}
-                                                    stars
-                                                </span>
-                                            </h3>
+                                        <div className={"icon-box bordered" }>
+                                            <img src={CarIcon} alt={"rider icon"}/>
+                                            <h3>BMW</h3>
                                         </div>
                                         <div
                                             className={
@@ -636,36 +614,33 @@ class RiderHomePage extends Component {
                                                         'driver-item-icon-button'
                                                     }
                                                 >
-                                                    <ChatBubbleIcon />
+                                                    <img src={IconMessage}/>
                                                 </IconButton>
                                                 <IconButton
                                                     className={
                                                         'driver-item-icon-button'
                                                     }
                                                 >
-                                                    <PhoneIcon />
+                                                    <img src={IconPhone} />
                                                 </IconButton>
                                             </div>
                                         </div>
-                                        <IconButton
-                                            className={'right-arrow-button '}
-                                            onClick={e =>
-                                                this.loadDriverProfile(
-                                                    currentDriver
-                                                )
-                                            }
+                                        <img src={IconArrowRight}
+                                             onClick={e =>
+                                                 this.loadDriverProfile(
+                                                     currentDriver
+                                                 )
+                                             }
                                         >
-                                            <RightArrowIcon />
-                                        </IconButton>
+                                        </img>
                                     </div>
                                 )}
-                            </div>
-                            <Button
+                            <button
                                 className={'request-ride-button bordered'}
                                 onClick={e => this.cancelTrip()}
                             >
                                 CANCEL TRIP
-                            </Button>
+                            </button>
                         </div>
                     )
                 case 'trip-ended':
@@ -675,12 +650,12 @@ class RiderHomePage extends Component {
                                 {headerMessage}
                             </h1>
                             <div className="drivers-nearby-container-list"></div>
-                            <Button
+                            <button
                                 className={'request-ride-button bordered'}
                                 onClick={this.handleCancelRideRequest}
                             >
                                 CANCEL REQUEST
-                            </Button>
+                            </button>
                         </div>
                     )
                 default:

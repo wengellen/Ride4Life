@@ -100,7 +100,7 @@
 }
 
 .driver-item-accept-button{
-    border-radius: 12px;
+    border-radius: 16px 12px;
     display:flex;
     flex-flow:column wrap;
     font-size:0.7rem;
@@ -109,10 +109,16 @@
     line-height: 1.4rem;
     outline: none;
     margin-left:1rem;
-    background-color:#ADE6EE;
-    padding:8px 16px;
+    background-color:#3ACCE1;
+    padding:20px 16px;
     border:none;
+
 }
+.driver-item-accept-button{
+    font-size:1rem;
+    font-weight:700;
+}
+
 .driver-name-your-fare__button{
     border-radius: 0 0 16px 16px;
     width: 120px;
@@ -120,15 +126,22 @@
     background-color: #3ACCE1;
     font-weight: 900;
     font-size:16px;
-}
-
-.driver-item-accept-button.requesting div{
-
+    border:1px solid #111;
 }
 
 .trip-destination-left{
-    flex-basis: 80%;
     text-align: left;
+    padding-left:2rem;
+}
+
+.text-blue{
+    font-size:1.4rem;
+    margin-bottom:16px;
+    color: #ADE6EE;
+}
+.text-white{
+    color: #fff;
+    padding-top:0.5rem;
 }
 
 .trip-destination-left > h1{

@@ -10,6 +10,7 @@ import Clear from  "@material-ui/icons/Clear";
 import placeholder from 'assets/img/placeholder.jpg'
 import {
 	getDriversById,
+	openModal
 } from '../../actions';
 import {Avatar} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,6 +18,7 @@ import BackIcon from "../../assets/img/icons/arrow-back.svg";
 
 class DriverProfilePage extends Component {
 	state = {
+		showPopup:true
 	}
 	
 	componentWillMount() {
@@ -35,22 +37,28 @@ class DriverProfilePage extends Component {
 		// let backUrl = this.props.location.state ? this.props.location.state.prevPath : '/rider-home/standby'
 		// console.log('previsouPath',  this.props.location)
 		// this.props.history.push(backUrl)
+	    // this.props.history.go(-1)
+	    // this.setState({"showPopup": false});
+		this.props.openModal({shouldOpen:false})
 	}
+	
 	
 	render() {
 		const {currentDriver, findDriverByIdStarted} = this.props
+		const {showPopup} = this.state
 		console.log('currentDriver', currentDriver)
 		
 		if(!currentDriver){
 			return (<Loader/>)
 		}else{
 			return (
-				<div className={`driver-profile-container ${currentDriver && "slideInPopup"}`}>
+				<div className={`driver-profile-container ${showPopup ? "slideInPopup" : "slideOutPopup" }`}>
 					<IconButton
 						color="inherit"
 						aria-label="back"
 						className={"back-arrow-button"}
 						onClick={this.handleBack}
+						style={{position:"absolute"}}
 					>
 						<img src={BackIcon}/>
 					</IconButton>
@@ -58,7 +66,7 @@ class DriverProfilePage extends Component {
 						<div className="driver-profile-img-container ">
 							<img src={currentDriver.avatar} className="round" alt={"driver avatar"}/>
 						</div>
-						<h1>{currentDriver.username}</h1>
+						<h1 className={"blue-text"}>{currentDriver.username}</h1>
 						<h3>{currentDriver.city}</h3>
 					</header>
 					<div className="stats-container">
@@ -85,7 +93,7 @@ class DriverProfilePage extends Component {
 							</div>
 							<div className="title">
 								<h2>{currentDriver.username}</h2>
-								<h5>Driving for {currentDriver.createdAt} years</h5>
+								<h5 >Driving for {currentDriver.createdAt} years</h5>
 							</div>
 						</header>
 						{this.state.isEditing
@@ -150,5 +158,6 @@ const mapStateToProps = ({riderReducer}) => {
 export default withRouter(connect(
 	mapStateToProps,
 	{
-		getDriversById}
+		getDriversById,
+		openModal}
 )(DriverProfilePage));
