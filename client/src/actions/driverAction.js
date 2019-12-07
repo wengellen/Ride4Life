@@ -35,6 +35,11 @@ export const driverGoOffline = (socket, data) => dispatch => {
 	socket.emit('DRIVER_GO_OFFLINE', data)
 }
 
+export const driverStartTrip = (socket, data) => dispatch => {
+	console.log('trip started')
+	socket.emit('DRIVER_START_TRIP', data)
+}
+
 export const updateDriverLocation = (socket, data) => dispatch => {
 	console.log('updateDriverLocation')
 	socket.emit('UPDATE_DRIVER_LOCATION', data)

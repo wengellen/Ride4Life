@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up t
 // import './DirectionMapDriver.css' // Updating node module will keep css up to date.
 import './DriverHomePage.css' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
+import {setLocal, getLocal, removeLocal} from '../../utils/helpers'
 import { connect } from 'react-redux'
 import {
     updateDriverLocation,
@@ -12,13 +13,13 @@ import {
     driverGoOffline,
     acceptTrip,
     driverCancelTrip,
+    driverStartTrip,
 } from '../../actions'
 import IconButton from "@material-ui/core/IconButton";
 import CarIcon from '../../assets/img/icons/icons-car-front.svg'
 import RiderIcon from '../../assets/img/icons/rider.svg'
 // import socket from "../../utils/socketConnection";
 import io from "socket.io-client"
-import {Avatar} from "@material-ui/core";
 import placeholder from 'assets/img/placeholder.jpg'
 import IconMessage from 'assets/img/message-square.svg'
 import IconPhone from 'assets/img/phone.svg'
@@ -55,16 +56,18 @@ class DriverHomePage extends Component {
         const endpoint = process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`
     
         socket = io.connect(endpoint)
-    
+        
+        // Received trip request from rider
         socket.on('REQUEST_TRIP', data => {
             const requestDetails = data
-            console.log('data',data)
+            // console.log('data',data)
             
             if (this.state.driverStatus === 'requestIncoming') {
                 return;
             }
             localStorage.setItem('requestDetails', JSON.stringify( data))
-            
+            // setLocal('requestDetails', data)
+           
             this.setState({
                 driverStatus:"requestIncoming",
                 requestDetails: data,
@@ -87,7 +90,7 @@ class DriverHomePage extends Component {
             console.log(
                 'You have a new request! \n'
             )
-            
+            // removeLocal('requestDetails')
             localStorage.removeItem('requestDetails')
             this.props.history.push('/driver-home/standby')
             
@@ -95,7 +98,7 @@ class DriverHomePage extends Component {
         
         socket.on('TRIP_CONFIRMED', data => {
             const requestDetails = data
-            console.log('requestDetails', data)
+            // console.log('requestDetails', data)
             var riderGeojson = {
                 type: 'FeatureCollection',
                 features: [{
@@ -122,6 +125,9 @@ class DriverHomePage extends Component {
                 .setPopup(popup)
                 .addTo(this.map);
             });
+    
+            //setLocal('requestDetails', data)
+            localStorage.setItem('requestDetails', JSON.stringify( data))
             
             this.setState({
                 driverStatus:"confirmed",
@@ -129,7 +135,7 @@ class DriverHomePage extends Component {
                 headerMessage:"Trip Confirmed",
                 tripId:data._id
             }) //Save request details
-            
+    
             console.log(
                 'Rider has accept your service! \n' +
                 JSON.stringify(requestDetails)
@@ -149,6 +155,8 @@ class DriverHomePage extends Component {
                 'RIDER_TRIP_CANCELED! \n'
             )
             localStorage.removeItem('requestDetails')
+            // removeLocal('requestDetails')
+            
             document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
             
             this.resetTrip()
@@ -167,7 +175,8 @@ class DriverHomePage extends Component {
             })
             
             this.resetTrip()
-            
+    
+            // removeLocal('requestDetails')
             localStorage.removeItem('requestDetails')
             document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
             this.props.history.push('/driver-home/standby')
@@ -294,7 +303,10 @@ class DriverHomePage extends Component {
         this.setState({
             driverStatus:"tripStarted",
         })
+    
+        // const requestDetails = getLocal('requestDetails')
         const requestDetails = JSON.parse( localStorage.getItem('requestDetails'))
+        console.log("requestDetails",requestDetails)
         this.directions.setOrigin(requestDetails.startLocation.coordinates)
         this.directions.setDestination(requestDetails.endLocationAddress)
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
@@ -317,7 +329,13 @@ class DriverHomePage extends Component {
             })
             summaryHeader.appendChild(btn)
         },1000)
-        this.props.history.push('/driver-home/pickup')
+    
+        this.props.driverStartTrip(socket, {
+            driver: getLocal('user'),
+            ...requestDetails
+        })
+        this.props.history.push('/driver-home/trip-started')
+        
     }
     
     
@@ -326,6 +344,7 @@ class DriverHomePage extends Component {
         this.setState({
             driverStatus:"pickup",
         })
+        // const requestDetails = getLocal('requestDetails')
         const requestDetails = JSON.parse( localStorage.getItem('requestDetails'))
         this.directions.setOrigin(this.state.location)
         this.directions.setDestination(requestDetails.startLocation.coordinates)
@@ -351,7 +370,8 @@ class DriverHomePage extends Component {
             })
             summaryHeader.appendChild(btn)
         },3000)
-     
+        
+        // send heart beat to check location proximety
         this.props.history.push('/driver-home/pickup')
         
     }
@@ -359,15 +379,14 @@ class DriverHomePage extends Component {
     handleAcceptTrip = (e) => {
         console.log('ACCEPT_TRIP', )
         if (e.target.disabled ) return
-        
         this.props.acceptTrip(socket, {
-            driver: JSON.parse(localStorage.getItem('user')),
+            driver: getLocal('user'),
             ...this.state.requestDetails,
         })
         
         this.setState({
             driverStatus:"waitingForConfirmation",
-            headerMessage:"Waiting for rider confirmation."
+            headerMessage:"Waiting for rider confirmation..."
         })
         
         this.props.history.push('/driver-home/waitingForConfirmation')
@@ -377,7 +396,7 @@ class DriverHomePage extends Component {
         console.log('DRIVER_GO_ONLINE', )
         
         this.props.driverGoOnline(socket,{
-            driver: JSON.parse(localStorage.getItem('user'))
+            driver:getLocal('user'),
         })
         
         this.setState({
@@ -390,11 +409,19 @@ class DriverHomePage extends Component {
     handleDriverGoOffline = () => {
         console.log('DRIVER_GO_OFFLINE', )
         this.props.driverGoOffline(socket, {
-            driver: JSON.parse(localStorage.getItem('user'))
+            driver: getLocal('user'),
         } )
+    
+        this.resetTrip()
         this.setState({driverStatus:"offline"})
         // socket.disconnect()
         this.props.history.push('/driver-home/offline')
+    }
+    
+    resetTrip = () => {
+        localStorage.removeItem('requestDetails')
+        this.directions.removeRoutes()
+        this.directions.setOrigin(this.state.startLocation)
     }
     
     getStatePath = (path) => {
@@ -404,7 +431,7 @@ class DriverHomePage extends Component {
     render() {
         const { driverStatus, headerMessage } = this.state
         const path = this.getStatePath(this.props.location.pathname)
-        
+        // removeLocal('requestDetails')
         const requestDetails = JSON.parse( localStorage.getItem('requestDetails')) || null
         
         const statusPanel = () => {
@@ -412,8 +439,6 @@ class DriverHomePage extends Component {
                 case "offline": return (
                     <div className={'status-panel'}>
                         <h1 className={`status-panel__header`}>Ready to drive?</h1>
-                        <p>
-                        </p>
                         <button className={'request-ride-button'} onClick={this.handleDriverGoOnline}>GO ONLINE</button>
                     </div>
                 )
@@ -452,7 +477,7 @@ class DriverHomePage extends Component {
                 
                 case "waitingForConfirmation": return (
                     <div className={'status-panel'}>
-                        <h1 className={`status-panel__header`}>{headerMessage}</h1>
+                        <h1 className={`status-panel__header text-blue`}>{headerMessage}</h1>
                         <div className={"trip-destination-container"}>
                             <div className={"icon-box"}>
                                 <img className={"icon-box-image"} src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
@@ -475,7 +500,7 @@ class DriverHomePage extends Component {
                 )
                 case "confirmed": return (
                     <div className={'status-panel'}>
-                            <h1 className={`status-panel__header inline`}>Trip Confirmed. Drive to rider</h1>
+                            <h1 className={`status-panel__header inline`}>Trip Confirmed. <span className={"text-blue"}>Drive to rider</span></h1>
                             <div className={'action-icon-button-bar right'}>
                                 <IconButton className={'driver-item-icon-button'}>
                                     <img src={IconMessage}/>
@@ -510,7 +535,7 @@ class DriverHomePage extends Component {
                 )
                 case "pickup": return (
                     <div className={'status-panel'}>
-                        <h1 className={`status-panel__header`}>Trip Started</h1>
+                        <h1 className={`status-panel__header`}>Start Driving to Rider</h1>
                         <div className={"trip-destination-container"}>
                             <div className={"icon-box"}>
                                 <img className={"icon-box-image"} src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
@@ -532,6 +557,37 @@ class DriverHomePage extends Component {
                             </button>
                         </div>
                         <button className={'request-ride-button'} onClick={this.cancelTrip}>CANCEL TRIP</button>
+                        {/*<button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>*/}
+                    </div>
+                )
+                case "trip-started": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`status-panel__header`}>Trip Started. <span className={"text-blue"}>Drive to Destination</span></h1>
+                        <div className={"trip-destination-container"}>
+                            <div className={"icon-box"}>
+                                <img className={"icon-box-image"} src={requestDetails.rider.avatar||  placeholder}  alt={"rider"} />
+                                <h3> {`${requestDetails.rider.rating} `}stars</h3>
+                            </div>
+                            <div className={"icon-box"}>
+                                <img src={CarIcon} alt={"rider icon"}/>
+                                <h3>24 miles</h3>
+                            </div>
+                            <div className={"trip-destination-left"}>
+                                <h1>Destination</h1>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                <span className={"tag white"}>{requestDetails.duration} mins</span>
+                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                                <span className={"tag pink"}>${requestDetails.tripFare}</span>
+                            </div>
+                            <button className={"driver-item-accept-button"} onClick={this.handleStartTrip}>
+                                END TRIP
+                            </button>
+                        </div>
+                        
+                        <button className={'request-ride-button'} onClick={this.endTrip}>
+                            <IconButton className={'driver-item-icon-button'}>
+                                <img src={IconPhone} />
+                            </IconButton> Call Support</button>
                         {/*<button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>*/}
                     </div>
                 )
@@ -577,6 +633,7 @@ export default connect(
         driverGoOffline,
         acceptTrip,
         driverCancelTrip,
+        driverStartTrip
     }
 )(DriverHomePage);
 

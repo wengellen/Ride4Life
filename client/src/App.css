@@ -674,6 +674,10 @@ status-panel
     color:white;
 }
 
+.status-panel__header.warning{
+    color:#C840E9;
+}
+
 .status-panel__standby{
     padding-bottom:100px;
 }

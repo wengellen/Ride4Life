@@ -315,6 +315,7 @@ export const initialize = function(server) {
         socket.on('DRIVER_ACCEPT_TRIP', async data => {
             clearInterval(requestInterval)
             const { driver, rider } = data
+            console.log('data._id', data._id)
             socket.join(data._id)
             try {
                 const who = await Driver.findByIdAndUpdate(
@@ -345,37 +346,64 @@ export const initialize = function(server) {
                     .populate('rider')
                     .populate('driver')
                     .exec()
+    
+                for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
+        
+                    if (nearbyOnlineDrivers[i].username === driverUsername) {
+                        console.log(
+                            'DISPATCHING TRIP_CONFIRMED to dirver - ',
+                            nearbyOnlineDrivers[i].username
+                        )
+                        logger.debug(
+                            `DISPATCHING TRIP_CONFIRMED to dirver -  ${data.driver.username}`
+                        )
+                        socketIo.sockets
+                        .in(driverUsername)
+                        .emit('TRIP_CONFIRMED', data)
+            
+                    } else {
+                        console.log(
+                            'RIDER_REQUEST_CANCELED to dirver - ',
+                            nearbyOnlineDrivers[i].username
+                        )
+                        logger.debug(
+                            `RIDER_REQUEST_CANCELED to dirver -  ${data.driver.username}`
+                        )
+                        socketIo.sockets
+                        .in(nearbyOnlineDrivers[i].username)
+                        .emit('RIDER_REQUEST_CANCELED', data)
+                    }
+                }
             } catch (e) {
                 console.log('there has been an error', e)
             }
-
-            for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
-          
-                if (nearbyOnlineDrivers[i].username === driverUsername) {
-                    console.log(
-                        'DISPATCHING TRIP_CONFIRMED to dirver - ',
-                        nearbyOnlineDrivers[i].username
-                    )
-                    logger.debug(
-                       `DISPATCHING TRIP_CONFIRMED to dirver -  ${data.driver.username}`
-                    )
-                    socketIo.sockets
-                        .in(driverUsername)
-                        .emit('TRIP_CONFIRMED', data)
-                        
-                } else {
-                    console.log(
-                        'RIDER_REQUEST_CANCELED to dirver - ',
-                        nearbyOnlineDrivers[i].username
-                    )
-                    logger.debug(
-                        `RIDER_REQUEST_CANCELED to dirver -  ${data.driver.username}`
-                    )
-                    socketIo.sockets
-                        .in(nearbyOnlineDrivers[i].username)
-                        .emit('RIDER_REQUEST_CANCELED', data)
-                }
+        })
+    
+    
+        // Driver can start trip
+        socket.on('DRIVER_START_TRIP', async data => {
+            const { driver, rider } = data
+            socket.join(data._id)
+            console.log('DRIVER_START_TRIP ------>')
+            console.log('data', data)
+            console.log('rider', rider)
+           // send heartbeat and update driver location
+            try {
+                const who = await Driver.findByIdAndUpdate(
+                    driver._id,
+                    { new: true }
+                ).exec()
+                // let clients =  socketIo.sockets.adapter.rooms[data._id].sockets;
+                // console.log('!!!clients',clients)
+                console.log('who', who)
+                socketIo.sockets
+                .to(rider.username)
+                .emit('START_TRIP', { ...data})
+                
+            } catch (e) {
+                console.log('error', e)
             }
+           
         })
     })
 

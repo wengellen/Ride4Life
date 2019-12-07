@@ -7,9 +7,6 @@ import './RiderHomePage.css'
 import {openModal} from "../../actions";
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
-import RightArrowIcon from '@material-ui/icons/KeyboardArrowRight'
-import ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline'
-import PhoneIcon from '@material-ui/icons/Phone'
 import placeholder from 'assets/img/placeholder.jpg'
 import IconArrowRight from 'assets/img/arrow-right.png'
 import IconMessage from 'assets/img/message-square.svg'
@@ -76,6 +73,7 @@ class RiderHomePage extends Component {
 
         socket.on('ACCEPT_TRIP', data => {
             console.log('ACCEPT_TRIP data', data)
+            localStorage.setItem('requestDetails', JSON.stringify( data))
             this.setState({
                 showEstimate: true,
                 requestDetails: data,
@@ -107,12 +105,28 @@ class RiderHomePage extends Component {
                 'acceptedDriversMarkerMap \n',
                 this.acceptedDriversMarkerMap.get(data.driver.username)
             )
+       
             this.props.history.push('/rider-home/driversFound')
         })
-
+        
+        socket.on('START_TRIP', data => {
+            console.log('START_TRIP data', data)
+            localStorage.setItem('requestDetails', JSON.stringify( data))
+            
+            this.setState({
+                showEstimate: true,
+                requestDetails: data,
+                tripStatus: 'trip-started',
+                acceptedDrivers: [...this.state.acceptedDrivers, data.driver],
+            }) //Save request details
+            console.log(
+                'Driver is coming to pickyou up \n' + JSON.stringify(data)
+            )
+            this.props.history.push('/rider-home/trip-started')
+        })
+        
         socket.on('RIDER_TRIP_CANCELED', () => {
             console.log('RIDER_TRIP_CANCELED! \n')
-
             this.resetTrip()
 
             this.setState({
@@ -137,7 +151,7 @@ class RiderHomePage extends Component {
 
         socket.on('DRIVER_GO_OFFLINE', data => {
             console.log('DRIVER_GO_OFFLINE! \n')
-
+            this.resetTrip()
             const newArr = this.state.acceptedDrivers.filter(
                 driver => driver.username !== data.driver.username
             )
@@ -319,6 +333,7 @@ class RiderHomePage extends Component {
     }
 
     resetTrip = () => {
+        localStorage.removeItem('requestDetails')
         this.directions.removeRoutes()
         this.directions.setOrigin(this.state.startLocation)
         document.querySelectorAll(
@@ -370,7 +385,7 @@ class RiderHomePage extends Component {
             tripStatus: 'confirmed',
         })
 
-        // this.props.history.push('/rider-home/confirmed')
+        this.props.history.push('/rider-home/confirmed')
     }
     loadDriverProfile = driver => {
         console.log('driver', driver)
@@ -438,6 +453,10 @@ class RiderHomePage extends Component {
         })
      
     }
+    
+    getStatePath = (path) => {
+        return path.split('/rider-home/')[1]
+    }
 
     render() {
         const { findNearbyDriverMessage, driversNearby } = this.props
@@ -450,6 +469,12 @@ class RiderHomePage extends Component {
         } = this.state
 
         const currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
+            // if(!requestDetails) {
+        const requestDetails = this.state.requestDetails || JSON.parse(localStorage.getItem('requestDetails'));
+    
+        // const path = this.getStatePath(this.props.location.pathname)
+    
+        // }
         // console.log("this.props.location.pathname",path)
         // console.log('tripStatus',tripStatus)
         // if(tripStatus !== path){
@@ -458,10 +483,10 @@ class RiderHomePage extends Component {
         //   tripStatus = path
         // }
 
-        // let path = tripStatus
+        let path = tripStatus
         const statusPanel = () => {
             console.log('tripStatus', tripStatus)
-            switch (tripStatus) {
+            switch (path) {
                 case 'standby':
                     return (
                         <div className={'status-panel status-panel__standby'}>
@@ -643,6 +668,103 @@ class RiderHomePage extends Component {
                             </button>
                         </div>
                     )
+                // case 'pickup-rider':
+                //     return (
+                //         <div className={'status-panel'}>
+                //             <h1 className={`status-panel__header`}>
+                //                 Your Drive is On the Way
+                //             </h1>
+                //             {currentDriver && (
+                //                 <div
+                //                     className="trip-destination-container"
+                //                 >
+                //                     <div className={"icon-box bordered"}>
+                //                         <img className={"icon-box-image"}
+                //                              src={
+                //                                  currentDriver.avatar ||
+                //                                  placeholder
+                //                              } alt={"driver"} />
+                //                         <h3>2 miles away</h3>
+                //                     </div>
+                //                     <div className={"icon-box bordered" }>
+                //                         <img src={CarIcon} alt={"rider icon"}/>
+                //                         <h3>BMW</h3>
+                //                     </div>
+                //                     <div
+                //                         className={
+                //                             'driver-item-buttons-list'
+                //                         }
+                //                     >
+                //                         <div
+                //                             className={
+                //                                 'action-icon-button-bar'
+                //                             }
+                //                         >
+                //                             <IconButton
+                //                                 className={
+                //                                     'driver-item-icon-button'
+                //                                 }
+                //                             >
+                //                                 <img src={IconMessage}/>
+                //                             </IconButton>
+                //                             <IconButton
+                //                                 className={
+                //                                     'driver-item-icon-button'
+                //                                 }
+                //                             >
+                //                                 <img src={IconPhone} />
+                //                             </IconButton>
+                //                         </div>
+                //                     </div>
+                //                     <img src={IconArrowRight}
+                //                          onClick={e =>
+                //                              this.loadDriverProfile(
+                //                                  currentDriver
+                //                              )
+                //                          }
+                //                     >
+                //                     </img>
+                //                 </div>
+                //             )}
+                //             <button
+                //                 className={'request-ride-button bordered'}
+                //                 onClick={e => this.cancelTrip()}
+                //             >
+                //                 CANCEL TRIP
+                //             </button>
+                //         </div>
+                //     )
+                case "trip-started": return (
+                    <div className={'status-panel'}>
+                        <h1 className={`status-panel__header`}>Trip Started. <span className={"text-blue"}>On your Way to Destination</span></h1>
+                        <div className={"trip-destination-container"}>
+                            <div className={"icon-box"}>
+                                <img className={"icon-box-image"} src={currentDriver.avatar||  placeholder}  alt={"rider"} />
+                                <h3> {`${currentDriver.rating} `}stars</h3>
+                            </div>
+                            <div className={"icon-box"}>
+                                <img src={CarIcon} alt={"rider icon"}/>
+                                <h3>24 miles</h3>
+                            </div>
+                            <div className={"trip-destination-left"}>
+                                <h1>Destination</h1>
+                                <h2>{requestDetails.endLocationAddress}</h2>
+                                <span className={"tag white"}>{requestDetails.duration} mins</span>
+                                <span className={"tag blue"}>{requestDetails.distance} mi</span>
+                                <span className={"tag pink"}>${requestDetails.tripFare}</span>
+                            </div>
+                            {/*<button className={"driver-item-accept-button"} onClick={this.handleStartTrip}>*/}
+                            {/*    END TRIP*/}
+                            {/*</button>*/}
+                        </div>
+            
+                        <button className={'request-ride-button'} onClick={this.endTrip}>
+                            <IconButton className={'driver-item-icon-button'}>
+                                <img src={IconPhone} />
+                            </IconButton> Call Support</button>
+                        {/*<button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>*/}
+                    </div>
+                )
                 case 'trip-ended':
                     return (
                         <div className={'status-panel'}>

@@ -110,6 +110,14 @@ class App extends React.Component {
                             component={RiderHomePage}
                         />
                         <PrivateRoute
+                            path="/rider-home/pickup-rider"
+                            component={RiderHomePage}
+                        />
+                        <PrivateRoute
+                            path="/rider-home/trip-started"
+                            component={RiderHomePage}
+                        />
+                        <PrivateRoute
                             path="/rider-home/driver/:id"
                             component={DriverProfilePage}
                         />
@@ -141,6 +149,10 @@ class App extends React.Component {
                         />
                         <PrivateRoute
                             path="/driver-home/pickup"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/driver-home/trip-started"
                             component={DriverHomePage}
                         />
                         {/*<PrivateRoute*/}

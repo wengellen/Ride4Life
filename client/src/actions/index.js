@@ -15,6 +15,7 @@ export {
     driverGoOnline,
     driverGoOffline,
     driverCancelTrip,
+    driverStartTrip
 } from './driverAction'
 
 export {

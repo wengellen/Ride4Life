@@ -123,10 +123,12 @@
     border-radius: 0 0 16px 16px;
     width: 120px;
     padding: 1rem 1rem;
-    background-color: #3ACCE1;
+    background-color: #2A2E43;
     font-weight: 900;
-    font-size:16px;
-    border:1px solid #111;
+    font-size: 16px;
+    border: 2px solid #27B2C6;
+    border-top: none;
+    color: #27B2C6;
 }
 
 .trip-destination-left{

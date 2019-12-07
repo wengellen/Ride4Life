@@ -16,3 +16,19 @@ export const minW = n => {
 	return result
 }
 
+export const setLocal = (key, value) =>{
+	if (typeof value === Object){
+		localStorage.setItem(key, JSON.stringify(value))
+	}else{
+		localStorage.setItem(key, value)
+	}
+}
+
+export const getLocal = (key) =>{
+	return JSON.parse(localStorage.getItem(key))
+	
+}
+
+export const removeLocal = (key) =>{
+	localStorage.removeItem(key)
+}

@@ -53,7 +53,7 @@ class DriverReviewPage extends Component {
 		// console.log('submitDriverReview ',this.state.review)
 		this.props.submitDriverReview(this.state.review,this.props.currentDriver.driver_id)
 		.then(msg=>{
-			this.props.history.push('/rider-home')
+			// this.props.history.push(-0)
 		})
 	}
 	
