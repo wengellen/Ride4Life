@@ -14,6 +14,7 @@ export const getRiderProfile = (req, res) => {
 export const updateRiderProfile = (req, res) => {
 };
 
+
 export const getRiderTrips = async (req, res) => {
   try {
     const trips = await Trip.find({ rider: req.user._id })

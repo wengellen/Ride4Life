@@ -58,6 +58,7 @@ export const initialize = function(server) {
                     console.log('error', e)
                 }
             }
+            
 
             logger.debug('USER DISCONNECTED ' + user.username)
         })
@@ -329,7 +330,7 @@ export const initialize = function(server) {
             // console.log('!!!clients',clients)
             socketIo.sockets
                 .to(rider.username)
-                .emit('ACCEPT_TRIP', { ...data, quote: 20 })
+                .emit('TRIP_ACCEPTED_BY_DRIVER', { ...data, quote: 20 })
         })
 
         // Rider can confirm trip

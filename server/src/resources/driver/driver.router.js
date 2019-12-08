@@ -13,6 +13,5 @@ router.put('/quote', quoteTrip)
 router.post('/uploadProfile', uploadProfile)
 router.post('/uploadProfilePhoto', uploadProfilePhoto)
 
-
 // router.post('/:id/trip', requestTrip)
 export default router

@@ -102,7 +102,7 @@ class App extends React.Component {
                             component={RiderHomePage}
                         />
                         <PrivateRoute
-                            path="/rider-home/driversFound"
+                            path="/rider-home/drivers-found"
                             component={RiderHomePage}
                         />
                         <PrivateRoute

@@ -54,7 +54,8 @@ class DriverHomePage extends Component {
         this.mapContainer = React.createRef();
         this.driver=JSON.parse(localStorage.getItem('user'))
         const endpoint = process.env.NODE_ENV !== "production" ? "http://localhost:7000" : `https://ride4lifer.herokuapp.com`
-    
+        var  checkSummaryHeaderInterval;
+        
         socket = io.connect(endpoint)
         
         // Received trip request from rider
@@ -311,24 +312,30 @@ class DriverHomePage extends Component {
         this.directions.setDestination(requestDetails.endLocationAddress)
         document.querySelectorAll('.driver-map')[0].classList.remove('hide-direction')
     
-        setTimeout(() => {
-            let summaryHeader = document.querySelectorAll('.mapbox-directions-route-summary')[0]
-            let btn = document.createElement('button');
-            btn.className = 'showDirectionBtn'
-            btn.textContent = "Show Direction"
-            btn.addEventListener('click', function (e) {
-                e.stopPropagation()
-                let dirInstruction = document.querySelectorAll('.mapbox-directions-route-summary + .mapbox-directions-instructions')[0]
-                if (dirInstruction.style.display === 'none'){
-                    dirInstruction.style.display = 'block'
-                    this.textContent = "Hide Direction"
-                } else{
-                    dirInstruction.style.display = 'none'
-                    this.textContent = "Show Direction"
-                }
-            })
-            summaryHeader.appendChild(btn)
-        },1000)
+        // Add Show Direction
+        let summaryHeader = document.querySelectorAll('.mapbox-directions-route-summary')[0]
+        let btn = document.createElement('button');
+        btn.className = 'showDirectionBtn'
+        btn.textContent = "Show Direction"
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation()
+            let dirInstruction = document.querySelectorAll('.mapbox-directions-route-summary + .mapbox-directions-instructions')[0]
+            if (dirInstruction.style.display === 'none'){
+                dirInstruction.style.display = 'block'
+                this.textContent = "Hide Direction"
+            } else{
+                dirInstruction.style.display = 'none'
+                this.textContent = "Show Direction"
+            }
+        })
+    
+    
+        let checkSummaryHeaderInterval =  setInterval(()=>{
+            if (summaryHeader){
+                summaryHeader.appendChild(btn)
+                clearInterval(checkSummaryHeaderInterval);
+            }
+            },1000)
     
         this.props.driverStartTrip(socket, {
             driver: getLocal('user'),

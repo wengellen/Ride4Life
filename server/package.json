@@ -35,8 +35,10 @@
     "morgan": "^1.9.1",
     "path": "^0.12.7",
     "socket.io": "^2.2.0",
+    "socket.io-client": "^2.3.0",
     "winston": "^2.2.0",
-    "winston-papertrail": "^1.0.5"
+    "winston-papertrail": "^1.0.5",
+    "yarn": "^1.21.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -64,5 +66,15 @@
     "prettier": "^1.15.2",
     "rimraf": "^2.6.2",
     "supertest": "^3.3.0"
+  },
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost/",
+    "testEnvironment": "node",
+    "setupTestFrameworkScriptFile": "<rootDir>/testconfig.js",
+    "restoreMocks": true,
+    "testPathIgnorePatterns": [
+      "dist/"
+    ]
   }
 }

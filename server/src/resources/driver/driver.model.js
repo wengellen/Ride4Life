@@ -82,7 +82,7 @@ const driverSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: ["driver", "rider"],
-      default: "rider"
+      default: "driver"
     }
   },
   { timestamps: true }

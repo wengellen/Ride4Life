@@ -70,14 +70,14 @@ class RiderHomePage extends Component {
                 ? 'http://localhost:7000'
                 : `https://ride4lifer.herokuapp.com`
         socket = io.connect(endpoint)
-
-        socket.on('ACCEPT_TRIP', data => {
-            console.log('ACCEPT_TRIP data', data)
+        
+        // DRIVER send back ride request confirmation
+        socket.on('TRIP_ACCEPTED_BY_DRIVER', data => {
             localStorage.setItem('requestDetails', JSON.stringify( data))
             this.setState({
                 showEstimate: true,
                 requestDetails: data,
-                tripStatus: 'driversFound',
+                // tripStatus: 'driversFound',
                 headerMessage: `Drivers found. Accept offer?`,
                 acceptedDrivers: [...this.state.acceptedDrivers, data.driver],
             }) //Save request details
@@ -106,17 +106,16 @@ class RiderHomePage extends Component {
                 this.acceptedDriversMarkerMap.get(data.driver.username)
             )
        
-            this.props.history.push('/rider-home/driversFound')
+            this.props.history.push('/rider-home/drivers-found')
         })
         
         socket.on('START_TRIP', data => {
-            console.log('START_TRIP data', data)
             localStorage.setItem('requestDetails', JSON.stringify( data))
             
             this.setState({
                 showEstimate: true,
                 requestDetails: data,
-                tripStatus: 'trip-started',
+                // tripStatus: 'trip-started',
                 acceptedDrivers: [...this.state.acceptedDrivers, data.driver],
             }) //Save request details
             console.log(
@@ -130,7 +129,7 @@ class RiderHomePage extends Component {
             this.resetTrip()
 
             this.setState({
-                tripStatus: 'standby',
+                // tripStatus: 'standby',
                 headerMessage: 'Start a new ride',
                 acceptedDrivers: [],
             })
@@ -140,9 +139,8 @@ class RiderHomePage extends Component {
         socket.on('DRIVER_TRIP_CANCELED', () => {
             console.log('DRIVER_TRIP_CANCELED! \n')
             this.resetTrip()
-
             this.setState({
-                tripStatus: 'standby',
+                // tripStatus: 'standby',
                 headerMessage: 'Send a new request',
                 acceptedDrivers: [],
             })
@@ -157,7 +155,7 @@ class RiderHomePage extends Component {
             )
             this.setState({
                 acceptedDrivers: newArr,
-                tripStatus: 'requesting',
+                // tripStatus: 'requesting',
                 headerMessage: 'Finding drivers for you',
             })
 
@@ -165,7 +163,16 @@ class RiderHomePage extends Component {
                 this.acceptedDriversMarkerMap.get(data.driver.username).remove()
         })
     }
-
+    
+    
+    unbindListeners = ()=>{
+        socket.removeEventListenr('DRIVER_GO_OFFLINE')
+        socket.removeEventListenr('TRIP_ACCEPTED_BY_DRIVER')
+        socket.removeEventListenr('START_TRIP')
+        socket.removeEventListenr('RIDER_TRIP_CANCELED')
+        socket.removeEventListenr('DRIVER_TRIP_CANCELED')
+        console.log('unbindListeners')
+    }
     // addMarkers = () => {
     // 	// geojson.features.forEach((marker)=> {
     // 		this.addMarker()
@@ -177,7 +184,7 @@ class RiderHomePage extends Component {
         if (!rider) this.props.history.push('/')
 
         navigator.geolocation.getCurrentPosition(position => {
-            let path = this.props.location.pathname.split('/rider-home/')[1]
+            // let path = this.props.location.pathname.split('/rider-home/')[1]
             this.setState({
                 startLocation: [
                     position.coords.longitude,
@@ -185,7 +192,7 @@ class RiderHomePage extends Component {
                 ],
                 location: [position.coords.longitude, position.coords.latitude],
                 loadingMap: false,
-                tripStatus: path,
+                // tripStatus: path,
             })
 
             this.map = new mapboxgl.Map({
@@ -312,6 +319,7 @@ class RiderHomePage extends Component {
         if (this.map) {
             setTimeout(() => this.map.remove(), 3000)
         }
+        this.unbindListeners(socket);
     }
 
     addMarker = (markerStyle, markerId, marker) => {
@@ -321,7 +329,6 @@ class RiderHomePage extends Component {
         el.id = markerId
 
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
-        
             marker.properties.description
         )
 
@@ -351,7 +358,7 @@ class RiderHomePage extends Component {
 
         this.setState({
             requestingRide: false,
-            tripStatus: 'standby',
+            // tripStatus: 'standby',
             headerMessage: 'Start a new ride',
 			endLocation: null,
 			tripFare:0,
@@ -370,7 +377,7 @@ class RiderHomePage extends Component {
     handleConfirmRequest = idx => {
         const driver = this.state.acceptedDrivers[idx]
         console.log('driver', driver)
-        localStorage.setItem('currentDriver', JSON.stringify(driver))
+        // localStorage.setItem('currentDriver', JSON.stringify(driver))
 
         this.props.confirmTrip(socket, {
             driverId: driver._id,
@@ -382,7 +389,7 @@ class RiderHomePage extends Component {
             showEstimate: false,
             currentDriver: driver,
             headerMessage: `Your driver is on the way`,
-            tripStatus: 'confirmed',
+            // tripStatus: 'confirmed',
         })
 
         this.props.history.push('/rider-home/confirmed')
@@ -438,7 +445,7 @@ class RiderHomePage extends Component {
 
         this.setState({
             requestingRide: true,
-            tripStatus: 'requesting',
+            // tripStatus: 'requesting',
             headerMessage: 'Quote Submitted to Drivers',
         })
 
@@ -449,6 +456,7 @@ class RiderHomePage extends Component {
 
         socket.on('TRIP_REQUESTED', data => {
             this.setState({ tripId: data })
+            this.props.history.push('/rider-home/requesting')
             console.log('TRIP_ID \n' + JSON.stringify(data))
         })
      
@@ -463,7 +471,7 @@ class RiderHomePage extends Component {
         const {
             requestingRide,
             tripFare,
-            tripStatus,
+            // tripStatus,
             acceptedDrivers,
             headerMessage,
         } = this.state
@@ -472,7 +480,7 @@ class RiderHomePage extends Component {
             // if(!requestDetails) {
         const requestDetails = this.state.requestDetails || JSON.parse(localStorage.getItem('requestDetails'));
     
-        // const path = this.getStatePath(this.props.location.pathname)
+        const path = this.getStatePath(this.props.location.pathname)
     
         // }
         // console.log("this.props.location.pathname",path)
@@ -483,9 +491,9 @@ class RiderHomePage extends Component {
         //   tripStatus = path
         // }
 
-        let path = tripStatus
+        // let path = tripStatus
         const statusPanel = () => {
-            console.log('tripStatus', tripStatus)
+            // console.log('tripStatus', tripStatus)
             switch (path) {
                 case 'standby':
                     return (
@@ -544,7 +552,7 @@ class RiderHomePage extends Component {
                             </button>
                         </div>
                     )
-                case 'driversFound':
+                case 'drivers-found':
                     return (
                         <div className={'status-panel'}>
                             <h1 className={`status-panel__header`}>{headerMessage}</h1>
@@ -804,7 +812,7 @@ class RiderHomePage extends Component {
                     >
                         <div
                             ref={el => (this.mapContainer = el)}
-                            className={`map ${tripStatus !== 'standby' &&
+                            className={`map ${path !== 'standby' &&
                                 'hide-direction'}`}
                             style={{
                                 width: '100%',
