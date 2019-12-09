@@ -2,7 +2,7 @@
 import {Rider} from '../../rider/rider.model'
 import {Driver} from '../../driver/driver.model'
 import {Trip} from '../trip.model'
-import {crud} from '../trip.crud'
+import {TripCrud} from '../trip.crud'
 import { app } from '../../../server'
 import * as logger from '../../../logger'
 import sio from 'socket.io'
@@ -57,7 +57,7 @@ describe('TRIP crud', () => {
                     distance:10,
                     duration:10
                 })
-            const match = await crud.getById(trip.id)
+            const match = await TripCrud.getById(trip.id)
             expect(match.id).toBe(trip.id)
         })
     })
@@ -114,7 +114,7 @@ describe('TRIP crud', () => {
                 },
             ]
             const trips = await Trip.create(tripsToCreate)
-            const matchedUsers = await crud.getAll()
+            const matchedUsers = await TripCrud.getAll()
             expect(matchedUsers).toHaveLength(trips.length)
         })
     })
@@ -136,7 +136,7 @@ describe('TRIP crud', () => {
                 distance:10,
                 duration:10
             })
-            await crud.removeById(id)
+            await TripCrud.removeById(id)
             const match = await Trip.findById(id).exec()
             expect(match).toBe(null)
         })
@@ -160,7 +160,7 @@ describe('TRIP crud', () => {
                     distance:10,
                     duration:10
                 })
-            const user = await crud.updateById(id, {status: 'standby'})
+            const user = await TripCrud.updateById(id, {status: 'standby'})
             expect(user.id).toBe(id)
             expect(user.status).toBe('standby')
         })

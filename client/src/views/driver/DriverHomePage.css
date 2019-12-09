@@ -103,8 +103,8 @@
     border-radius: 16px 12px;
     display:flex;
     flex-flow:column wrap;
-    font-size:0.7rem;
-    font-weight: 500;
+    /*font-size:0.7rem;*/
+    /*font-weight: 500;*/
     margin-top:0;
     line-height: 1.4rem;
     outline: none;
@@ -112,12 +112,13 @@
     background-color:#3ACCE1;
     padding:20px 16px;
     border:none;
-
-}
-.driver-item-accept-button{
     font-size:1rem;
     font-weight:700;
 }
+/*.driver-item-accept-button{*/
+/*    font-size:1rem;*/
+/*    font-weight:700;*/
+/*}*/
 
 .driver-name-your-fare__button{
     border-radius: 0 0 16px 16px;

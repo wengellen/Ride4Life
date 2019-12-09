@@ -17,32 +17,32 @@ import {
 	UPDATE_RIDER_PROFILE_STARTED,
 	UPDATE_RIDER_PROFILE_SUCCESS,
 	UPDATE_RIDER_PROFILE_FAILURE,
-	SUBMIT_REVIEW_STARTED,
-	SUBMIT_REVIEW_SUCCESS,
-	SUBMIT_REVIEW_FAILURE,
+	SUBMIT_DRIVER_REVIEW_STARTED,
+	SUBMIT_DRIVER_REVIEW_SUCCESS,
+	SUBMIT_DRIVER_REVIEW_FAILURE,
 	CANCEL_TRIP_REQUEST,
 	
 } from "./actionTypes";
 // Find drivers nearby
-export const submitDriverReview = (review, driver_id) => dispatch => {
-	dispatch({type: SUBMIT_REVIEW_STARTED})
-	const currentUser = JSON.parse(localStorage.getItem('loggedInUser'))
-	// console.log("currentUser",currentUser)
+export const submitDriverReview = (review) => dispatch => {
+	dispatch({type: SUBMIT_DRIVER_REVIEW_STARTED})
+	// const currentUser = JSON.parse(localStorage.getItem('user'))
+	const trip = JSON.parse(localStorage.getItem('requestDetails'))
 	const requestPayload = {
-				driver_id,
-				user_id: currentUser.rider_id,
-				review:review.details,
-				rating:review.rating
-			}
-	// console.log("requestPayload",requestPayload)
+			driver_id: trip.driver._id,
+			trip_id:trip._id,
+			rider_id: trip.rider._id,
+			review:review.details,
+			rating:review.rating
+		}
 	
 	return (
-		API().post('/api/drivers/reviews', requestPayload)
+		API().post(`/api/rider/${trip.rider._id}/review-trip/${trip._id}`, requestPayload)
 		.then(res =>{
-			dispatch({type: SUBMIT_REVIEW_SUCCESS, payload: res.data})
+			dispatch({type: SUBMIT_DRIVER_REVIEW_SUCCESS, payload: res.data})
 		})
 		.catch(err =>{
-			dispatch({type: SUBMIT_REVIEW_FAILURE, payload: err.message})
+			dispatch({type: SUBMIT_DRIVER_REVIEW_FAILURE, payload: err.message})
 		})
 	)
 }
@@ -152,11 +152,16 @@ export const cancelTripRequest = () => dispatch => {
 export const confirmTrip = (socket, data) => dispatch => {
 	console.log('confirmTrip')
 	socket.emit('CONFIRM_TRIP', data)
+	
+	socket.on('TRIP_CONFIRMED_BY_RIDER', ()=>{
+		console.log("!!!!!TRIP_CONFIRMED_BY_RIDER")
+	})
 }
 
 export const riderCancelTrip = (socket, data) => dispatch => {
 	console.log('riderCancelTrip')
 	socket.emit('RIDER_CANCEL_TRIP', data)
+	
 }
 
 
@@ -172,7 +177,7 @@ export const riderCancelRequest = (socket, data) => dispatch => {
 }
 
 export const requestTrip = (socket, data) => dispatch =>{
-	socket.emit('REQUEST_TRIP', data)
+	socket.emit('RIDER_REQUEST_TRIP', data)
 }
 
 export const updateThisRiderLocation = (socket, data) => dispatch =>{

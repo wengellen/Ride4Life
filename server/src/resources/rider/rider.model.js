@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+var SchemaTypes = mongoose.Schema;
 
 const riderSchema = new mongoose.Schema(
   {
@@ -24,10 +25,10 @@ const riderSchema = new mongoose.Schema(
         type: String,
         default:"https://i.pravatar.cc/60"
       },
-      memberSince: { type: Date },
-      tripCompleted: {type: Number},
+      memberSince: { type:Date,  default: Date.now()},
+      tripCompleted: {type: Number, default:0},
       rating: {type: Number, default:0},
-      numRiderRated:{type:Number},
+      numRideRated:{type:Number, default:0},
       // Account info
       username:{
           type: String,

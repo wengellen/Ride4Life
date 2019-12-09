@@ -16,9 +16,9 @@ import {
 	SEND_TRIP_REQUEST_STARTED,
 	SEND_TRIP_REQUEST_SUCCESS,
 	SEND_TRIP_REQUEST_FAILURE,
-	SUBMIT_REVIEW_STARTED,
-	SUBMIT_REVIEW_SUCCESS,
-	SUBMIT_REVIEW_FAILURE,
+	SUBMIT_DRIVER_REVIEW_STARTED,
+	SUBMIT_DRIVER_REVIEW_SUCCESS,
+	SUBMIT_DRIVER_REVIEW_FAILURE,
 	CANCEL_TRIP_REQUEST,
 	CONFIRM_TRIP_REQUEST,
 	UPDATE_RIDER_PROFILE_STARTED,
@@ -149,17 +149,17 @@ export const riderReducer = (state = initialState, action)=>{
 			return {...state,
 				sendTripRequestStarted:false
 			}
-		case SUBMIT_REVIEW_STARTED:
+		case SUBMIT_DRIVER_REVIEW_STARTED:
 			return {...state,
 				submitDriverReviewStarted:true
 			}
-		case SUBMIT_REVIEW_SUCCESS:
+		case SUBMIT_DRIVER_REVIEW_SUCCESS:
 			console.log('action.payload.message',action.payload.message)
 			return {...state,
 				submitDriverReviewStarted:false,
 				submitDriverReviewSuccessMessage:action.payload.message
 			}
-		case SUBMIT_REVIEW_FAILURE:
+		case SUBMIT_DRIVER_REVIEW_FAILURE:
 			return {...state,
 				submitDriverReviewStarted:false
 			}

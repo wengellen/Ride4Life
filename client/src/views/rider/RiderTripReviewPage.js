@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 import Rating from "../../components/Ratings/Rating";
 import Loader from 'react-loader-spinner'
 
 import {
-	submitDriverReview
+	submitDriverReview,
+	openModal,
+	resetTrip
 } from '../../actions';
 import {Button} from "@material-ui/core";
 
-class DriverReviewPage extends Component {
+class RiderTripReviewPage extends Component {
 	state = {
 		isEditing: true,
 		driver:null,
@@ -43,18 +46,20 @@ class DriverReviewPage extends Component {
 		})
 	}
 	
-	componentWillUnmount() {
-		// this.props = {}
-	}
-	
-	
 	submitDriverReview = (e) => {
 		e.preventDefault()
 		// console.log('submitDriverReview ',this.state.review)
-		this.props.submitDriverReview(this.state.review,this.props.currentDriver.driver_id)
-		.then(msg=>{
-			// this.props.history.push(-0)
-		})
+		this.props.submitDriverReview(this.state.review)
+			.then(res => {
+				this.props.openModal({shouldOpen:false})
+				this.props.resetTrip().then(()=>{
+					this.props.history.push('/rider/standby')
+				})
+			})
+	}
+	
+	handleClose = () => {
+		this.props.openModal({shouldOpen:false})
 	}
 	
 	render() {
@@ -81,12 +86,12 @@ class DriverReviewPage extends Component {
 						   </form>
 						   <div className="leave-review">
 							   <h1>Rate your Trip </h1>
-							   <Rating stars={5}/>
-							   {/*<Rating*/}
-								{/*   value={3}*/}
-								{/*   max={5}*/}
-								{/*   onChange={e=> this.rateDriver(e)}*/}
-							   {/*/>*/}
+							   {/*<Rating stars={5}/>*/}
+							   <Rating
+								   value={0}
+								   max={5}
+								   onChange={e=> this.rateDriver(e)}
+							   />
 						   </div>
 					   <Button onClick={this.submitDriverReview}>Submit Rating</Button>
 					   <h2>{this.props.submitDriverReviewSuccessMessage}</h2>
@@ -108,5 +113,5 @@ const mapStateToProps = ({riderReducer}) => {
 
 export default connect(
 	mapStateToProps,
-	{submitDriverReview }
-)(DriverReviewPage);
+	{submitDriverReview, openModal, resetTrip }
+)(withRouter(RiderTripReviewPage));

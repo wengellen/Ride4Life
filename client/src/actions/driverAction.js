@@ -12,7 +12,9 @@ import {
 	UPDATE_PROFILE_STARTED,
 	UPDATE_PROFILE_SUCCESS,
 	UPDATE_PROFILE_FAILURE,
-	
+	SUBMIT_RIDER_REVIEW_STARTED,
+	SUBMIT_RIDER_REVIEW_SUCCESS,
+	SUBMIT_RIDER_REVIEW_FAILURE,
 } from "./actionTypes";
 
 export const driverCancelTrip = (socket, data) => dispatch => {
@@ -38,12 +40,47 @@ export const driverGoOffline = (socket, data) => dispatch => {
 export const driverStartTrip = (socket, data) => dispatch => {
 	console.log('trip started')
 	socket.emit('DRIVER_START_TRIP', data)
+	
+	dispatch({
+		type:"START_TRIP"
+	})
+}
+
+export const driverEndTrip = (socket, data) => dispatch => {
+	console.log('trip ended')
+	socket.emit('DRIVER_END_TRIP', data)
 }
 
 export const updateDriverLocation = (socket, data) => dispatch => {
 	console.log('updateDriverLocation')
 	socket.emit('UPDATE_DRIVER_LOCATION', data)
 }
+
+export const submitRiderReview = (review) => dispatch => {
+	dispatch({type: SUBMIT_RIDER_REVIEW_STARTED})
+	// const currentUser = JSON.parse(localStorage.getItem('user'))
+	const trip = JSON.parse(localStorage.getItem('requestDetails'))
+	const requestPayload = {
+		driver_id: trip.driver._id,
+		trip_id:trip._id,
+		rider_id: trip.rider._id,
+		review:review.details,
+		rating:parseInt(review.rating)
+	}
+	
+	return (
+		API().post(`/api/driver/${trip.driver._id}/review-trip/${trip._id}`, requestPayload)
+		.then(res =>{
+			dispatch({type: SUBMIT_RIDER_REVIEW_SUCCESS, payload: res.data})
+			return res.data
+		})
+		.catch(err =>{
+			dispatch({type: SUBMIT_RIDER_REVIEW_FAILURE, payload: err.message})
+			return err.response
+		})
+	)
+}
+
 
 // Update Profile
 export const updateProfile = (user) => dispatch => {

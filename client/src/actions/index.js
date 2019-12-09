@@ -1,8 +1,8 @@
 import {
     LOGOUT_USER,
-    OPEN_MODAL
+    OPEN_MODAL,
+    RESET_TRIP
 } from './actionTypes'
-
 import socket from "../utils/socketConnection";
 
 export {
@@ -15,7 +15,9 @@ export {
     driverGoOnline,
     driverGoOffline,
     driverCancelTrip,
-    driverStartTrip
+    driverStartTrip,
+    driverEndTrip,
+    submitRiderReview
 } from './driverAction'
 
 export {
@@ -27,18 +29,31 @@ export {
     findDriversNearby,
     signup_rider,
     login_rider,
-    submitDriverReview,
     uploadRiderProfile,
     updateThisRiderLocation,
-    riderCancelRequest
+    riderCancelRequest,
+    submitDriverReview
 } from './riderAction'
 
 export const logoutUser = () => dispatch => {
     console.log('logoutUser',logoutUser)
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    localStorage.removeItem('requestDetails')
+    localStorage.removeItem('currentDriver')
     socket.disconnect()
     dispatch({type: LOGOUT_USER})
+}
+
+export const resetTrip = () => dispatch => {
+    console.log('resetTrip',resetTrip)
+    localStorage.removeItem('requestDetails')
+    localStorage.removeItem('currentDriver')
+    
+    dispatch({
+        type:"RESET_TRIP"
+    })
+    return Promise.resolve();
 }
 
 export function openModal({shouldOpen, component}) {

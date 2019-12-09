@@ -14,7 +14,36 @@ export const getRiderProfile = (req, res) => {
 export const updateRiderProfile = (req, res) => {
 };
 
-
+export const reviewTrip = async (req, res)=>{
+  const {driver_id, rider_id, trip_id, review, rating} = req.body
+  try{
+     const trip = await Trip.findByIdAndUpdate(
+         trip_id,
+         { tripRating: rating, review},
+         {new:true})
+         .populate("driver")
+         .populate("rider")
+         .exec();
+  
+    const driver = await Driver.findById(driver_id).exec()
+    
+     let currentNumRatedTrip = driver.numRideRated;
+     let currentRating = driver.rating;
+     let ratingTripTotal = ((currentNumRatedTrip * currentRating) + rating)/currentNumRatedTrip + 1
+     
+    const updateDriver = await Driver.findByIdAndUpdate(
+        driver_id,
+        {  $inc: [{ tripCompleted: 1},{ numRideRated: 1}], rating:ratingTripTotal },
+        {new:true})
+    .exec();
+  
+    console.log('trip', trip)
+    console.log('updateDriver', updateDriver)
+    res.status(200).json({ data: {trip,  driver:updateDriver}});
+  }catch (e) {
+    res.status(500).json({ error: e });
+  }
+}
 export const getRiderTrips = async (req, res) => {
   try {
     const trips = await Trip.find({ rider: req.user._id })

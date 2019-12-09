@@ -7,7 +7,8 @@ import DriverLoginPage from './views/driver/DriverLoginPage'
 import DriverSignupPage from './views/driver/DriverSignupPage'
 import RiderLoginPage from './views/rider/RiderLoginPage'
 import RiderSignupPage from './views/rider/RiderSignupPage'
-import DriverReviewPage from './views/driver/DriverReviewPage'
+import RiderTripReviewPage from './views/rider/RiderTripReviewPage'
+import DriverTripReviewPage from './views/driver/DriverTripReviewPage'
 import RiderHomePage from './views/rider/RiderHomePage'
 import DriverHomePage from './views/driver/DriverHomePage'
 import DriverProfilePage from './views/driver/DriverProfilePage'
@@ -94,31 +95,38 @@ class App extends React.Component {
                             component={DriverEditProfilePage}
                         />
                         <PrivateRoute
-                            path="/rider-home/standby"
+                            path="/rider/standby"
                             component={RiderHomePage}
                         />
                         <PrivateRoute
-                            path="/rider-home/requesting"
+                            path="/rider/requesting"
                             component={RiderHomePage}
                         />
                         <PrivateRoute
-                            path="/rider-home/drivers-found"
+                            path="/rider/drivers-found"
                             component={RiderHomePage}
                         />
                         <PrivateRoute
-                            path="/rider-home/confirmed"
+                            path="/rider/confirmed"
                             component={RiderHomePage}
                         />
                         <PrivateRoute
-                            path="/rider-home/pickup-rider"
+                            path="/rider/pickup-rider"
                             component={RiderHomePage}
                         />
                         <PrivateRoute
-                            path="/rider-home/trip-started"
+                            path="/rider/trip-started"
                             component={RiderHomePage}
                         />
+                        
                         <PrivateRoute
-                            path="/rider-home/driver/:id"
+                            path="/rider/trip-ended"
+                            component={RiderHomePage}
+                        />
+                        
+                        {/*RIDER*/}
+                        <PrivateRoute
+                            path="/rider/driver/:id"
                             component={DriverProfilePage}
                         />
     
@@ -128,41 +136,41 @@ class App extends React.Component {
                         />
     
                         <PrivateRoute
-                            path="/driver-home/offline"
+                            path="/driver/offline"
                             component={DriverHomePage}
                         />
                         <PrivateRoute
-                            path="/driver-home/standby"
+                            path="/driver/standby"
                             component={DriverHomePage}
                         />
                         <PrivateRoute
-                            path="/driver-home/requestIncoming"
+                            path="/driver/requestIncoming"
                             component={DriverHomePage}
                         />
                         <PrivateRoute
-                            path="/driver-home/waitingForConfirmation"
+                            path="/driver/waitingForConfirmation"
                             component={DriverHomePage}
                         />
                         <PrivateRoute
-                            path="/driver-home/confirmed"
+                            path="/driver/confirmed"
                             component={DriverHomePage}
                         />
                         <PrivateRoute
-                            path="/driver-home/pickup"
+                            path="/driver/pickup"
                             component={DriverHomePage}
                         />
                         <PrivateRoute
-                            path="/driver-home/trip-started"
+                            path="/driver/trip-started"
+                            component={DriverHomePage}
+                        />
+                        <PrivateRoute
+                            path="/driver/trip-ended"
                             component={DriverHomePage}
                         />
                         {/*<PrivateRoute*/}
-                        {/*    path="/drivers/:id"*/}
-                        {/*    component={DriverProfilePage}*/}
+                        {/*    path="/driver/trip-ended"*/}
+                        {/*    component={DriverTripReviewPage}*/}
                         {/*/>*/}
-                        <PrivateRoute
-                            path="/driver/review"
-                            component={DriverReviewPage}
-                        />
                     </Switch>
                 </div>
             </ThemeProvider>

@@ -1,4 +1,5 @@
 import { Driver } from './driver.model'
+import { Rider } from '../rider/rider.model'
 import { Trip } from '../trip/trip.model'
 require('dotenv').config()
 
@@ -13,6 +14,49 @@ cloudinary.config({
 
 export const getMe = (req, res) => {
     res.status(200).send(req.user)
+}
+
+
+export const reviewTrip = async (req, res)=>{
+    const {driver_id, rider_id, trip_id, review, rating} = req.body
+    try{
+        const tripFound = await Trip.findById(trip_id).exec()
+        if (tripFound.rated){
+            console.log('"This trip has been reviewed"')
+            return  res.status(404).json({ data: "This trip has been reviewed"});
+        }
+        
+        const trip = await Trip.findByIdAndUpdate(
+            trip_id,
+            { tripRating: parseInt(rating), review, rated:true},
+            {new:true})
+        .populate("driver")
+        .populate("rider")
+        .exec();
+    
+        const rider = await Rider.findById(rider_id).exec()
+        
+        let currentNumRatedTrip = rider.numRideRated;
+        let currentRating = rider.rating;
+        let ratingTripTotal = parseFloat((currentNumRatedTrip * currentRating) + rating)
+        let newNumRatedTrip = parseInt(currentNumRatedTrip + 1);
+        let averageTripRating = parseFloat(ratingTripTotal/newNumRatedTrip).toFixed(2)
+        console.log('rider', rider)
+        console.log('currentNumRatedTrip', currentNumRatedTrip)
+        console.log('currentRating', currentRating)
+        console.log('ratingTripTotal',ratingTripTotal)
+        console.log('averageTripRating',averageTripRating)
+        const updateRider = await Rider.findByIdAndUpdate(
+            rider_id,
+            {  $inc: { tripCompleted: 1, numRideRated: 1}, rating:averageTripRating},
+            {new:true})
+        .exec();
+        
+        console.log('updateRider', updateRider)
+        res.status(200).json({ data: {trip,  rider:updateRider}});
+    }catch (e) {
+        res.status(500).json({ error: e });
+    }
 }
 
 export const getDriverById = async (req, res) => {

@@ -22,7 +22,11 @@ const updateById = (id, update) => {
     return Trip.findByIdAndUpdate(id, update, {new: true}).exec()
 }
 
-export const crud = {
+const updateStatus = (id, status) => {
+    return this.updateById(id, {status});
+}
+
+export const TripCrud = {
     getById,
     getAll,
     createOne,

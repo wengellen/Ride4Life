@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+var SchemaTypes = mongoose.Schema.Types;
 
 const geoSchema = new mongoose.Schema({
     type: {
@@ -35,18 +36,19 @@ const driverSchema = new mongoose.Schema(
         type: String
     },
     memberSince: {
-        type: Date
+       type:Date,
+       default: Date.now(),
     },
     tripCompleted: {
         type: Number,
         default:0
     },
     rating: {
+        rating: {type: Number, default:0},
+    },
+    numRideRated: {
         type: Number,
         default:0
-    },
-    numRiderRated: {
-        type: Number
     },
     firstName: {
       type: String

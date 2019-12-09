@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import {getMe, getDriverById, updateDriverProfile, getDriverTrips, updateDriverLocation,
-quoteTrip, uploadProfilePhoto, uploadProfile } from './driver.controllers'
+quoteTrip, uploadProfilePhoto, uploadProfile, reviewTrip } from './driver.controllers'
 
 const router = Router()
 
@@ -12,6 +12,9 @@ router.put('/location', updateDriverLocation)
 router.put('/quote', quoteTrip)
 router.post('/uploadProfile', uploadProfile)
 router.post('/uploadProfilePhoto', uploadProfilePhoto)
+router.post('/uploadProfilePhoto', uploadProfilePhoto)
+router.post('/:id/review-trip/:tripId', reviewTrip)
+
 
 // router.post('/:id/trip', requestTrip)
 export default router

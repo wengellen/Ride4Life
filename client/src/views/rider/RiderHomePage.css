@@ -166,6 +166,16 @@
     font-weight:700;
 }
 
+.request-ride-button div{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.request-ride-button img{
+    margin-right:40px;
+}
+
 /*  DRIVER CONTAINER  */
 .drivers-nearby-container{
     display:flex;

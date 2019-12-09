@@ -46,11 +46,15 @@ const tripSchema = new mongoose.Schema(
     },
     tripRating:{
         type: Number,
-        default: 5
+        default: 0
     },
     tripFare:{
         type: Number,
         default: 0
+    },
+    rated:{
+        type:Boolean,
+        default:false
     },
     quote:{
         type: Number,

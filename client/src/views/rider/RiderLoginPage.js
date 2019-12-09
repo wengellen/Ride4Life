@@ -50,7 +50,7 @@ class RiderLoginPage extends React.Component {
 		.then(res => {
 			console.log(res)
 			if(res && res.message){
-				this.props.history.push('/rider-home/standby');
+				this.props.history.push('/rider/standby');
 			}else{
 				console.log('SERVER ERROR, PLEASE COME BACK LATER')
 			}
