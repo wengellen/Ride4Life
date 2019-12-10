@@ -296,7 +296,7 @@ class DriverHomePage extends Component {
     }
     
     resetTrip = () => {
-        localStorage.removeItem('requestDetails')
+        // localStorage.removeItem('requestDetails')
         if (this.directions){
             this.directions.setOrigin(this.state.startLocation)
             this.directions.removeRoutes();
@@ -474,13 +474,12 @@ class DriverHomePage extends Component {
     }
     
     componentDidUpdate(prevProps){
-        if(prevProps.resetTrip !== this.props.resetTrip){
-            if (this.props.resetTrip){
+        if(prevProps.shouldResetTrip !== this.props.shouldResetTrip ||  this.props.shouldResetTrip){
                 this.resetTrip();
                 this.hideDirecitonsUI();
-            }
         }
     }
+    
     
     getStatePath = (path) => {
         return path.split('/driver/')[1]
@@ -686,7 +685,7 @@ class DriverHomePage extends Component {
 
 const mapStateToProps = ({ driverReducer, tripReducer }, ownProps) => ({
     tripStatus:driverReducer.tripStatus,
-    resetTrip:tripReducer.resetTrip
+    shouldResetTrip:tripReducer.shouldResetTrip
 })
 
 export default connect(

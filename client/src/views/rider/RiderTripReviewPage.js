@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner'
 import {
 	submitDriverReview,
 	openModal,
-	resetTrip
+	toggleResetTrip
 } from '../../actions';
 import {Button} from "@material-ui/core";
 
@@ -52,14 +52,21 @@ class RiderTripReviewPage extends Component {
 		this.props.submitDriverReview(this.state.review)
 			.then(res => {
 				this.props.openModal({shouldOpen:false})
-				this.props.resetTrip().then(()=>{
+				this.props.toggleResetTrip(true).then(()=>{
 					this.props.history.push('/rider/standby')
 				})
 			})
 	}
 	
 	handleClose = () => {
-		this.props.openModal({shouldOpen:false})
+		// this.props.openModal({shouldOpen:false})
+		this.props.submitDriverReview(this.state.review)
+		.then(res => {
+			this.props.openModal({shouldOpen:false})
+			this.props.toggleResetTrip(true).then(()=>{
+				this.props.history.push('/rider/standby')
+			})
+		})
 	}
 	
 	render() {
@@ -113,5 +120,5 @@ const mapStateToProps = ({riderReducer}) => {
 
 export default connect(
 	mapStateToProps,
-	{submitDriverReview, openModal, resetTrip }
+	{submitDriverReview, openModal, toggleResetTrip }
 )(withRouter(RiderTripReviewPage));

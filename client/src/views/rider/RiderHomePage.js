@@ -81,10 +81,16 @@ class RiderHomePage extends Component {
             acceptedDrivers: [...this.state.acceptedDrivers, data.driver],
         }) //Save request details
         console.log(
+            'acceptedDrivers' , this.state.acceptedDrivers
+        )
+        console.log(
+            'this.acceptedDriversMarkerMap' + this.acceptedDriversMarkerMap
+        )
+        console.log(
             'A driver has accepted your trip \n' + JSON.stringify(data)
         )
         console.log(
-            'acceptedDriversMarkerMap \n',
+            'onTripAcceptedByDriver \n',
             this.acceptedDriversMarkerMap.get(data.driver.username)
         )
         
@@ -324,11 +330,11 @@ class RiderHomePage extends Component {
         }
     }
     
-    componentDidUpdate(prevProps){
-        if(prevProps.resetTrip !== this.props.resetTrip){
-            this.resetTrip();
-        }
-    }
+    // componentDidUpdate(prevProps){
+    //     if(prevProps.shouldResetTrip !== this.props.shouldResetTrip ){
+    //         this.resetTrip();
+    //     }
+    // }
     
     
     addMarker = (markerStyle, markerId, marker) => {
@@ -359,6 +365,9 @@ class RiderHomePage extends Component {
         if (destinationInput) {
             destinationInput.value = ''
         }
+        
+        this.state.acceptedDrivers = [];
+        
         if ( this.map) {
             this.map.zoom = 15
         }
@@ -841,9 +850,9 @@ const mapStateToProps = ({ riderReducer, tripReducer }) => ({
     findNearbyDriverMessage: riderReducer.findNearbyDriverMessage,
     tripStatus: riderReducer.tripStatus,
     submitDriverReviewSuccessMessage:
-   riderReducer.submitDriverReviewSuccessMessage,
+    riderReducer.submitDriverReviewSuccessMessage,
     
-    resetTrip:tripReducer.resetTrip
+    shouldResetTrip:tripReducer.shouldResetTrip
 })
 
 

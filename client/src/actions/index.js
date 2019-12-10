@@ -1,7 +1,7 @@
 import {
     LOGOUT_USER,
     OPEN_MODAL,
-    RESET_TRIP
+    TOGGLE_RESET_TRIP
 } from './actionTypes'
 import socket from "../utils/socketConnection";
 
@@ -45,13 +45,14 @@ export const logoutUser = () => dispatch => {
     dispatch({type: LOGOUT_USER})
 }
 
-export const resetTrip = () => dispatch => {
-    console.log('resetTrip',resetTrip)
+export const toggleResetTrip = (isTrue) => dispatch => {
+    console.log('resetTrip')
     localStorage.removeItem('requestDetails')
     localStorage.removeItem('currentDriver')
     
     dispatch({
-        type:"RESET_TRIP"
+        type:"TOGGLE_RESET_TRIP",
+        payload:isTrue
     })
     return Promise.resolve();
 }

@@ -6,7 +6,7 @@ import {withRouter} from 'react-router-dom'
 import {
 	submitRiderReview,
 	openModal,
-	resetTrip
+	toggleResetTrip
 } from '../../actions';
 import {Button} from "@material-ui/core";
 
@@ -51,7 +51,7 @@ class DriverTripReviewPage extends Component {
 		this.props.submitRiderReview(this.state.review)
 			.then(res => {
 				this.props.openModal({shouldOpen:false})
-				this.props.resetTrip().then(()=>{
+				this.props.toggleResetTrip(true).then(()=>{
 					this.props.history.push('/driver/standby')
 				})
 			})
@@ -59,8 +59,14 @@ class DriverTripReviewPage extends Component {
 	
 	handleClose = () => {
 		console.log("handleClose")
-		this.props.openModal({shouldOpen:false})
-	
+		// this.props.openModal({shouldOpen:false})
+		this.props.submitRiderReview(this.state.review)
+		.then(res => {
+			this.props.openModal({shouldOpen:false})
+			this.props.toggleResetTrip(true).then(()=>{
+				this.props.history.push('/driver/standby')
+			})
+		})
 	}
 	
 	render() {
@@ -69,7 +75,6 @@ class DriverTripReviewPage extends Component {
 	   }else{
 		   return (
 			   <div className="driver-review-container">
-				 
 				   <main className="driver-profile-main review">
 						   <div className="driver-profile-img-container ">
 							   <img src="http://lorempixel.com/500/500" className="round" alt={"driver avatar"}/>
@@ -114,5 +119,5 @@ const mapStateToProps = ({riderReducer}) => {
 
 export default connect(
 	mapStateToProps,
-	{submitRiderReview, openModal, resetTrip}
+	{submitRiderReview, openModal, toggleResetTrip}
 )(withRouter(DriverTripReviewPage));

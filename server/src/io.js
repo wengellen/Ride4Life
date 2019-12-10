@@ -435,6 +435,7 @@ export const initialize = function(server) {
         socket.on('DRIVER_END_TRIP', async data => {
             const { driver, rider } = data
             let trip
+            // socket.join(data._id)
             socket.join(data._id)
             console.log('DRIVER_END_TRIP ------>')
             console.log('data', data)
@@ -461,7 +462,8 @@ export const initialize = function(server) {
                 .populate('rider')
                 .populate('driver')
                 .exec()
-            
+    
+                
                 // const who = await Driver.findByIdAndUpdate(
                 //     driver._id,
                 //     { new: true }

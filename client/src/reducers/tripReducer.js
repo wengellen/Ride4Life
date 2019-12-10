@@ -1,17 +1,18 @@
-import {RESET_TRIP, START_TRIP} from '../actions/actionTypes'
+import {TOGGLE_RESET_TRIP} from '../actions/actionTypes'
 
-export const tripReducer =  (state = {resetTrip:false}, action)=>{
+export const tripReducer =  (state = {shouldResetTrip:false}, action)=>{
 	switch(action.type){
-		case RESET_TRIP:
+		case TOGGLE_RESET_TRIP:
+			console.log('action.payload',action.payload)
 			return {
 				...state,
-				resetTrip:true
+				shouldResetTrip: action.payload
 			}
-		case START_TRIP:
-			return {
-				...state,
-				resetTrip:false
-			}
+		// case START_TRIP:
+		// 	return {
+		// 		...state,
+		// 		resetTrip:false
+		// 	}
 		default:
 			return state
 	}
