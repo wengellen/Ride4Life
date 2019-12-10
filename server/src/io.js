@@ -436,7 +436,7 @@ export const initialize = function(server) {
             const { driver, rider } = data
             let trip
             // socket.join(data._id)
-            socket.join(data._id)
+            // socket.join(data._id)
             console.log('DRIVER_END_TRIP ------>')
             console.log('data', data)
             console.log('driver', driver)
@@ -474,7 +474,8 @@ export const initialize = function(server) {
                 socketIo.sockets
                 .to(rider.username)
                 .emit('TRIP_ENDED_BY_DRIVER', { ...data})
-            
+    
+                socket.leave(data._id)
             } catch (e) {
                 console.log('error', e)
             }
