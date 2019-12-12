@@ -1,31 +1,42 @@
 
 import {Driver} from './driver.model'
 
-const getUserById = (id) => {
+const getDriverById = (id) => {
     return Driver.findById(id)
     .exec()
 }
 
-const getAllUsers = () => {
+const getAllDrivers = () => {
     return Driver.find({})
     .exec()
 }
 
-const createUser = (userDetails) => {
+const createDriver = (userDetails) => {
     return Driver.create(userDetails)
 }
-const removeUserById = (id) => {
+
+const removeDriverById = (id) => {
     return Driver.findByIdAndDelete(id).exec()
 }
 
-const updateUserById = (id, update) => {
-    return Driver.findByIdAndUpdate(id, update, {new: true}).exec()
+const updateDriverById = (id, update) => {
+    return Driver.findByIdAndUpdate(id, update, {new: true, useFindAndModify:false}).exec()
+}
+
+export const updateDriverLocation = (id, location) =>{
+    return updateDriverById(id,  {location})
+}
+
+export const updateDriverStatus = (id, status) =>{
+    return updateDriverById(id,  {status:status})
 }
 
 export const crud = {
-    getUserById,
-    getAllUsers,
-    createUser,
-    removeUserById,
-    updateUserById
+    getDriverById,
+    getAllDrivers,
+    createDriver,
+    removeDriverById,
+    updateDriverById,
+    updateDriverLocation,
+    updateDriverStatus
 }

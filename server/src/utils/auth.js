@@ -142,6 +142,42 @@ export const signin = async (req, res) => {
   }
 };
 
+export const isTokenValid = async(token) => {
+  let payload  // id: user.id, role: user.role
+  let doc
+  try {
+    // IF TOKEN MATCHES SECRETS, IT"S AUTHORIZED
+    payload = await verifyToken(token);
+  } catch (e) {
+    console.log("You are not authorized")
+    return false
+  }
+  
+  switch (payload.role) {
+    case "rider":
+      doc = Rider;
+      break;
+    case "driver":
+      doc = Driver;
+      break;
+    case "admin":
+      doc = User;
+      break;
+  }
+  // IF USER ID IS FOUND IN ${ROLE} TABLE, IT"S AUTHENTICATED
+  const user = await doc
+  .findById(payload.id)
+  .select("-password")
+  .lean()
+  .exec();
+  
+  if (!user) {
+    console.log("Can not be authenticated");
+    return false
+  }
+ 
+  
+}
 
 export const protect = async (req, res, next) => {
   let doc;

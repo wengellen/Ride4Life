@@ -9,7 +9,7 @@ import morgan from 'morgan'
 import config from './config'
 import cors from 'cors'
 import { connect } from './utils/db'
-import { signup, signin, protect } from './utils/auth'
+import { signup, signin, protect, isTokenValid } from './utils/auth'
 import driverRouter from './resources/driver/driver.router'
 import riderRouter from './resources/rider/rider.router'
 import tripRouter from './resources/trip/trip.router'
@@ -40,6 +40,14 @@ app.use(json())
 app.use(formData.parse())
 app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
+
+globalSocket.use((socket,  next) => {
+	let token = socket.handshake.query.token;
+	if (isTokenValid(token)){
+		return next()
+	}
+	return next(new Error('authentication error'))
+})
 
 app.post('/signup', signup)
 app.post('/signin', signin)
