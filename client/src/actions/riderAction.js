@@ -1,6 +1,5 @@
 // RIDER
 import API from "../utils/axiosAuth";
-
 import {
 	RIDER_SIGNUP_STARTED,
 	RIDER_SIGNUP_SUCCESS,
@@ -21,23 +20,23 @@ import {
 	SUBMIT_DRIVER_REVIEW_SUCCESS,
 	SUBMIT_DRIVER_REVIEW_FAILURE,
 	CANCEL_TRIP_REQUEST,
-	
 } from "./actionTypes";
+import {setLocalStore, getLocalStore} from "../utils/helpers";
 // Find drivers nearby
-export const submitDriverReview = (review) => dispatch => {
+export const submitDriverReview = (review, data) => dispatch => {
 	dispatch({type: SUBMIT_DRIVER_REVIEW_STARTED})
-	// const currentUser = JSON.parse(localStorage.getItem('user'))
-	const trip = JSON.parse(localStorage.getItem('requestDetails'))
+	
+	const  {driverId, riderId, tripId} = data
 	const requestPayload = {
-			driver_id: trip.driver._id,
-			trip_id:trip._id,
-			rider_id: trip.rider._id,
-			review:review.details,
-			rating:review.rating
-		}
+		driverId,
+		tripId,
+		riderId,
+		review:review.details,
+		rating:parseInt(review.rating)
+	}
 	
 	return (
-		API().post(`/api/rider/${trip.rider._id}/review-trip/${trip._id}`, requestPayload)
+		API().post(`/api/rider/${driverId}/review-trip/${tripId}`, requestPayload)
 		.then(res =>{
 			dispatch({type: SUBMIT_DRIVER_REVIEW_SUCCESS, payload: res.data})
 		})
@@ -63,8 +62,6 @@ export const findDriversNearby = (location) => dispatch => {
 	)
 }
 
-
-
 // Find drivers nearby
 export const getDriversById = (driverId) => dispatch => {
 	dispatch({type: FIND_DRIVER_BY_ID_STARTED})
@@ -79,7 +76,6 @@ export const getDriversById = (driverId) => dispatch => {
 		})
 	)
 }
-
 
 // LOGIN / SIGN UP
 export const signup_rider = (rider) => dispatch => {
@@ -105,9 +101,11 @@ export const login_rider = (rider) => dispatch => {
 	return (
 		API().post('/signin', {...rider, role:'rider'})
 		.then(res =>{
-			localStorage.setItem('token', res.data.token)
-			localStorage.setItem('user', JSON.stringify(res.data.user))
-			console.log('res.data',res.data)
+			const {token, user} = res.data
+			setLocalStore('token', token)
+			setLocalStore('user', {username: user.username, userId: user._id, role:'rider'})
+			
+			console.log('token',getLocalStore('token'))
 			// localStorage.setItem('loggedInUser', JSON.stringify({...res.data}))
 			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
 			return res.data
@@ -161,9 +159,7 @@ export const confirmTrip = (socket, data) => dispatch => {
 export const riderCancelTrip = (socket, data) => dispatch => {
 	console.log('riderCancelTrip')
 	socket.emit('RIDER_CANCEL_TRIP', data)
-	
 }
-
 
 export const riderCancelRequest = (socket, data) => dispatch => {
 	console.log('riderCancelRequest')
@@ -176,7 +172,7 @@ export const riderCancelRequest = (socket, data) => dispatch => {
 	})
 }
 
-export const requestTrip = (socket, data) => dispatch =>{
+export const riderRequestTrip = (socket, data) => dispatch =>{
 	socket.emit('RIDER_REQUEST_TRIP', data)
 }
 

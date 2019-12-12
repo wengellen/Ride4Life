@@ -15,6 +15,7 @@ import {
 import {Avatar} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import BackIcon from "../../assets/img/icons/arrow-back.svg";
+import {getLocalStore} from "../../utils/helpers";
 
 class DriverProfilePage extends Component {
 	state = {
@@ -60,7 +61,7 @@ class DriverProfilePage extends Component {
 						onClick={this.handleBack}
 						style={{position:"absolute"}}
 					>
-						<img src={BackIcon}/>
+						<img src={BackIcon} alt={"back icon"}/>
 					</IconButton>
 					<header>
 						<div className="driver-profile-img-container ">
@@ -109,7 +110,7 @@ class DriverProfilePage extends Component {
 						}
 						{ this.props.currentDriver.review && this.props.currentDriver.review.map((item, idx) => (
 							<div className="review-container" key={idx}>
-								{ item.username === JSON.parse(localStorage.getItem('user')).username
+								{ item.username === getLocalStore('user').username //JSON.parse(localStorage.getItem('user')).username
 									? <Clear/>
 									: null
 								}

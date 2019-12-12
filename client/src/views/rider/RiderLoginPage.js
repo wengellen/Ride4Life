@@ -14,7 +14,6 @@ import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageSty
 import IconButton from "@material-ui/core/IconButton";
 import BackIcon from "../../assets/img/icons/arrow-back.svg";
 import RiderIcon from '../../assets/img/icons/rider.svg'
-import CarIcon from "../../assets/img/icons/car.svg";
 
 // import SearchableMap from "../map/SearchableMap";
 class RiderLoginPage extends React.Component {
@@ -48,7 +47,6 @@ class RiderLoginPage extends React.Component {
 		})
 		this.props.login_rider(this.state.credentials)
 		.then(res => {
-			console.log(res)
 			if(res && res.message){
 				this.props.history.push('/rider/standby');
 			}else{
@@ -66,7 +64,7 @@ class RiderLoginPage extends React.Component {
 					className={"back-arrow-button"}
 					onClick={this.handleBack}
 				>
-					<img src={BackIcon}/>
+					<img src={BackIcon} alt={"back icon"}/>
 				</IconButton>
 					<GridContainer justify="center">
 						<GridItem  >

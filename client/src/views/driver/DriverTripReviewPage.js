@@ -47,8 +47,10 @@ class DriverTripReviewPage extends Component {
 	
 	submitDriverReview = (e) => {
 		e.preventDefault()
+		// const {driverId, riderId} = this.props.data
+		console.log('requestDetails', this.props.data)
 		// console.log('submitDriverReview.data ',this.props.data)
-		this.props.submitRiderReview(this.state.review)
+		this.props.submitRiderReview(this.state.review, this.props.data)
 			.then(res => {
 				this.props.openModal({shouldOpen:false})
 				this.props.toggleResetTrip(true).then(()=>{
@@ -60,7 +62,8 @@ class DriverTripReviewPage extends Component {
 	handleClose = () => {
 		console.log("handleClose")
 		// this.props.openModal({shouldOpen:false})
-		this.props.submitRiderReview(this.state.review)
+		const requestDetails = this.props.requestDetails
+		this.props.submitRiderReview(this.state.review, requestDetails)
 		.then(res => {
 			this.props.openModal({shouldOpen:false})
 			this.props.toggleResetTrip(true).then(()=>{

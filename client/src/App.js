@@ -7,8 +7,6 @@ import DriverLoginPage from './views/driver/DriverLoginPage'
 import DriverSignupPage from './views/driver/DriverSignupPage'
 import RiderLoginPage from './views/rider/RiderLoginPage'
 import RiderSignupPage from './views/rider/RiderSignupPage'
-import RiderTripReviewPage from './views/rider/RiderTripReviewPage'
-import DriverTripReviewPage from './views/driver/DriverTripReviewPage'
 import RiderHomePage from './views/rider/RiderHomePage'
 import DriverHomePage from './views/driver/DriverHomePage'
 import DriverProfilePage from './views/driver/DriverProfilePage'
@@ -23,7 +21,7 @@ import { ThemeProvider } from "emotion-theming";
 import ModalContainer  from "./components/ModalContainer";
 
 /** @jsx jsx */
-import { jsx, css } from "@emotion/core";
+import { jsx} from "@emotion/core";
 
 
 class App extends React.Component {
@@ -52,7 +50,6 @@ class App extends React.Component {
     }
     render() {
         const { showSlidingPanel, slidingPanelComponent } = this.state
-        const { user } = this.props
 
         return (
             <ThemeProvider

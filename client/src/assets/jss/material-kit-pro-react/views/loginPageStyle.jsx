@@ -1,7 +1,6 @@
 import {
   container,
   description,
-  cardTitle,
   blackColor,
   whiteColor,
   grayColor,

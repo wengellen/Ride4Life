@@ -10,13 +10,14 @@ import {
 	UPDATE_PROFILE_STARTED,
 	UPDATE_PROFILE_SUCCESS,
 	UPDATE_PROFILE_FAILURE,
-	SUBMIT_RIDER_REVIEW_STARTED,
-	SUBMIT_RIDER_REVIEW_SUCCESS,
-	SUBMIT_RIDER_REVIEW_FAILURE,
+	// SUBMIT_RIDER_REVIEW_STARTED,
+	// SUBMIT_RIDER_REVIEW_SUCCESS,
+	// SUBMIT_RIDER_REVIEW_FAILURE,
 } from '../actions/actionTypes'
+import {getLocalStore} from "../utils/helpers";
 
 const initialState = {
-	user: JSON.parse(localStorage.getItem('user')),
+	user: getLocalStore('user'),//JSON.parse(localStorage.getItem('user')),
 	driverSignupStarted: false,
 	driverLoginStarted: false,
 	serverMessage:'',

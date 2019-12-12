@@ -72,7 +72,7 @@ class RiderSignupPage extends React.Component {
                     className={"back-arrow-button"}
                     onClick={this.handleBack}
                 >
-                    <img src={BackIcon}/>
+                    <img src={BackIcon} alt={"back icon"}/>
                 </IconButton>
                 <GridContainer justify="center">
                     <GridItem>

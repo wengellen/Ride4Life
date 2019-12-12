@@ -14,7 +14,6 @@ import loginPageStyle from "../../assets/jss/material-kit-pro-react/views/loginP
 import IconButton from "@material-ui/core/IconButton";
 import BackIcon from '../../assets/img/icons/arrow-back.svg'
 import CarIcon from '../../assets/img/icons/car.svg'
-import RiderIcon from "../../assets/img/icons/rider.svg";
 
 class DriverLoginPage extends React.Component {
 	state = {
@@ -71,7 +70,7 @@ class DriverLoginPage extends React.Component {
 						className={"back-arrow-button"}
 						onClick={this.handleBack}
 					>
-						<img src={BackIcon}/>
+						<img src={BackIcon} alt={"back icon"}/>
 					</IconButton>
 					<GridContainer justify="center">
 						<GridItem >

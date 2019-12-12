@@ -3,7 +3,8 @@ import {
     OPEN_MODAL,
     TOGGLE_RESET_TRIP
 } from './actionTypes'
-import socket from "../utils/socketConnection";
+import {getSocket} from "../utils/socketConnection";
+import {removeLocalStore} from "../utils/helpers";
 
 export {
     updateDriverLocation,
@@ -24,7 +25,7 @@ export {
     cancelTripRequest,
     riderCancelTrip,
     confirmTrip,
-    requestTrip,
+    riderRequestTrip,
     getDriversById,
     findDriversNearby,
     signup_rider,
@@ -37,19 +38,20 @@ export {
 
 export const logoutUser = () => dispatch => {
     console.log('logoutUser',logoutUser)
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    localStorage.removeItem('requestDetails')
-    localStorage.removeItem('currentDriver')
-    socket.disconnect()
+    removeLocalStore('token')
+    removeLocalStore('user')
+    removeLocalStore('requestDetails')
+    removeLocalStore('currentDriver')
+    if (getSocket()){
+        getSocket().disconnect()
+    }
+    console.log('socket',getSocket())
     dispatch({type: LOGOUT_USER})
 }
 
 export const toggleResetTrip = (isTrue) => dispatch => {
-    console.log('resetTrip')
-    localStorage.removeItem('requestDetails')
-    localStorage.removeItem('currentDriver')
-    
+    removeLocalStore('requestDetails')
+    removeLocalStore('currentDriver')
     dispatch({
         type:"TOGGLE_RESET_TRIP",
         payload:isTrue
@@ -57,11 +59,13 @@ export const toggleResetTrip = (isTrue) => dispatch => {
     return Promise.resolve();
 }
 
-export function openModal({shouldOpen, component}) {
+export function openModal({shouldOpen, component, data}) {
     console.log('openModal component',component)
+    console.log('openModal data',data)
     return {
         type: OPEN_MODAL,
         shouldOpen,
-        component
+        component,
+        data
     }
 }

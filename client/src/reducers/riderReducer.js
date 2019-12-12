@@ -1,3 +1,4 @@
+import {getLocalStore} from '../utils/helpers'
 
 import {
 	RIDER_SIGNUP_STARTED,
@@ -40,13 +41,12 @@ const initialState = {
 	currentDriver:{},
 	activeTrip:{},
     driversNearby:[],
-	user:JSON.parse(localStorage.getItem('user')),
+	loggedInUser: {},
 	serverMessage:'',
 }
 
 export const riderReducer = (state = initialState, action)=>{
 	switch(action.type){
-		
 		case RIDER_SIGNUP_STARTED:
 			return {...state,
 				riderSignupStarted:true,
@@ -72,7 +72,7 @@ export const riderReducer = (state = initialState, action)=>{
 		case RIDER_LOGIN_SUCCESS:
 			return {...state,
 				riderLoginStarted:false,
-				user: action.payload.user,
+				loggedInUser: action.payload.user,
 				serverMessage: 'Login Success'
 			}
 		case RIDER_LOGIN_FAILURE:
@@ -131,7 +131,7 @@ export const riderReducer = (state = initialState, action)=>{
 
 		case LOGOUT_USER:
 			return {...state,
-				user: null
+				loggedInUser: null
 			}
 			
 		case SEND_TRIP_REQUEST_STARTED:
@@ -170,7 +170,7 @@ export const riderReducer = (state = initialState, action)=>{
 			}
 		case UPDATE_RIDER_PROFILE_SUCCESS:
 			return {...state,
-				user: action.payload,
+				loggedInUser: action.payload,
 				serverMessage:action.payload.message,
 			}
 		case UPDATE_RIDER_PROFILE_FAILURE:

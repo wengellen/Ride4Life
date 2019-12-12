@@ -5,7 +5,8 @@ export const modalReducer =  (state = {}, action)=>{
 		case OPEN_MODAL:
 			return {...state,
 				shouldOpen: action.shouldOpen,
-				component:action.component
+				component:action.component,
+				data:action.data
 			}
 		default:
 			return state

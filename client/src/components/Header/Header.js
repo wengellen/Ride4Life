@@ -1,7 +1,5 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
 import logo from 'assets/img/safe_logo.png'
 import { Avatar } from '@material-ui/core'
@@ -10,7 +8,7 @@ import Face from '@material-ui/icons/Face'
 import Button from '@material-ui/core/Button'
 import styled from '@emotion/styled'
 import { minW } from '../../utils/helpers'
-import { Menu, Close } from 'emotion-icons/material'
+import { Menu } from 'emotion-icons/material'
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -158,7 +156,7 @@ class Header extends React.Component {
     }
 
     render() {
-        const { handleOpenProfile, openPanel, user } = this.props
+        const { handleOpenProfile, openPanel, loggedInUser } = this.props
     
         const drawer = (
             <div>
@@ -220,12 +218,12 @@ class Header extends React.Component {
                         </Link>
                     </LogoContainer>
                     {
-                        user
+                        loggedInUser
                         ? (
                             <AuthButtonContainer>
-                                <Button onClick={()=> handleOpenProfile(user.role)}>
+                                <Button onClick={()=> handleOpenProfile(loggedInUser.role)}>
                                     <Avatar
-                                        src={user.avatar}
+                                        src={loggedInUser.avatar}
                                         alt={'avatar'}
                                     />
                                 </Button>
@@ -262,7 +260,7 @@ Header.propTypes = {}
 
 const mapStateToProps = ({ riderReducer, driverReducer }) => {
     return {
-        user: driverReducer.user || riderReducer.user,
+        loggedInUser: driverReducer.user || riderReducer.loggedInUser,
     }
 }
 const mapDispatchToProps = dispatch => ({

@@ -24,15 +24,13 @@ import {
     updateThisRiderLocation,
     riderCancelRequest,
     riderCancelTrip,
-    requestTrip,
+    riderRequestTrip,
 } from '../../actions'
 import IconButton from '@material-ui/core/IconButton'
 import { withRouter } from 'react-router'
-import Button from '@material-ui/core/Button'
-import io from 'socket.io-client'
-import { Avatar } from '@material-ui/core'
-import DriverEditProfilePage from "../driver/DriverEditProfilePage";
 import CarIcon from "../../assets/img/icons/icons-car-front.svg";
+import {socketInit} from '../../utils/socketConnection'
+import {getLocalStore, removeLocalStore, setLocalStore} from "../../utils/helpers";
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
@@ -40,7 +38,7 @@ class RiderHomePage extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            location: [-122.431297, 37.7749],
+            location: [-122.431297, 37.7749],      // used for geolocation
             startLocation: [-122.431297, 37.7749],
             endLocation: null,
             startLocationAddress: null,
@@ -65,42 +63,117 @@ class RiderHomePage extends Component {
         this.directions = null
         this.geolocate = null
         this.acceptedDriversMarkerMap = new Map()
-        this.rider = JSON.parse(localStorage.getItem('user'))
-        const endpoint =
-            process.env.NODE_ENV !== 'production'
-                ? 'http://localhost:7000'
-                : `https://ride4lifer.herokuapp.com`
-        socket = io.connect(endpoint)
+    
+        const rider = this.props.loggedInUser;
+        const token = getLocalStore('token')
+        socket = socketInit(token, rider.username, 'rider')
     }
     
+    //========================================
+    //  Happy Path - Requests and Trips
+    //========================================
+    
+    /*  Step 0. - Update Rider Location on Geolocation Results
+    /*  Called when geolocation result is returned
+     */
+    updateRiderLocation = ()=>{
+        const {location} = this.state
+        const rider = this.props.loggedInUser;//getLocalStore('user') // JSON.parse(localStorage.getItem('user'))
+        
+        console.log("rider",rider)
+        this.props.updateThisRiderLocation(socket,
+            {
+                location,
+                role: 'rider',
+                riderUsername: rider.username,
+                riderId: rider._id
+            })
+    }
+    
+    /**
+     *   Step 1. - Send Ride Requests to Drivers Nearby
+     *   Handler for requesting ride in the standby stage
+     */
+    handleRequestRide = () => {
+        const rider = this.props.loggedInUser;
+        const tripRequest = {
+            startLocation: {
+                coordinates: this.state.startLocation,
+                type: 'Point',
+            },
+            endLocation: {
+                coordinates: this.state.endLocation,
+                type: 'Point',
+            },
+            location: {
+                coordinates: this.state.location,
+                type: 'Point',
+            },
+            endLocationAddress: this.state.endLocationAddress,
+            distance: this.state.distance,
+            duration: this.state.duration,
+            tripFare: this.state.tripFare,
+            riderId:rider._id,
+            riderUsername:rider.username
+        }
+    
+        this.props.riderRequestTrip(socket, {
+            ...tripRequest,
+        })
+    
+        this.props.history.push('/rider/requesting')
+    }
+    
+    /**
+     *  Step 2. - Trip Offered by Drivers
+     * @param data
+     */
     onTripAcceptedByDriver = (data)=>{
-        localStorage.setItem('requestDetails', JSON.stringify( data))
+        setLocalStore('requestDetails', data)
         this.setState({
             showEstimate: true,
             requestDetails: data,
-            acceptedDrivers: [...this.state.acceptedDrivers, data.driver],
-        }) //Save request details
+            acceptedDrivers: [data.driver],
+        })
         console.log(
             'acceptedDrivers' , this.state.acceptedDrivers
-        )
-        console.log(
-            'this.acceptedDriversMarkerMap' + this.acceptedDriversMarkerMap
-        )
-        console.log(
-            'A driver has accepted your trip \n' + JSON.stringify(data)
         )
         console.log(
             'onTripAcceptedByDriver \n',
             this.acceptedDriversMarkerMap.get(data.driver.username)
         )
-        
         this.props.history.push('/rider/drivers-found')
     }
     
+    /**
+     *  Step 3. - Rider Send Confirmation to Driver
+     * @param idx
+     */
+    handleConfirmRequest = idx => {
+        const driver = this.state.acceptedDrivers[idx]
+        console.log('driver', driver)
+        setLocalStore('currentDriver', driver)
+        
+        this.props.confirmTrip(socket, {
+            driverId: driver._id,
+            driverUsername: driver.username,
+            ...this.state.requestDetails,
+        })
+        
+        this.setState({
+            showEstimate: false,
+            currentDriver: driver,
+        })
+        
+        this.props.history.push('/rider/confirmed')
+    }
     
+    /**
+     *  Step 4. - Trip Started By Driver
+     * @param data
+     */
     onTripStartedByDriver = (data)=>{
-        localStorage.setItem('requestDetails', JSON.stringify( data))
-    
+		setLocalStore('requestDetails', data)
         this.setState({
             showEstimate: true,
             requestDetails: data,
@@ -112,6 +185,66 @@ class RiderHomePage extends Component {
         this.props.history.push('/rider/trip-started')
     }
     
+    /**
+     *  Step 5. - Trip Ended By Driver
+     * @param data
+     */
+    onTripEndedByDriver = (data)=>{
+        this.setState({ tripId: data })
+		const requestDetails = setLocalStore('requestDetails', data)
+        console.log('requestDetails', requestDetails.rider)
+        
+        const tripData = {
+            driverId: requestDetails.driverId,
+            riderId:  requestDetails.rider._id,
+            tripId:   requestDetails._id
+        }
+        
+        this.props.openModal({shouldOpen:true, component:RiderTripReviewPage, data:tripData});
+        this.props.history.push('/rider/trip-ended')
+        console.log('TRIP_ID \n' + JSON.stringify(data))
+        this.resetTrip()
+    }
+    
+    //============================================
+    //  EDGE CASES  -  CANCELLATIONS & OFFLINE
+    //============================================
+    
+    /**
+     *  CANCEL TYPE   -  Rider Send Cancel Trip Request
+     * @param data
+     */
+    handleCancelRideRequest = () => {
+        this.resetTrip()
+        
+        this.props.riderCancelRequest(socket, {
+            rider: this.props.loggedInUser,////getLocalStore('user'),
+            tripId: this.state.tripId,
+        })
+        
+        this.setState({
+            requestingRide: false,
+            endLocation: null,
+            tripFare:0,
+            acceptedDrivers: [],
+        })
+        this.props.cancelTripRequest()
+        this.props.history.push('/rider/standby')
+    }
+    
+    /**
+     *  CANCEL TYPE  -  Rider Cancel Trip
+     * @param data
+     */
+    handleCancelTrip = () => {
+        this.resetTrip()
+        this.props.riderCancelTrip(socket, {
+            rider: this.props.loggedInUser,
+            tripId: this.state.tripId,
+        })
+        this.setState({ acceptedDrivers: [] })
+        this.props.history.push('/rider/standby')
+    }
     
     onTripCanceledByRider = ()=>{
         console.log('RIDER_TRIP_CANCELED! \n')
@@ -122,6 +255,10 @@ class RiderHomePage extends Component {
         this.props.history.push('/rider/standby')
     }
     
+    /**
+     *  CANCEL TYPE  -  Trip Cancelled by Driver
+     * @param data
+     */
     onTripCanceledByDriver = ()=>{
         console.log('RIDER_TRIP_CANCELED! \n')
         this.resetTrip()
@@ -132,23 +269,10 @@ class RiderHomePage extends Component {
         this.props.history.push('/rider/standby')
     }
     
-    onTripRequestedByRider = (data)=>{
-            this.setState({ tripId: data })
-            this.props.history.push('/rider/requesting')
-            console.log('TRIP_ID \n' + JSON.stringify(data))
-    }
-    
-    onTripEndedByDriver = (data)=>{
-        this.setState({ tripId: data })
-        
-        // this.props.history.push('/rider/trip-ended')
-        this.props.openModal({shouldOpen:true, component:RiderTripReviewPage});
-        this.props.history.push('/rider/trip-ended')
-    
-        console.log('TRIP_ID \n' + JSON.stringify(data))
-        // this.resetTrip()
-    }
-    
+    /**
+     *  CANCEL TYPE 4.  -  Driver gone offline
+     * @param data
+     */
     onDriverGoOffline = (data)=>{
         console.log('DRIVER_GO_OFFLINE! \n')
         this.resetTrip()
@@ -189,8 +313,7 @@ class RiderHomePage extends Component {
     // }
 
     componentDidMount() {
-        const rider = JSON.parse(localStorage.getItem('user'))
-        if (!rider) this.props.history.push('/')
+        // if (!rider) this.props.history.push('/')
         this.bindListeners()
         navigator.geolocation.getCurrentPosition(position => {
             this.setState({
@@ -201,6 +324,8 @@ class RiderHomePage extends Component {
                 location: [position.coords.longitude, position.coords.latitude],
                 loadingMap: false,
             })
+    
+            this.updateRiderLocation()
 
             this.map = new mapboxgl.Map({
                 container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
@@ -310,15 +435,6 @@ class RiderHomePage extends Component {
             this.map.addControl(this.directions, 'bottom-left')
             this.map.addControl(this.geolocate, 'top-right')
 
-            this.props.updateThisRiderLocation(socket, {
-                coordinates: [
-                    position.coords.longitude,
-                    position.coords.latitude,
-                ],
-                role: 'rider',
-                username: rider.username,
-                rider: rider,
-            })
         })
     }
 
@@ -329,13 +445,6 @@ class RiderHomePage extends Component {
             setTimeout(() => this.map.remove(), 3000)
         }
     }
-    
-    // componentDidUpdate(prevProps){
-    //     if(prevProps.shouldResetTrip !== this.props.shouldResetTrip ){
-    //         this.resetTrip();
-    //     }
-    // }
-    
     
     addMarker = (markerStyle, markerId, marker) => {
         // marker.features.forEach((marker)=> {
@@ -351,12 +460,11 @@ class RiderHomePage extends Component {
             .setLngLat(marker.geometry.coordinates)
             .setPopup(popup)
             .addTo(this.map)
-        // })
     }
 
     resetTrip = () => {
-        localStorage.removeItem('requestDetails')
-        localStorage.removeItem('currentDriver')
+        removeLocalStore('requestDetails')
+        removeLocalStore('currentDriver')
         if (this.directions){
             this.directions.removeRoutes()
             this.directions.setOrigin(this.state.startLocation)
@@ -373,58 +481,17 @@ class RiderHomePage extends Component {
         }
     }
 
-    handleCancelRideRequest = () => {
-        this.resetTrip()
-
-        this.props.riderCancelRequest(socket, {
-            rider: JSON.parse(localStorage.getItem('user')),
-            tripId: this.state.tripId,
-        })
-
-        this.setState({
-            requestingRide: false,
-			endLocation: null,
-			tripFare:0,
-            acceptedDrivers: [],
-        })
-        this.props.cancelTripRequest()
-        this.props.history.push('/rider/standby')
-    }
-
     handleChange = e => {
         this.setState({
             [e.target.name]: e.target.value,
         })
     }
 
-    handleConfirmRequest = idx => {
-        const driver = this.state.acceptedDrivers[idx]
-        console.log('driver', driver)
-        
-        localStorage.setItem('currentDriver', JSON.stringify(driver))
-
-        this.props.confirmTrip(socket, {
-            driverId: driver._id,
-            driverUsername: driver.username,
-            ...this.state.requestDetails,
-        })
-
-        this.setState({
-            showEstimate: false,
-            currentDriver: driver,
-        })
-
-        this.props.history.push('/rider/confirmed')
-    }
     loadDriverProfile = driver => {
         console.log('driver', driver)
         this.props.getDriversById(driver._id).then(() => {
             console.log('getDriverByIdeSuccess', driver._id)
             this.props.openModal({shouldOpen:true, component:DriverProfilePage});
-            
-            // this.props.history.push({
-            // 	pathname:`/rider-home/driver/${driver._id}`,
-            // 	state: { prevPath: this.props.location.pathname }})
         })
     }
 
@@ -433,87 +500,25 @@ class RiderHomePage extends Component {
            this.handleRequestRide()
         }
     }
-    
-    handleCancelTrip = () => {
-        this.resetTrip()
-        this.props.riderCancelTrip(socket, {
-            rider: JSON.parse(localStorage.getItem('user')),
-            tripId: this.state.tripId,
-        })
-        this.setState({ acceptedDrivers: [] })
-        this.props.history.push('/rider/standby')
-    }
-
-    handleRequestRide = () => {
-        const tripRequest = {
-            startLocation: {
-                coordinates: this.state.startLocation,
-                type: 'Point',
-            },
-            endLocation: {
-                coordinates: this.state.endLocation,
-                type: 'Point',
-            },
-            location: {
-                coordinates: this.state.location,
-                type: 'Point',
-            },
-            // startLocationAddress:this.state.startLocationAddress,
-            endLocationAddress: this.state.endLocationAddress,
-            distance: this.state.distance,
-            duration: this.state.duration,
-            tripFare: this.state.tripFare,
-        }
-
-        this.setState({
-            requestingRide: true,
-        })
-
-        this.props.requestTrip(socket, {
-            rider: JSON.parse(localStorage.getItem('user')),
-            ...tripRequest,
-        })
-    
-        this.props.history.push('/rider/requesting')
-    }
+   
     
     getStatePath = (path) => {
         return path.split('/rider/')[1]
     }
 
     render() {
-        const { findNearbyDriverMessage, driversNearby } = this.props
         const path = this.getStatePath(this.props.location.pathname)
         const {
-            requestingRide,
-            tripFare,
             acceptedDrivers,
             headerMessage,
         } = this.state
+        
         let requestDetails
         let currentDriver
-    
-        // if (path === 'standby'){
-        //     this.resetTrip()
-        //     requestDetails = JSON.parse( localStorage.getItem('requestDetails')) || null
-        //
-        // }else{
-            currentDriver = JSON.parse(localStorage.getItem('currentDriver'))
-            requestDetails = JSON.parse( localStorage.getItem('requestDetails')) || null
-        // }
-    
-        // }
-        // console.log("this.props.location.pathname",path)
-        // console.log('tripStatus',tripStatus)
-        // if(tripStatus !== path){
-        // NOT Allowed
-        //   console.log('tripStatus',tripStatus)
-        //   tripStatus = path
-        // }
+            currentDriver = getLocalStore('currentDriver') //.parse(localStorage.getItem('currentDriver'))
+            requestDetails =getLocalStore('requestDetails') || null  //JSON.parse( localStorage.getItem('requestDetails')) || null
 
-        // let path = tripStatus
         const statusPanel = () => {
-            // console.log('tripStatus', tripStatus)
             switch (path) {
                 case 'standby':
                     return (
@@ -612,6 +617,7 @@ class RiderHomePage extends Component {
                                                         ACCEPT
                                                     </button>
                                                 <img src={IconArrowRight}
+                                                    alt={"right arrow icon"}
                                                     onClick={e =>
                                                         this.loadDriverProfile(
                                                             driver
@@ -667,18 +673,19 @@ class RiderHomePage extends Component {
                                                         'driver-item-icon-button'
                                                     }
                                                 >
-                                                    <img src={IconMessage}/>
+                                                    <img src={IconMessage} alt={"message icon"}/>
                                                 </IconButton>
                                                 <IconButton
                                                     className={
                                                         'driver-item-icon-button'
                                                     }
                                                 >
-                                                    <img src={IconPhone} />
+                                                    <img src={IconPhone}  alt={"phone icon"}/>
                                                 </IconButton>
                                             </div>
                                         </div>
                                         <img src={IconArrowRight}
+                                             alt={"right arrow icon"}
                                              onClick={e =>
                                                  this.loadDriverProfile(
                                                      currentDriver
@@ -696,72 +703,6 @@ class RiderHomePage extends Component {
                             </button>
                         </div>
                     )
-                // case 'pickup-rider':
-                //     return (
-                //         <div className={'status-panel'}>
-                //             <h1 className={`status-panel__header`}>
-                //                 Your Drive is On the Way
-                //             </h1>
-                //             {currentDriver && (
-                //                 <div
-                //                     className="trip-destination-container"
-                //                 >
-                //                     <div className={"icon-box bordered"}>
-                //                         <img className={"icon-box-image"}
-                //                              src={
-                //                                  currentDriver.avatar ||
-                //                                  placeholder
-                //                              } alt={"driver"} />
-                //                         <h3>2 miles away</h3>
-                //                     </div>
-                //                     <div className={"icon-box bordered" }>
-                //                         <img src={CarIcon} alt={"rider icon"}/>
-                //                         <h3>BMW</h3>
-                //                     </div>
-                //                     <div
-                //                         className={
-                //                             'driver-item-buttons-list'
-                //                         }
-                //                     >
-                //                         <div
-                //                             className={
-                //                                 'action-icon-button-bar'
-                //                             }
-                //                         >
-                //                             <IconButton
-                //                                 className={
-                //                                     'driver-item-icon-button'
-                //                                 }
-                //                             >
-                //                                 <img src={IconMessage}/>
-                //                             </IconButton>
-                //                             <IconButton
-                //                                 className={
-                //                                     'driver-item-icon-button'
-                //                                 }
-                //                             >
-                //                                 <img src={IconPhone} />
-                //                             </IconButton>
-                //                         </div>
-                //                     </div>
-                //                     <img src={IconArrowRight}
-                //                          onClick={e =>
-                //                              this.loadDriverProfile(
-                //                                  currentDriver
-                //                              )
-                //                          }
-                //                     >
-                //                     </img>
-                //                 </div>
-                //             )}
-                //             <button
-                //                 className={'request-ride-button bordered'}
-                //                 onClick={e => this.cancelTrip()}
-                //             >
-                //                 CANCEL TRIP
-                //             </button>
-                //         </div>
-                //     )
                 case "trip-started": return (
                     <div className={'status-panel'}>
                         <h1 className={`status-panel__header`}>Trip Started. <span className={"text-blue"}>On your Way to Destination</span></h1>
@@ -785,9 +726,8 @@ class RiderHomePage extends Component {
             
                         <button className={'request-ride-button'} >
                             <IconButton className={'driver-item-icon-button'}>
-                                <img src={IconPhone} />
+                                <img src={IconPhone} alt={"phone icon"} />
                             </IconButton> Call Support</button>
-                        {/*<button color="info" className="main" onClick={this.handleStartTrip}>START TRIP</button>*/}
                     </div>
                 )
                 case 'trip-ended':
@@ -851,10 +791,9 @@ const mapStateToProps = ({ riderReducer, tripReducer }) => ({
     tripStatus: riderReducer.tripStatus,
     submitDriverReviewSuccessMessage:
     riderReducer.submitDriverReviewSuccessMessage,
-    
-    shouldResetTrip:tripReducer.shouldResetTrip
+    shouldResetTrip:tripReducer.shouldResetTrip,
+    loggedInUser: riderReducer.loggedInUser,
 })
-
 
 
 export default withRouter(
@@ -863,7 +802,7 @@ export default withRouter(
         {
             findDriversNearby,
             getDriversById,
-            requestTrip,
+            riderRequestTrip,
             updateThisRiderLocation,
             riderCancelRequest,
             confirmTrip,

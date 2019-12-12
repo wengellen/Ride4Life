@@ -84,7 +84,7 @@ const HeroSection = styled.section`
 class HomePage extends Component {
     componentDidMount() {
       console.log('')
-      this.props.logoutUser();
+ // this.props.logoutUser();
     }
     
     onRequestRide = () => {
@@ -92,7 +92,6 @@ class HomePage extends Component {
     }
 
     render() {
-        const {user} = this.props
         return (
           <HeroSection className={"hero--homepage container"}>
                     <div className={"hero--homepage--video"}  >

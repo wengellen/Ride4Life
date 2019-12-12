@@ -16,21 +16,19 @@ let ModalContainer = ({history, classes, Component, shouldOpen, closeModal, data
 				style={{top:"0", height:"100vh", zIndex:'8000', padding:0, overflow:'scroll'}}
 			>
 				<DialogContent style={{padding:0}}>
-					{Component && <Component/>}
+					{Component && <Component data={data}/>}
 				</DialogContent>
 			</Modal>
 		)
 		
 }
 
-function mapStateToProps(state, ownProps){
+function mapStateToProps({modalReducer}){
+	console.log('data:modalReducer.data',modalReducer.data)
 	return {
-		shouldOpen: state.modalReducer.shouldOpen,
-		Component: state.modalReducer.component,
-		// data:{
-		// 	currentPost: state.currentPost,
-		// 	categories: state.categories
-		// }
+		shouldOpen: modalReducer.shouldOpen,
+		Component: modalReducer.component,
+		data:modalReducer.data
 	}
 }
 

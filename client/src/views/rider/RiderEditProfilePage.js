@@ -58,9 +58,9 @@ class RiderEditProfilePage extends React.Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if (prevState.isEditing) return null
 
-        if (prevState.profile !== nextProps.user) {
+        if (prevState.profile !== nextProps.loggedInUser) {
             return {
-                profile: { ...nextProps.user },
+                profile: { ...nextProps.loggedInUser },
             }
         } else {
             return null
@@ -72,7 +72,7 @@ class RiderEditProfilePage extends React.Component {
     }
 
     render() {
-        const { classes, user } = this.props
+        const { classes, loggedInUser } = this.props
         const { profile } = this.state
         return (
             <div css={css`
@@ -94,7 +94,7 @@ class RiderEditProfilePage extends React.Component {
                                         className="avatar-input"
                                         name="avatar"
                                         maxValue={200}
-                                        value={user && user.avatar}
+                                        value={loggedInUser && loggedInUser.avatar}
                                     />
                                 </div>
                             </div>
@@ -201,10 +201,13 @@ class RiderEditProfilePage extends React.Component {
         )
     }
 }
-const mapStateToProps = ({ riderReducer }) => ({
-    serverMessage: riderReducer.serverMessage,
-    user: riderReducer.user,
-})
+const mapStateToProps = ({ riderReducer }) => {
+    console.log('loggedInUser',riderReducer.loggedInUser)
+    return ({
+        serverMessage: riderReducer.serverMessage,
+        loggedInUser: riderReducer.loggedInUser,
+    })
+}
 
 export default connect(
     mapStateToProps,

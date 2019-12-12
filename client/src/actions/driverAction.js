@@ -1,7 +1,6 @@
 
 // DRIVER
 import API  from "../utils/axiosAuth";
-
 import {
 	DRIVER_SIGNUP_STARTED,
 	DRIVER_SIGNUP_SUCCESS,
@@ -16,6 +15,8 @@ import {
 	SUBMIT_RIDER_REVIEW_SUCCESS,
 	SUBMIT_RIDER_REVIEW_FAILURE,
 } from "./actionTypes";
+import {setLocalStore} from "../utils/helpers";
+
 
 export const driverCancelTrip = (socket, data) => dispatch => {
 	console.log('driverCancelTrip')
@@ -56,20 +57,19 @@ export const updateDriverLocation = (socket, data) => dispatch => {
 	socket.emit('UPDATE_DRIVER_LOCATION', data)
 }
 
-export const submitRiderReview = (review) => dispatch => {
+export const submitRiderReview = (review, data) => dispatch => {
 	dispatch({type: SUBMIT_RIDER_REVIEW_STARTED})
-	// const currentUser = JSON.parse(localStorage.getItem('user'))
-	const trip = JSON.parse(localStorage.getItem('requestDetails'))
+	const  {driverId, riderId, tripId} = data
 	const requestPayload = {
-		driver_id: trip.driver._id,
-		trip_id:trip._id,
-		rider_id: trip.rider._id,
+		driverId,
+		tripId,
+		riderId,
 		review:review.details,
 		rating:parseInt(review.rating)
 	}
 	
 	return (
-		API().post(`/api/driver/${trip.driver._id}/review-trip/${trip._id}`, requestPayload)
+		API().post(`/api/driver/${driverId}/review-trip/${tripId}`, requestPayload)
 		.then(res =>{
 			dispatch({type: SUBMIT_RIDER_REVIEW_SUCCESS, payload: res.data})
 			return res.data
@@ -80,7 +80,6 @@ export const submitRiderReview = (review) => dispatch => {
 		})
 	)
 }
-
 
 // Update Profile
 export const updateProfile = (user) => dispatch => {
@@ -119,9 +118,13 @@ export const login_driver= (driver) => dispatch =>{
 	return (
 		API().post('/signin', {...driver, role:'driver'})
 	   .then(res =>{
-	   		console.log('signin usccess', res)
-			localStorage.setItem('token', res.data.token)
-			localStorage.setItem('user', JSON.stringify(res.data.user))
+	   		console.log('signin susccess', res)
+	   		setLocalStore('token', res.data.token)
+	   		setLocalStore('user', res.data.user)
+			// localStorage.setItem('token', res.data.token)
+		    // socketInit(res.data.token)
+		
+		   // localStorage.setItem('user', JSON.stringify(res.data.user))
 		   dispatch({type: DRIVER_LOGIN_SUCCESS, payload: res.data})
 		   return res.data
 		})
