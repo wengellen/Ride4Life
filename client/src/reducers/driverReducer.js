@@ -17,7 +17,7 @@ import {
 import {getLocalStore} from "../utils/helpers";
 
 const initialState = {
-	user: getLocalStore('user'),//JSON.parse(localStorage.getItem('user')),
+	user: JSON.parse(localStorage.getItem('user')),//JSON.parse(localStorage.getItem('user')),
 	driverSignupStarted: false,
 	driverLoginStarted: false,
 	serverMessage:'',

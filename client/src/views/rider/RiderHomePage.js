@@ -13,6 +13,7 @@ import IconMessage from 'assets/img/message-square.svg'
 import IconPhone from 'assets/img/phone.svg'
 import DriverProfilePage from '../driver/DriverProfilePage'
 import RiderTripReviewPage from '../rider/RiderTripReviewPage'
+import * as helper from "../../utils/helpers";
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
 
@@ -30,7 +31,6 @@ import IconButton from '@material-ui/core/IconButton'
 import { withRouter } from 'react-router'
 import CarIcon from "../../assets/img/icons/icons-car-front.svg";
 import {socketInit} from '../../utils/socketConnection'
-import {getLocalStore, removeLocalStore, setLocalStore} from "../../utils/helpers";
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
@@ -64,9 +64,9 @@ class RiderHomePage extends Component {
         this.geolocate = null
         this.acceptedDriversMarkerMap = new Map()
     
-        const rider = this.props.loggedInUser;
-        const token = getLocalStore('token')
-        socket = socketInit(token, rider.username, 'rider')
+        // const rider = this.props.loggedInUser;
+        // const token = localStorage.getItem('token')
+        socket = socketInit(helper.getToken())
     }
     
     //========================================
@@ -78,15 +78,10 @@ class RiderHomePage extends Component {
      */
     updateRiderLocation = ()=>{
         const {location} = this.state
-        const rider = this.props.loggedInUser;//getLocalStore('user') // JSON.parse(localStorage.getItem('user'))
         
-        console.log("rider",rider)
         this.props.updateThisRiderLocation(socket,
             {
                 location,
-                role: 'rider',
-                riderUsername: rider.username,
-                riderId: rider._id
             })
     }
     
@@ -95,7 +90,7 @@ class RiderHomePage extends Component {
      *   Handler for requesting ride in the standby stage
      */
     handleRequestRide = () => {
-        const rider = this.props.loggedInUser;
+        // const rider = this.props.loggedInUser;
         const tripRequest = {
             startLocation: {
                 coordinates: this.state.startLocation,
@@ -113,8 +108,8 @@ class RiderHomePage extends Component {
             distance: this.state.distance,
             duration: this.state.duration,
             tripFare: this.state.tripFare,
-            riderId:rider._id,
-            riderUsername:rider.username
+            // riderId:rider._id,
+            // riderUsername:rider.username
         }
     
         this.props.riderRequestTrip(socket, {
@@ -129,7 +124,7 @@ class RiderHomePage extends Component {
      * @param data
      */
     onTripAcceptedByDriver = (data)=>{
-        setLocalStore('requestDetails', data)
+        localStorage.setItem('requestDetails', JSON.stringify(data))
         this.setState({
             showEstimate: true,
             requestDetails: data,
@@ -151,9 +146,9 @@ class RiderHomePage extends Component {
      */
     handleConfirmRequest = idx => {
         const driver = this.state.acceptedDrivers[idx]
-        console.log('driver', driver)
-        setLocalStore('currentDriver', driver)
-        
+        // console.log('driver', driver)
+        // localStorage.setItem('currentDriver', JSON.stringify(driver))
+    
         this.props.confirmTrip(socket, {
             driverId: driver._id,
             driverUsername: driver.username,
@@ -173,7 +168,8 @@ class RiderHomePage extends Component {
      * @param data
      */
     onTripStartedByDriver = (data)=>{
-		setLocalStore('requestDetails', data)
+        localStorage.setItem('requestDetails',JSON.stringify(data))
+    
         this.setState({
             showEstimate: true,
             requestDetails: data,
@@ -191,7 +187,7 @@ class RiderHomePage extends Component {
      */
     onTripEndedByDriver = (data)=>{
         this.setState({ tripId: data })
-		const requestDetails = setLocalStore('requestDetails', data)
+		const requestDetails = localStorage.setItem('requestDetails', data)
         console.log('requestDetails', requestDetails.rider)
         
         const tripData = {
@@ -218,7 +214,7 @@ class RiderHomePage extends Component {
         this.resetTrip()
         
         this.props.riderCancelRequest(socket, {
-            rider: this.props.loggedInUser,////getLocalStore('user'),
+            // rider: this.props.loggedInUser,////getLocalStore('user'),
             tripId: this.state.tripId,
         })
         
@@ -239,7 +235,7 @@ class RiderHomePage extends Component {
     handleCancelTrip = () => {
         this.resetTrip()
         this.props.riderCancelTrip(socket, {
-            rider: this.props.loggedInUser,
+            // rider: this.props.loggedInUser,
             tripId: this.state.tripId,
         })
         this.setState({ acceptedDrivers: [] })
@@ -286,6 +282,14 @@ class RiderHomePage extends Component {
         this.acceptedDriversMarkerMap.get(data.driver.username) &&
         this.acceptedDriversMarkerMap.get(data.driver.username).remove()
     }
+    /**
+     *  RECEIVE UPDATE FROM DRIVER -  Driver come online
+     * @param data
+     */
+    onDriverGoOnline = ({driver})=>{
+        console.log('DRIVER_GO_ONLINE! \n', driver)
+        
+    }
     
     bindListeners(){
         socket.on('TRIP_ACCEPTED_BY_DRIVER', this.onTripAcceptedByDriver)
@@ -295,6 +299,7 @@ class RiderHomePage extends Component {
         socket.on('TRIP_REQUESTED_BY_RIDER', this.onTripRequestedByRider)
         socket.on('TRIP_ENDED_BY_DRIVER', this.onTripEndedByDriver)
         socket.on('DRIVER_GO_OFFLINE', this.onDriverGoOffline)
+        socket.on('DRIVER_GO_ONLINE', this.onDriverGoOnline)
     }
     
     unbindListeners = ()=>{
@@ -463,8 +468,8 @@ class RiderHomePage extends Component {
     }
 
     resetTrip = () => {
-        removeLocalStore('requestDetails')
-        removeLocalStore('currentDriver')
+        helper.removeTrip()
+        // removeLocalStore('currentDriver')
         if (this.directions){
             this.directions.removeRoutes()
             this.directions.setOrigin(this.state.startLocation)
@@ -515,8 +520,8 @@ class RiderHomePage extends Component {
         
         let requestDetails
         let currentDriver
-            currentDriver = getLocalStore('currentDriver') //.parse(localStorage.getItem('currentDriver'))
-            requestDetails =getLocalStore('requestDetails') || null  //JSON.parse( localStorage.getItem('requestDetails')) || null
+            currentDriver = JSON.parse(localStorage.getItem('currentDriver')) //.parse(localStorage.getItem('currentDriver'))
+            requestDetails =JSON.parse(localStorage.getItem('requestDetails')) || null  //JSON.parse( localStorage.getItem('requestDetails')) || null
 
         const statusPanel = () => {
             switch (path) {

@@ -8,7 +8,7 @@ const PrivateRoute = ({ component: Component, permissions, ...rest }) => (
 		render={props =>
 			// (permissions === "admin" || localStorage.getItem("token"))
 			
-			(getLocalStore('token'))
+			(localStorage.getItem('token'))
 			 ? (
 				<Component {...props} />
 			) : (

@@ -84,7 +84,6 @@ const HeroSection = styled.section`
 class HomePage extends Component {
     componentDidMount() {
       console.log('')
- // this.props.logoutUser();
     }
     
     onRequestRide = () => {
@@ -100,7 +99,7 @@ class HomePage extends Component {
                         <span className={'content-inner'}>
                             <h6>Mothers Rideshare Service</h6>
                             <h1>Ride for life</h1>
-                            <p>We make finding rides to take you to hospital in time for delivery easy and affordable</p>
+                            <p>We make finding rides to take you to hospital innpm  time for delivery easy and affordable</p>
                             <Button className="green-btn" onClick={()=> this.onRequestRide()}>Request Ride</Button>
                         </span>
                     </a>

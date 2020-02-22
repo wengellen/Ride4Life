@@ -1,5 +1,6 @@
 // RIDER
 import API from "../utils/axiosAuth";
+import * as helper from '../utils/helpers'
 import {
 	RIDER_SIGNUP_STARTED,
 	RIDER_SIGNUP_SUCCESS,
@@ -21,7 +22,7 @@ import {
 	SUBMIT_DRIVER_REVIEW_FAILURE,
 	CANCEL_TRIP_REQUEST,
 } from "./actionTypes";
-import {setLocalStore, getLocalStore} from "../utils/helpers";
+// import {setLocalStore, getLocalStore} from "../utils/helpers";
 // Find drivers nearby
 export const submitDriverReview = (review, data) => dispatch => {
 	dispatch({type: SUBMIT_DRIVER_REVIEW_STARTED})
@@ -101,11 +102,15 @@ export const login_rider = (rider) => dispatch => {
 	return (
 		API().post('/signin', {...rider, role:'rider'})
 		.then(res =>{
-			const {token, user} = res.data
-			setLocalStore('token', token)
-			setLocalStore('user', {username: user.username, userId: user._id, role:'rider'})
+			const {token} = res.data
+			// setLocalStore('token', token)
+			// setLocalStore('user', {username: user.username, userId: user._id, role:'rider'})
+			//
+			// localStorage.setItem('user', JSON.stringify({username: user.username, userId: user._id, role:'rider'}))
+			// localStorage.setItem('token', token)
+			helper.setToken(token)
+			// console.log('token',localStorage.getItem('token'))
 			
-			console.log('token',getLocalStore('token'))
 			// localStorage.setItem('loggedInUser', JSON.stringify({...res.data}))
 			dispatch({type: RIDER_LOGIN_SUCCESS, payload: res.data})
 			return res.data

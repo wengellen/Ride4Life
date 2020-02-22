@@ -4,7 +4,7 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
 import './DriverHomePage.css' // Updating node module will keep css up to date.
 import Loader from 'react-loader-spinner'
-import {getLocalStore, removeLocalStore, setLocalStore} from '../../utils/helpers'
+import * as helper from "../../utils/helpers";
 import { connect } from 'react-redux'
 import {
     updateDriverLocation,
@@ -25,8 +25,6 @@ import DriverTripReviewPage from "./DriverTripReviewPage";
 import {socketInit} from '../../utils/socketConnection'
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
-
-
 
 class DriverHomePage extends Component {
     constructor(props) {
@@ -54,9 +52,13 @@ class DriverHomePage extends Component {
         this.instruction = null
         this.mapContainer = React.createRef();
         
-        const driver = getLocalStore('user');//SON.parse(localStorage.getItem('user'))
-        const token =  getLocalStore('token'); //localStorage.getItem('token')
-        socket = socketInit(token, driver.username,'driver')
+        // const driver = getLocalStore('user');//SON.parse(localStorage.getItem('user'))
+        // const driver = JSON.parse(localStorage.getItem('user'))
+        
+        //const token =  localStorage.getItem('token')  //localStorage.getItem('token')
+        // const token =  localStorage.getItem('token')  //localStorage.getItem('token')
+        // console.log("socketInit   driver",driver)
+        socket = socketInit(helper.getToken())
     }
     
     //========================================
@@ -68,13 +70,11 @@ class DriverHomePage extends Component {
      */
     updateDriverLocation = ()=>{
         const {location} = this.state
-        const driver = getLocalStore('user') //.parse(localStorage.getItem('user'))
+        // const driver = JSON.parse(localStorage.getItem('user'))//.parse(localStorage.getItem('user'))
+        // console.log("updateDriverLocation - driver",driver)
         this.props.updateDriverLocation(socket,
             {
                 location,
-                role: 'driver',
-                driverUsername: driver.username,
-                driverId: driver._id
             })
     }
     
@@ -87,13 +87,8 @@ class DriverHomePage extends Component {
     
         this.bindListeners()
         
-        const driver = getLocalStore('user')
-        this.props.driverGoOnline(socket,{
-            role: 'driver',
-            driverUsername: driver.username,
-            driverId: driver._id
-        })
-    
+        const driver =  JSON.parse(localStorage.getItem('user'))
+        this.props.driverGoOnline(socket)
        
         this.props.history.push('/driver/standby')
     }
@@ -105,7 +100,7 @@ class DriverHomePage extends Component {
     onTripRequestedByRider = (data)=>{
             const requestDetails = data
             console.log('onTripRequestedByRider')
-            setLocalStore('requestDetails', data)
+            localStorage.setItem('requestDetails', JSON.stringify(data))
             this.setState({
                 driverStatus:"requestIncoming",
                 requestDetails: data,
@@ -126,7 +121,6 @@ class DriverHomePage extends Component {
         console.log('ACCEPT_TRIP', )
         if (e.target.disabled ) return
         this.props.acceptTrip(socket, {
-            driver: getLocalStore('user'),
             ...this.state.requestDetails,
         })
         
@@ -143,8 +137,8 @@ class DriverHomePage extends Component {
      */
     onTripConfirmedByRider = (data)=>{
         const requestDetails = data
-        setLocalStore('requestDetails', data)
-        
+        localStorage.setItem('requestDetails', JSON.stringify(data))
+    
         // console.log('requestDetails', data)
         var riderGeojson = {
             type: 'FeatureCollection',
@@ -197,7 +191,7 @@ class DriverHomePage extends Component {
             driverStatus:"pickup",
         })
         // const requestDetails = getLocal('requestDetails')
-        const requestDetails = getLocalStore('requestDetails') //JSON.parse( localStorage.getItem('requestDetails'))
+        const requestDetails = JSON.parse(localStorage.getItem('requestDetails'))//JSON.parse( localStorage.getItem('requestDetails'))
         this.directions.setOrigin(this.state.location)
         this.directions.setDestination(requestDetails.startLocation.coordinates)
         this.startInput.value = "Your Location"
@@ -243,7 +237,7 @@ class DriverHomePage extends Component {
         })
         
         // const requestDetails = getLocal('requestDetails')
-        const requestDetails = getLocalStore('requestDetails') //JSON.parse( localStorage.getItem('requestDetails'))
+        const requestDetails =JSON.parse(localStorage.getItem('requestDetails')) //JSON.parse( localStorage.getItem('requestDetails'))
         console.log("requestDetails",requestDetails)
         this.directions.setOrigin(requestDetails.startLocation.coordinates)
         this.directions.setDestination(requestDetails.endLocationAddress)
@@ -275,7 +269,6 @@ class DriverHomePage extends Component {
         },1000)
         
         this.props.driverStartTrip(socket, {
-            driver: getLocalStore('user'),
             ...requestDetails
         })
         this.props.history.push('/driver/trip-started')
@@ -286,9 +279,8 @@ class DriverHomePage extends Component {
      *   onClick event listener
      */
     handleEndTrip = (e) => {
-        const requestDetails = getLocalStore('requestDetails') //JSON.parse( localStorage.getItem('requestDetails'))
+        const requestDetails =JSON.parse(localStorage.getItem('requestDetails')) //JSON.parse( localStorage.getItem('requestDetails'))
         this.props.driverEndTrip(socket, {
-            driver: getLocalStore('user'),
             ...requestDetails
         })
         this.props.history.push('/driver/trip-ended')
@@ -318,7 +310,7 @@ class DriverHomePage extends Component {
             'You have a new request! \n'
         )
         // removeLocal('requestDetails')
-        removeLocalStore('requestDetails')
+        helper.removeTrip()
         this.props.history.push('/driver/standby')
     }
     
@@ -335,7 +327,7 @@ class DriverHomePage extends Component {
         console.log(
         'TRIP_CANCELED_BY_RIDER! \n'
          )
-         removeLocalStore('requestDetails')
+        helper.removeTrip()
         document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
         
         this.resetTrip()
@@ -359,7 +351,7 @@ class DriverHomePage extends Component {
             this.resetTrip()
         
             // removeLocal('requestDetails')
-            removeLocalStore('requestDetails')
+            helper.removeTrip()
             document.querySelectorAll('.driver-map')[0].classList.add('hide-direction')
             this.props.history.push('/driver/standby')
     }
@@ -371,7 +363,6 @@ class DriverHomePage extends Component {
     handleDriverGoOffline = () => {
         console.log('DRIVER_GO_OFFLINE', )
         this.props.driverGoOffline(socket, {
-            driver: getLocalStore('user'),
         })
         this.unbindListeners();
         this.resetTrip()
@@ -505,7 +496,6 @@ class DriverHomePage extends Component {
     
     cancelTrip = (e) => {
         this.props.driverCancelTrip(socket, {
-            driver: getLocalStore('user'),  //JSON.parse(localStorage.getItem('user')),
             tripId:this.state.tripId
         })
         this.startInput.value = ""
@@ -527,7 +517,7 @@ class DriverHomePage extends Component {
         const path = this.getStatePath(this.props.location.pathname)
         let requestDetails
         
-        requestDetails = getLocalStore('requestDetails') || this.state.requestDetails; // JSON.parse( localStorage.getItem('requestDetails')) || this.state.requestDetails;
+        requestDetails = JSON.parse(localStorage.getItem('requestDetails')) || this.state.requestDetails; // JSON.parse( localStorage.getItem('requestDetails')) || this.state.requestDetails;
        
         const statusPanel = () => {
             switch(path) {

@@ -4,7 +4,7 @@ import {
     TOGGLE_RESET_TRIP
 } from './actionTypes'
 import {getSocket} from "../utils/socketConnection";
-import {removeLocalStore} from "../utils/helpers";
+import * as helper from "../utils/helpers";
 
 export {
     updateDriverLocation,
@@ -38,10 +38,9 @@ export {
 
 export const logoutUser = () => dispatch => {
     console.log('logoutUser',logoutUser)
-    removeLocalStore('token')
-    removeLocalStore('user')
-    removeLocalStore('requestDetails')
-    removeLocalStore('currentDriver')
+    helper.removeToken()
+    helper.removeTrip()
+    // removeLocalStore('requestDetails')
     if (getSocket()){
         getSocket().disconnect()
     }
@@ -50,8 +49,8 @@ export const logoutUser = () => dispatch => {
 }
 
 export const toggleResetTrip = (isTrue) => dispatch => {
-    removeLocalStore('requestDetails')
-    removeLocalStore('currentDriver')
+    helper.removeTrip()
+    // removeLocalStore('currentDriver')
     dispatch({
         type:"TOGGLE_RESET_TRIP",
         payload:isTrue

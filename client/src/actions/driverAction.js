@@ -119,11 +119,9 @@ export const login_driver= (driver) => dispatch =>{
 		API().post('/signin', {...driver, role:'driver'})
 	   .then(res =>{
 	   		console.log('signin susccess', res)
-	   		setLocalStore('token', res.data.token)
-	   		setLocalStore('user', res.data.user)
-			// localStorage.setItem('token', res.data.token)
+		    // localStorage.setItem('user', JSON.stringify(res.data.user))
+			localStorage.setItem('token', res.data.token)
 		    // socketInit(res.data.token)
-		
 		   // localStorage.setItem('user', JSON.stringify(res.data.user))
 		   dispatch({type: DRIVER_LOGIN_SUCCESS, payload: res.data})
 		   return res.data

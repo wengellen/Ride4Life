@@ -15,7 +15,7 @@ import {
 import {Avatar} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import BackIcon from "../../assets/img/icons/arrow-back.svg";
-import {getLocalStore} from "../../utils/helpers";
+import * as helper from "../../utils/helpers";
 
 class DriverProfilePage extends Component {
 	state = {
@@ -110,7 +110,7 @@ class DriverProfilePage extends Component {
 						}
 						{ this.props.currentDriver.review && this.props.currentDriver.review.map((item, idx) => (
 							<div className="review-container" key={idx}>
-								{ item.username === getLocalStore('user').username //JSON.parse(localStorage.getItem('user')).username
+								{ item.username === JSON.parse(localStorage.getItem('user')).username //JSON.parse(localStorage.getItem('user')).username
 									? <Clear/>
 									: null
 								}
