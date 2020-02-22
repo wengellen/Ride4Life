@@ -59,7 +59,6 @@ app.use('/api/trip', tripRouter)
 
 app.use('/api/user', userRouter)
 
-
 export const start = async () => {
 	try {
 		await connect()
