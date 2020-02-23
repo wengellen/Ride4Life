@@ -9,7 +9,7 @@ import morgan from 'morgan'
 import config from './config'
 import cors from 'cors'
 import { connect } from './utils/db'
-import { signup, signin, protect, isTokenValid } from './utils/auth'
+import { signup, signin, protect, isTokenValidAndNotConnected } from './utils/auth'
 import driverRouter from './resources/driver/driver.router'
 import riderRouter from './resources/rider/rider.router'
 import tripRouter from './resources/trip/trip.router'
@@ -17,6 +17,7 @@ import userRouter from './resources/user/user.router'
 
 export const app = express()
 const httpServer = http.Server(app);
+
 const globalSocket = initialize(httpServer)
 let corsOptions = {}
 
@@ -43,10 +44,10 @@ app.use(morgan('dev'))
 
 globalSocket.use((socket,  next) => {
 	let token = socket.handshake.query.token;
-	if (isTokenValid(token)){
+	if (isTokenValidAndNotConnected(token, socket)){
 		return next()
 	}
-	return next(new Error('authentication error'))
+	next(new Error('authentication error'))
 })
 
 app.post('/signup', signup)

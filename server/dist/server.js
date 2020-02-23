@@ -72,11 +72,11 @@ app.use((0, _morgan.default)('dev'));
 globalSocket.use((socket, next) => {
   let token = socket.handshake.query.token;
 
-  if ((0, _auth.isTokenValid)(token)) {
+  if ((0, _auth.isTokenValidAndNotConnected)(token, socket)) {
     return next();
   }
 
-  return next(new Error('authentication error'));
+  next(new Error('authentication error'));
 });
 app.post('/signup', _auth.signup);
 app.post('/signin', _auth.signin);

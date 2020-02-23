@@ -3,6 +3,7 @@ import { User } from "../resources/user/user.model";
 import { Rider } from "../resources/rider/rider.model";
 import { Driver } from "../resources/driver/driver.model";
 import jwt from "jsonwebtoken";
+import {io} from "../io";
 
 export const newToken = user => {
 	return jwt.sign(
@@ -145,7 +146,7 @@ export const signin = async (req, res) => {
 	}
 };
 
-export const isTokenValid = async token => {
+export const isTokenValidAndNotConnected = async (token, socket) => {
 	let payload; // id: user.id, role: user.role
 	let doc;
 	try {
@@ -178,6 +179,15 @@ export const isTokenValid = async token => {
 		console.log("Can not be authenticated");
 		return false;
 	}
+	if (user.connected){
+		socket.emit('disconnect')
+		return false
+	}
+	// Or else set connected to be true
+	
+	const res = await doc.findByIdAndUpdate(payload.id, {
+		connected: true
+	}).exec();
 };
 
 export const protect = async (req, res, next) => {

@@ -10,6 +10,10 @@ const riderSchema = new mongoose.Schema(
             type: [Number]
         }
     },
+    connected:{
+        type:Boolean,
+        default:false
+    },
     status: {
       type: String,
       required: true,

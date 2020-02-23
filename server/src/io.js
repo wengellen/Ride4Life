@@ -22,7 +22,6 @@ let socketIo;
 const riders = new Map();
 const drivers = new Map();
 const workingDrivers = new Map();
-const trips = new Map();
 const ids = new Map();
 let nearbyOnlineDrivers = [];
 let tripRequestToDriverMap = new Map();
@@ -35,6 +34,7 @@ export const io = function() {
 
 export const initialize = function(server) {
 	socketIo = sio(server);
+	
 
 	socketIo.on("connection", async (socket) => {
 		const { username, role, id } = socket.handshake.query;
@@ -46,63 +46,76 @@ export const initialize = function(server) {
 		// console.log('socket.handshake.query.param',socket.handshake.query)
 		
 		if (role === "rider") {
-			riders.set(username, {
-				socketId: socket.id,
-				username,
-				role,
-				id
-			});
-			const res = await Rider.findByIdAndUpdate(
-				id,
-				{ status: "standby" },
-				{ new: true }
-			).exec();
+			// if (riders.get(username)) {
+			// 	socketIo.to(socket.id).emit('disconnect')
+			// 	return
+			// }else{
+			//
+				riders.set(username, {
+					socketId: socket.id,
+					username,
+					role,
+					id
+				});
+				const res = await Rider.findByIdAndUpdate(id, {
+					status: "standby"
+				}, {
+					new: true
+				}).exec();
+				
+				ids.set(socket.id, username);
+			// }
 		} else {
-			drivers.set(username, {
-				socketId: socket.id,
-				username,
-				role,
-				id
-			});
+			// if (drivers.get(username)) {
+			// 	socketIo.to(socket.id).emit('disconnect')
+			// 	return
+			// }else{
+				drivers.set(username, {
+					socketId: socket.id,
+					username,
+					role,
+					id
+				});
+				ids.set(socket.id, username);
+			// }
 		}
-
-		ids.set(socket.id, connectedUser);
-
+		
+		socket.on('connect_timeout', (timeout) => {
+			// ...
+		});
+		
 		socket.on("disconnect", async reason => {
 			if (reason === 'ping timeout') return
-			const { username, role, id } = socket.handshake.query;
-			// const user = ids.get(socket.id)
-			// console.log(socket.handshake.query)
-			// console.log(`User ${user.username} has been disconnected`,socket.id)
-			// const trip = trips.get(user.username)
-			delete socket.id;
-
-			// if (!user) return
-			// const map = user.role === 'rider' ? riders : drivers
-
-			if (role === "rider") {
+			if (role === 'rider'){
 				try {
-					const res = await Rider.findByIdAndUpdate(
-						id,
-						{ status: "offline" },
-						{ new: true }
-					).exec();
+					const res = await Rider.findByIdAndUpdate(id, {
+						status: "offline"
+					}, {
+						new: true
+					}).exec();
+					// riders.delete(username)
+					// ids.delete(socket.id);
+					// delete socket.id;
 				} catch (e) {
 					console.log("error", e);
 				}
-			} else {
+			}else{
 				try {
-					const res = await Driver.findByIdAndUpdate(
-						id,
-						{ status: "offline" },
-						{ new: true }
-					).exec();
+					const res = await  Driver.findByIdAndUpdate(id, {
+						status: "offline"
+					}, {
+						new: true
+					}).exec();
+					// drivers.delete(username)
+					// ids.delete(socket.id);
+					// delete socket.id;
 				} catch (e) {
 					console.log("error", e);
 				}
 			}
-
-			logger.debug("USER DISCONNECTED " + username);
+			logger.debug(
+				`USER DISCONNECTED   ${role} ${username}`
+			);
 		});
 
 		// socket.emit('',result)
@@ -328,18 +341,19 @@ export const initialize = function(server) {
 			const { id } = socket.handshake.query; // Rider
 			const { driverId, driverUsername } = data;
 			let trip;
-			socket.join(data._id);
-			// socket.join(rider.username)
+		
 			try {
 				trip = await Trip.findOneAndUpdate(
-					{ rider: id },
+					{ _id: data._id },
 					{ driver: driverId, status: "pickingUp" },
 					{ new: true }
 				)
 					.populate("rider")
 					.populate("driver")
 					.exec();
-
+					
+				
+				// socket.join(rider.username)
 				for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
 					if (nearbyOnlineDrivers[i].username === driverUsername) {
 						console.log(
@@ -349,8 +363,7 @@ export const initialize = function(server) {
 						logger.debug(
 							`DISPATCHING TRIP_CONFIRMED to dirver -  ${data.driver.username}`
 						);
-						socketIo.sockets
-							.in(driverUsername)
+						socketIo.to(data._id) // tripID
 							.emit("TRIP_CONFIRMED_BY_RIDER", data);
 					} else {
 						console.log(
@@ -360,9 +373,10 @@ export const initialize = function(server) {
 						logger.debug(
 							`TRIP_REQUEST_CANCELED_BY_RIDER to dirver -  ${data.driver.username}`
 						);
-						socketIo.sockets
-							.in(nearbyOnlineDrivers[i].username)
-							.emit("TRIP_REQUEST_CANCELED_BY_RIDER", data);
+						socketIo.to(drivers.get(nearbyOnlineDrivers[i].username))
+						.emit("TRIP_REQUEST_CANCELED_BY_RIDER", data);
+						// socketIo.to(drivers.get(nearbyOnlineDrivers[i].username))
+						
 					}
 				}
 			} catch (e) {

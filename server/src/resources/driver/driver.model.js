@@ -18,6 +18,10 @@ const driverSchema = new mongoose.Schema(
 			type: String,
 			default: "https://i.pravatar.cc/60"
 		},
+		connected:{
+			type:Boolean,
+			default:false
+		},
 		location: {
 			address: { type: String },
 			coordinates: []
