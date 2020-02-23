@@ -30,7 +30,7 @@ import {
 import IconButton from '@material-ui/core/IconButton'
 import { withRouter } from 'react-router'
 import CarIcon from "../../assets/img/icons/icons-car-front.svg";
-import {socketInit} from '../../utils/socketConnection'
+import {socketInit, getSocket} from '../../utils/socketConnection'
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
@@ -66,7 +66,10 @@ class RiderHomePage extends Component {
     
         // const rider = this.props.loggedInUser;
         // const token = localStorage.getItem('token')
-        socket = socketInit(helper.getToken())
+         if (!socket) {
+             socketInit()
+             socket = getSocket()
+         }
     }
     
     //========================================
@@ -148,7 +151,7 @@ class RiderHomePage extends Component {
         const driver = this.state.acceptedDrivers[idx]
         // console.log('driver', driver)
         // localStorage.setItem('currentDriver', JSON.stringify(driver))
-    
+        
         this.props.confirmTrip(socket, {
             driverId: driver._id,
             driverUsername: driver.username,
@@ -273,14 +276,14 @@ class RiderHomePage extends Component {
         console.log('DRIVER_GO_OFFLINE! \n')
         this.resetTrip()
         const newArr = this.state.acceptedDrivers.filter(
-            driver => driver.username !== data.driver.username
+            driver => driver.username !== data.username
         )
         this.setState({
             acceptedDrivers: newArr,
         })
     
-        this.acceptedDriversMarkerMap.get(data.driver.username) &&
-        this.acceptedDriversMarkerMap.get(data.driver.username).remove()
+        this.acceptedDriversMarkerMap.get(data.username) &&
+        this.acceptedDriversMarkerMap.get(data.username).remove()
     }
     /**
      *  RECEIVE UPDATE FROM DRIVER -  Driver come online
@@ -288,6 +291,11 @@ class RiderHomePage extends Component {
      */
     onDriverGoOnline = ({driver})=>{
         console.log('DRIVER_GO_ONLINE! \n', driver)
+        
+    }
+    
+    onReceiveError = (err)=>{
+        console.log('Receive Error',err)
         
     }
     
@@ -300,6 +308,7 @@ class RiderHomePage extends Component {
         socket.on('TRIP_ENDED_BY_DRIVER', this.onTripEndedByDriver)
         socket.on('DRIVER_GO_OFFLINE', this.onDriverGoOffline)
         socket.on('DRIVER_GO_ONLINE', this.onDriverGoOnline)
+        socket.on('error', this.onReceiveError)
     }
     
     unbindListeners = ()=>{
@@ -309,12 +318,13 @@ class RiderHomePage extends Component {
         socket.off('TRIP_CANCELED_BY_DRIVER')
         socket.off('TRIP_REQUESTED_BY_RIDER')
         socket.off('DRIVER_GO_OFFLINE')
+        socket.off('error')
         console.log('unbindListeners')
     }
     // addMarkers = () => {
-    // 	// geojson.features.forEach((marker)=> {
+    // 	geojson.features.forEach((marker)=> {
     // 		this.addMarker()
-    // 	// }
+    // 	}
     // }
 
     componentDidMount() {
@@ -381,11 +391,11 @@ class RiderHomePage extends Component {
                     },
                 }
 
-                // const riderMarker = this.addMarker(
-                //     'marker',
-                //     rider._id,
-                //     riderGeojson
-                // )
+                const riderMarker = this.addMarker(
+                    'marker',
+                    helper.getUserId,
+                    riderGeojson
+                )
             })
 
             this.directions = new MapboxDirections({
@@ -515,12 +525,11 @@ class RiderHomePage extends Component {
         const path = this.getStatePath(this.props.location.pathname)
         const {
             acceptedDrivers,
+            currentDriver,
             headerMessage,
         } = this.state
         
         let requestDetails
-        let currentDriver
-            currentDriver = JSON.parse(localStorage.getItem('currentDriver')) //.parse(localStorage.getItem('currentDriver'))
             requestDetails =JSON.parse(localStorage.getItem('requestDetails')) || null  //JSON.parse( localStorage.getItem('requestDetails')) || null
 
         const statusPanel = () => {
@@ -645,7 +654,7 @@ class RiderHomePage extends Component {
                     return (
                         <div className={'status-panel'}>
                             <h1 className={`status-panel__header`}>
-                                Your Driver <span className={"text-blue"}>{currentDriver.username}</span> is on the way
+                                Your Driver <span className={"text-blue"}>{currentDriver && currentDriver.username}</span> is on the way
                             </h1>
                                 {currentDriver && (
                                     <div

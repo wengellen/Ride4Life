@@ -23,9 +23,9 @@ class DriverProfilePage extends Component {
 	}
 	
 	componentWillMount() {
-		this.props.getDriversById(this.props.match.params.id).then((res) => {
-			console.log('res',res)
-		})
+		// this.props.getDriversById(this.props.match.params.id).then((res) => {
+		// 	console.log('res',res)
+		// })
 	}
 	
 	changeHandler = (e) => {

@@ -40,6 +40,10 @@ export const getUsername = () => {
 	const decoded = jwtDecoder(getToken())
 	return decoded.username
 }
+export const getUserId = () => {
+	const decoded = jwtDecoder(getToken())
+	return decoded.id
+}
 
 export const getCurrentUserId = () =>{
 	const decoded = jwtDecoder(getToken())
