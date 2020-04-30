@@ -1,5 +1,5 @@
 /* eslint-disable */
-require('winston-papertrail').Papertrail;
+// require('winston-papertrail').Papertrail;
 
 import winston from 'winston'
 import pjson from '../package.json'
@@ -12,40 +12,40 @@ const consoleLogger = new winston.transports.Console({
   colorize: true
 });
 
-const paperLogger = new winston.transports.Papertrail({
-  host: 'logs4.papertrailapp.com',
-  port: 44934,
-  program: pjson.name, //Get the name from the package JSON
-  inlineMeta: true, //Everything on 1 line
-  logFormat: function (level, message) {
-    if (level === 'error') {
-      return '<<< ERROR >>> ' + message;
-    }
-    return level + ' - ' + message;
-  }
-});
+// const paperLogger = new winston.transports.Papertrail({
+//   host: 'logs4.papertrailapp.com',
+//   port: 44934,
+//   program: pjson.name, //Get the name from the package JSON
+//   inlineMeta: true, //Everything on 1 line
+//   logFormat: function (level, message) {
+//     if (level === 'error') {
+//       return '<<< ERROR >>> ' + message;
+//     }
+//     return level + ' - ' + message;
+//   }
+// });
 
 let logger = new winston.Logger({
   transports: [
     consoleLogger,
-    paperLogger
+    // paperLogger
   ]
 
 });
 logger.transports.console.level = 'debug';
-logger.transports.Papertrail.level = 'debug';
+// logger.transports.Papertrail.level = 'debug';
 
 if (process.env.NODE_ENV === 'production') {
   logger.transports.console.level = 'debug';
-  logger.transports.Papertrail.level = 'debug';
+  // logger.transports.Papertrail.level = 'debug';
 }
 if (process.env.NODE_ENV === 'development') {
   logger.transports.console.level = 'debug';
-  logger.transports.Papertrail.level = 'debug';
+  // logger.transports.Papertrail.level = 'debug';
 }
 if (process.env.NODE_ENV === 'local') {
   logger.transports.console.level = 'debug';
-  logger.remove(logger.transports.Papertrail);
+  // logger.remove(logger.transports.Papertrail);
 }
 
 export const info = function () {

@@ -179,14 +179,18 @@ export const isTokenValidAndNotConnected = async (token, socket) => {
 		console.log("Can not be authenticated");
 		return false;
 	}
-	if (user.connected){
-		socket.emit('disconnect')
-		return false
-	}
-	// Or else set connected to be true
+	
+	console.log("socket.rooms",socket.rooms)
+	console.log("connectedSocket",user.connectedSocket)
+	console.log("socket",Object.keys(socket.rooms))
+	
+	if (user.connectedSocket !== null) {
+		socket.disconnect()
+		return false;
+	} // Or els
 	
 	const res = await doc.findByIdAndUpdate(payload.id, {
-		connected: true
+		connectedSocket: socket.id
 	}).exec();
 };
 

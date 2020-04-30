@@ -10,9 +10,9 @@ const riderSchema = new mongoose.Schema(
             type: [Number]
         }
     },
-    connected:{
-        type:Boolean,
-        default:false
+    connectedSocket:{
+        type:String,
+        default:null
     },
     status: {
       type: String,

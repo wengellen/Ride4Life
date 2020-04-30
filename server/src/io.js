@@ -1,6 +1,5 @@
 import sio from "socket.io";
 import * as logger from "./logger";
-import { fetchNearestCops } from "./utils/db";
 import { Rider } from "./resources/rider/rider.model";
 import { Driver } from "./resources/driver/driver.model";
 import {
@@ -14,7 +13,6 @@ import {
 	updateRiderLocationAndStatus
 } from "./resources/rider/rider.crud";
 import { Trip } from "./resources/trip/trip.model";
-// import { getDriverById } from './resources/driver/driver.controllers'
 
 // TODO: Need to add socketio-auth
 
@@ -33,24 +31,30 @@ export const io = function() {
 };
 
 export const initialize = function(server) {
-	socketIo = sio(server);
-	
+	socketIo = sio(server, {
+		path: '/',
+		serveClient: false,
+		// below are engine.IO options
+		pingInterval: 10000,
+		pingTimeout: 5000,
+		cookie: false
+	});
 
 	socketIo.on("connection", async (socket) => {
 		const { username, role, id } = socket.handshake.query;
 		const connectedUser = { username, role, id };
-		// console.log("socket.handshake.query",socket.handshake.query)
+		
+		socketIo.emit('connect', {data:'be received by everyone'})
 		logger.debug(
 			`USER CONNECTED  ${role} ${username} connected with ${socket.id}`
 		);
-		// console.log('socket.handshake.query.param',socket.handshake.query)
+		logger.debug(
+			`Conncted Client ${ids.size}`
+		);
+		
+		console.log('ids',ids)
 		
 		if (role === "rider") {
-			// if (riders.get(username)) {
-			// 	socketIo.to(socket.id).emit('disconnect')
-			// 	return
-			// }else{
-			//
 				riders.set(username, {
 					socketId: socket.id,
 					username,
@@ -64,12 +68,7 @@ export const initialize = function(server) {
 				}).exec();
 				
 				ids.set(socket.id, username);
-			// }
 		} else {
-			// if (drivers.get(username)) {
-			// 	socketIo.to(socket.id).emit('disconnect')
-			// 	return
-			// }else{
 				drivers.set(username, {
 					socketId: socket.id,
 					username,
@@ -77,38 +76,51 @@ export const initialize = function(server) {
 					id
 				});
 				ids.set(socket.id, username);
-			// }
 		}
 		
 		socket.on('connect_timeout', (timeout) => {
 			// ...
 		});
 		
+		socket.on('disconnecting', (reason) => {
+			let rooms = Object.keys(socket.rooms).map(room => ids.get(room))
+			console.log("Connected room",ids)
+			// ...
+		});
+		
 		socket.on("disconnect", async reason => {
 			if (reason === 'ping timeout') return
+			
+			// if (socket.io.connecting.indexOf(socket) === -1){
+			// 	return socket.connect()
+			// }
+		
 			if (role === 'rider'){
 				try {
 					const res = await Rider.findByIdAndUpdate(id, {
-						status: "offline"
+						status: "offline",
+						connectedSocket: null
 					}, {
 						new: true
 					}).exec();
-					// riders.delete(username)
-					// ids.delete(socket.id);
-					// delete socket.id;
+					riders.delete(username)
+					ids.delete(socket.id);
+					delete socket.id;
+					console.log("connected count", ids)
 				} catch (e) {
 					console.log("error", e);
 				}
 			}else{
 				try {
 					const res = await  Driver.findByIdAndUpdate(id, {
-						status: "offline"
+						status: "offline",
+						connectedSocket: null
 					}, {
 						new: true
 					}).exec();
-					// drivers.delete(username)
-					// ids.delete(socket.id);
-					// delete socket.id;
+					drivers.delete(username)
+					ids.delete(socket.id);
+					delete socket.id;
 				} catch (e) {
 					console.log("error", e);
 				}
@@ -116,14 +128,13 @@ export const initialize = function(server) {
 			logger.debug(
 				`USER DISCONNECTED   ${role} ${username}`
 			);
+		
 		});
 
 		// socket.emit('',result)
   
 		socket.on("join", room => {
 			// map socket id to user object
-			// ids.set(socket.id, data)
-			//         const username = ids.get(socket.id).username
 			const { username } = socket.handshake.query;
 			// add a room with username
 			socket.to(room).emit('USER_JOINED_ROOM', `USER ${username} JOINED "${room}" ROOM`) //User joins a unique room/channel that's named after the userId
@@ -133,33 +144,21 @@ export const initialize = function(server) {
 
 		socket.on("UPDATE_RIDER_LOCATION", async data => {
 			const { username, id } = socket.handshake.query;
-			// console.log
 			logger.debug(`UPDATE_RIDER_LOCATION - ${username}`);
-			// const role = socket.handshake.query.role
 			const { location } = data;
 
 			logger.debug(`UPDATE_RIDER_LOCATION - ${username}`);
-			// riders.set(username, {
-			//     socketId: socket.id,
-			//     ...data,
-			// })
 			try {
 				await updateRiderLocationAndStatus(id, location);
 			} catch (e) {
 				console.log("error", e);
 			}
-			// ids.set(socket.id, data)
 		});
 
 		socket.on("UPDATE_DRIVER_LOCATION", async data => {
 			const { location } = data;
 			const { username, id } = socket.handshake.query;
 			logger.debug(`UPDATE_DRIVER_LOCATION - data!!`, data);
-			// map driver username to socket
-			// drivers.set(username, {
-			//     socketId: socket.id,
-			//     ...data,
-			// })
 			logger.debug(
 				`UPDATE_DRIVER_LOCATION - ${username} data add to drivers map`,
 				drivers.get(username)
@@ -170,11 +169,6 @@ export const initialize = function(server) {
 			} catch (e) {
 				console.log("error", e);
 			}
-			// map socket id to driver object
-			//ids.set(socket.id, data)
-
-			// Put driver in a new chat room
-			//socket.join(username)
 		});
 
 		socket.on("DRIVER_GO_ONLINE", async data => {
@@ -193,7 +187,6 @@ export const initialize = function(server) {
 
 				logger.debug(`DRIVER_GO_ONLINE`);
 				 // Return to driver
-				// socketIo.to(username).emit("DRIVER_READY_TO_ACCEPT_TRIP");
                
                const nearbyOnlineRider = await Rider.find()
                 .lean()
@@ -220,8 +213,7 @@ export const initialize = function(server) {
                 const  trip = await Trip.findOne({ driver: id})
                 .exec();
                 
-                console.log("trip",trip)
-                // const trip = tripRequestToDriverMap
+                // console.log("trip",trip)
                 // broadcast to every one in the room
 				if (trip) {
 					socketIo.to(trip._id).emit("DRIVER_GO_OFFLINE", username);
@@ -260,13 +252,9 @@ export const initialize = function(server) {
 
 				console.log("newTrip", newTrip);
 
-				socket.join(trip._id); // create a room using trip id
-				// socket.join(username)
+				socket.join(trip._id);
 				// Return trip id to rider
 				socketIo.to(socket.id).emit("TRIP_REQUESTED_BY_RIDER", trip._id);
-				// socketIo.sockets
-				// 	.to(username)
-				// 	.emit("TRIP_REQUESTED_BY_RIDER", trip._id);
 
 				for (let driver of nearbyOnlineDrivers) {
 					console.log(
@@ -351,7 +339,6 @@ export const initialize = function(server) {
 					.populate("rider")
 					.populate("driver")
 					.exec();
-					
 				
 				// socket.join(rider.username)
 				for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
@@ -375,8 +362,6 @@ export const initialize = function(server) {
 						);
 						socketIo.to(drivers.get(nearbyOnlineDrivers[i].username))
 						.emit("TRIP_REQUEST_CANCELED_BY_RIDER", data);
-						// socketIo.to(drivers.get(nearbyOnlineDrivers[i].username))
-						
 					}
 				}
 			} catch (e) {
@@ -392,9 +377,7 @@ export const initialize = function(server) {
 			socket.join(data._id);
 			console.log("DRIVER_START_TRIP ------>");
 			console.log("data", data);
-			// console.log('driver', driver)
 			console.log("rider", rider);
-			// send heartbeat and update driver location
 			try {
 				const driver = await Driver.findOneAndUpdate(
 					{ _id: id },
@@ -414,14 +397,6 @@ export const initialize = function(server) {
 					.populate("rider")
 					.populate("driver")
 					.exec();
-
-				// const who = await Driver.findByIdAndUpdate(
-				//     driver._id,
-				//     { new: true }
-				// ).exec()
-				// // let clients =  socketIo.sockets.adapter.rooms[data._id].sockets;
-				// // console.log('!!!clients',clients)
-				// console.log('who', who)
 				socketIo.sockets
 					.to(rider.username)
 					.emit("TRIP_STARTED_BY_DRIVER", { ...data });
@@ -435,8 +410,6 @@ export const initialize = function(server) {
 			const { username, id } = socket.handshake.query; // Driver
 			const { driver, rider } = data;
 			let trip;
-			// socket.join(data._id)
-			// socket.join(data._id)
 			console.log("DRIVER_END_TRIP ------>");
 			console.log("data", data);
 			console.log("driver", driver);
@@ -461,14 +434,6 @@ export const initialize = function(server) {
 					.populate("rider")
 					.populate("driver")
 					.exec();
-
-				// const who = await Driver.findByIdAndUpdate(
-				//     driver._id,
-				//     { new: true }
-				// ).exec()
-				// // let clients =  socketIo.sockets.adapter.rooms[data._id].sockets;
-				// // console.log('!!!clients',clients)
-				// console.log('who', who)
 				socketIo.sockets
 					.to(rider.username)
 					.emit("TRIP_ENDED_BY_DRIVER", { ...data });
@@ -480,8 +445,6 @@ export const initialize = function(server) {
 		});
 
 		socket.on("DENY_TRIP_REQUEST", async data => {
-			//take the driver out of
-			// nearbyOnlineDriversMap.delete(drivers.username)
 		});
 
 		socket.on("RIDER_CANCEL_REQUEST", async data => {
