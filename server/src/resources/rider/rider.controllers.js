@@ -11,8 +11,8 @@ export const getRiderProfile = (req, res) => {
   res.status(200).json({ data: req.user });
 };
 
-export const updateRiderProfile = (req, res) => {
-};
+// export const updateRiderProfile = (req, res) => {
+// };
 
 export const reviewTrip = async (req, res)=>{
   const {driver_id, rider_id, trip_id, review, rating} = req.body
@@ -96,7 +96,7 @@ export const fetchNearestDriver = async (req, res) => {
   }
 }
 
-export const uploadProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
   console.log(".req.body", req.body)
   console.log("req.user._id", req.user._id)
   

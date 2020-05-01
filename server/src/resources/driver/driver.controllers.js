@@ -71,7 +71,7 @@ export const getDriverById = async (req, res) => {
     }
 }
 
-export const updateDriverProfile = (req, res) => {}
+// export const updateDriverProfile = (req, res) => {}
 
 export const getDriverTrips = async (req, res) => {
     try {
@@ -122,7 +122,7 @@ export const quoteTrip = async (req, res) => {
     }
 }
 
-export const uploadProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
     console.log(".req.body", req.body)
     console.log("req.user._id", req.user._id)
     try {

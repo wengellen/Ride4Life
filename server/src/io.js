@@ -32,8 +32,8 @@ export const io = function() {
 
 export const initialize = function(server) {
 	socketIo = sio(server, {
-		path: '/',
-		serveClient: false,
+		// path: '/',
+		// serveClient: false,
 		// below are engine.IO options
 		pingInterval: 10000,
 		pingTimeout: 5000,
