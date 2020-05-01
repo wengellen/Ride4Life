@@ -1,12 +1,8 @@
-import {combineReducers} from "redux";
-import {driverReducer} from './driverReducer'
-import {riderReducer} from './riderReducer'
-import {modalReducer} from './modalReducer'
-import {tripReducer} from './tripReducer'
+import { combineReducers } from 'redux'
+import { userReducer } from './userReducer'
+import { modalReducer } from './modalReducer'
 
 export default combineReducers({
-	driverReducer,
-	riderReducer,
-	modalReducer,
-	tripReducer
+	userReducer: userReducer,
+	modalReducer: modalReducer,
 })

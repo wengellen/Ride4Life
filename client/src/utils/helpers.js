@@ -36,6 +36,10 @@ export const getRole = () => {
 	return decoded.role
 }
 
+export const getUser = () => {
+	return jwtDecoder(getToken())
+}
+
 export const getUsername = () => {
 	const decoded = jwtDecoder(getToken())
 	return decoded.username
@@ -53,7 +57,6 @@ export const getCurrentUserId = () =>{
 export const getShortDate = (date)=>{
 	return date.substring(0, 10) //?
 }
-
 
 export const minW = n => {
 	const temp = Object.keys(bp).map(key => [key,  bp[key]])
@@ -75,21 +78,12 @@ export const setLocalStore = (key, value) =>{
 }
 
 export const getLocalStore = (key) => {
-	// console.log("getLocalStore - key",key)
 	const res = localStorage.getItem(key)
-	// console.log("getLocalStore - res",res)
 	console.log("typeof", typeof res)
-	// return JSON.parse(localStorage.getItem(key))
-	// if (typeof res === 'object'){
-	// 	console.log("getLocalStore - res",res)
-	// 	return JSON.parse(localStorage.getItem('user'))
-	// 	// return JSON.parse(res)
-	// }else{
-	// 	// console.log("getLocalStore -res",JSON.parse(res))
-	// 	return res
-	// }
 }
 
 export const removeLocalStore = (key) =>{
 	localStorage.removeItem(key)
 }
+
+

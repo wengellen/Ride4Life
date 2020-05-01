@@ -112,11 +112,11 @@ class DriverTripReviewPage extends Component {
 	
 }
 
-const mapStateToProps = ({riderReducer}) => {
+const mapStateToProps = ({userReducer}) => {
 	return {
-		submitDriverReviewStarted: riderReducer.submitDriverReviewStarted,
-		currentDriver:riderReducer.currentDriver,
-		submitDriverReviewSuccessMessage:riderReducer.submitDriverReviewSuccessMessage
+		submitDriverReviewStarted: userReducer.submitDriverReviewStarted,
+		currentDriver:userReducer.currentDriver,
+		submitDriverReviewSuccessMessage:userReducer.submitDriverReviewSuccessMessage
 	}
 }
 

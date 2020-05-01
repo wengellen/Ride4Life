@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner'
-import { login_driver } from '../../actions';
+import { loginUser } from '../../actions';
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -48,7 +48,7 @@ class DriverLoginPage extends React.Component {
 		this.setState({
 			isEditing:false,
 		})
-		this.props.login_driver(this.state.credentials)
+		this.props.loginUser({user:this.state.credentials, role:'driver'})
 		.then((res) => {
 			console.log('res', res)
 			if(!res){
@@ -157,14 +157,14 @@ class DriverLoginPage extends React.Component {
 		);
 	}
 }
-const mapStateToProps = ({driverReducer}) => (
+const mapStateToProps = ({modalReducer}) => (
 	{
-		driverSignupStarted:driverReducer.driverSignupStarted,
-		serverMessage:driverReducer.serverMessage
+		// driverSignupStarted:driverReducer.driverSignupStarted,
+		serverMessage:modalReducer.serverMessage
 	}
 )
 
 export default connect(
 	mapStateToProps,
-	{ login_driver }
+	{ loginUser }
 )(withStyles(loginPageStyle)(DriverLoginPage));

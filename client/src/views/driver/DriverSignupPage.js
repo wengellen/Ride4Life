@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner'
-import { signup_driver } from '../../actions';
+import { signupUser } from '../../actions';
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -56,7 +56,7 @@ DriverSingupPage extends React.Component {
       this.setState({
           isEditing:false,
       })
-    this.props.signup_driver(this.state.profile)
+    this.props.signupUser({user: this.state.profile, role:'driver'})
     .then((res) => {
         console.log('res', res)
         if(!res.data){
@@ -216,14 +216,14 @@ DriverSingupPage extends React.Component {
     );
   }
 }
-const mapStateToProps = ({driverReducer}) => (
+const mapStateToProps = ({userReducer}) => (
     {
-        driverSignupStarted:driverReducer.driverSignupStarted,
-        serverMessage:driverReducer.serverMessage
+        // driverSignupStarted:driverReducer.driverSignupStarted,
+        serverMessage:userReducer.serverMessage
     }
 )
 
 export default connect(
     mapStateToProps,
-    { signup_driver }
+    { signupUser }
 )(withStyles(loginPageStyle)(DriverSingupPage));

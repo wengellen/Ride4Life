@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner'
-import { signup_rider } from '../../actions';
+import { signupUser } from '../../actions';
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -51,7 +51,7 @@ class RiderSignupPage extends React.Component {
         this.setState({
             isEditing:false,
         })
-        this.props.signup_rider(this.state.profile)
+        this.props.signupUser({user:this.state.profile, role:'rider'})
         .then((res) => {
             console.log('res', res)
             if(!res.error){
@@ -195,15 +195,15 @@ class RiderSignupPage extends React.Component {
         );
     }
 }
-const mapStateToProps = ({riderReducer}) => (
+const mapStateToProps = ({userReducer}) => (
     {
-        riderSignupStarted:riderReducer.riderSignupStarted,
-        serverMessage:riderReducer.serverMessage
+        riderSignupStarted:userReducer.riderSignupStarted,
+        serverMessage:userReducer.serverMessage
         
     }
 )
 
 export default connect(
     mapStateToProps,
-    { signup_rider }
+    { signupUser }
 )(withStyles(loginPageStyle)(RiderSignupPage));

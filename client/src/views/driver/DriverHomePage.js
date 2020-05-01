@@ -23,6 +23,7 @@ import IconMessage from 'assets/img/message-square.svg'
 import IconPhone from 'assets/img/phone.svg'
 import DriverTripReviewPage from "./DriverTripReviewPage";
 import {socketInit} from '../../utils/socketConnection'
+import Wrapper from '../Wrapper'
 let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
@@ -683,30 +684,30 @@ class DriverHomePage extends Component {
             }
         }
         return (
-            <div className="map-wrapper ">
-                <div className="map-container driver">
-                    <div
-                        className="map-wrapper driver"
-                        style={{ position: 'relative', display: 'flex' }}>
+            <Wrapper>
+                <div className="map-wrapper ">
+                    <div className="map-container driver">
                         <div
-                            ref={ this.mapContainer}
-                            className={`driver-map hide-direction`}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                            }}
-                        />
-                        {statusPanel()}
+                            className="map-wrapper driver"
+                            style={{ position: 'relative', display: 'flex' }}>
+                            <div
+                                ref={ this.mapContainer}
+                                className={`driver-map hide-direction`}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                }}
+                            />
+                            {statusPanel()}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Wrapper>
         );
     }
 }
 
-const mapStateToProps = ({ driverReducer, tripReducer }, ownProps) => ({
-    tripStatus:driverReducer.tripStatus,
-    shouldResetTrip:tripReducer.shouldResetTrip
+const mapStateToProps = ({ }, ownProps) => ({
 })
 
 export default connect(

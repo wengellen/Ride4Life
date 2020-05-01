@@ -149,10 +149,10 @@ class DriverProfilePage extends Component {
 	
 }
 
-const mapStateToProps = ({riderReducer}) => {
+const mapStateToProps = ({userReducer}) => {
 	return {
-		findDriverByIdStarted: riderReducer.findDriverByIdStarted,
-		currentDriver:riderReducer.currentDriver,
+		findDriverByIdStarted: userReducer.findDriverByIdStarted,
+		currentDriver:userReducer.currentDriver,
 	}
 }
 

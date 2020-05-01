@@ -4,7 +4,6 @@ const endpoint = process.env.NODE_ENV !== "production" ? "http://localhost:7000"
 
 let socketIo = null
 
-
 export const getSocket = ()=>{
     return socketIo
 }
@@ -18,6 +17,3 @@ export const socketInit = ()=>{
     console.log('socketIo', socketIo.connected)
     return socketIo
 }
-
-//
-// export default socket;
