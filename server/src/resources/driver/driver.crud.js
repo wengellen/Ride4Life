@@ -1,4 +1,6 @@
 import { Driver } from "./driver.model";
+import MapBoxAPIClient from '../../utils/MapboxAPIClient'
+const mapboxClient = new MapBoxAPIClient()
 
 const getDriverById = id => {
 	return Driver.findById(id).exec();
@@ -58,6 +60,36 @@ export const getNearbyOnlineDrivers = async (
 	}
 };
 
+export const getDistanceAndDuration = async (
+	coord1 = [],
+	coord2 = [],
+) => {
+	// await Driver.createIndex().catch(e => console.error(e))
+	// console.log("coord1", coord1);
+	// console.log("coord2", coord2);
+	try {
+		const obj =  mapboxClient.getDistanceAndDuration(coord1, coord2)
+		// const drivers = await Driver.find({status:"standby"}).lean().exec()
+		// const drivers = await Driver.find({
+		//     location: {
+		//         $near: {
+		//             $geometry: {
+		//                 type: "Point",
+		//                 coordinates: coordinates
+		//             },
+		//             $maxDistance: 2000
+		//         }
+		//     }}).lean().exec()
+		// await Driver.createIndex().catch(e => console.error(e))
+		// 	.lean()
+		// 	.exec();
+		// console.log('obj',obj)
+		return obj;
+	} catch (e) {
+		console.log(e);
+	}
+};
+
 export const crud = {
 	getDriverById,
 	getAllDrivers,
@@ -66,5 +98,6 @@ export const crud = {
 	updateDriverById,
 	updateDriverLocation,
 	updateDriverStatus,
-	getNearbyOnlineDrivers
+	getNearbyOnlineDrivers,
+	getDistanceAndDuration
 };

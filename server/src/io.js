@@ -6,15 +6,17 @@ import {
 	updateDriverLocation,
 	updateDriverStatus,
 	getDriverById,
-	getNearbyOnlineDrivers
+	getNearbyOnlineDrivers,
+	getDistanceAndDuration
 } from "./resources/driver/driver.crud";
 import {
 	updateRiderLocation,
 	updateRiderStatus,
 	updateRiderLocationAndStatus
 } from "./resources/rider/rider.crud";
+import MapBoxAPIClient from '../../utils/MapboxAPIClient'
 import { Trip } from "./resources/trip/trip.model";
-
+const mapboxClient = new MapBoxAPIClient()
 // TODO: Need to add socketio-auth
 
 let socketIo;
@@ -31,6 +33,7 @@ let requestTimeout = null;
 export const io = function() {
 	return socketIo;
 };
+
 
 export const initialize = function(server) {
 	socketIo = sio(server, {
@@ -78,9 +81,15 @@ export const initialize = function(server) {
 				role,
 				id
 			});
-			ids.set(socket.id, username);
+			
+			// If it's not in ids,
+			if (![...ids.values()].includes(username)){
+				ids.set(socket.id, username);
+			}
 		}
-		console.log("ids", ids);
+		console.log("Connected Sockets:", ids);
+		console.log("Connected Drivers:", drivers);
+		console.log("Connected Riders:", riders);
 		
 
 		socket.on("connect_timeout", timeout => {
@@ -95,7 +104,6 @@ export const initialize = function(server) {
 						id,
 						{
 							status: "offline",
-							connectedSocket: null
 						},
 						{
 							new: true
@@ -106,7 +114,6 @@ export const initialize = function(server) {
 						id,
 						{
 							status: "offline",
-							connectedSocket: null
 						},
 						{
 							new: true
@@ -119,10 +126,9 @@ export const initialize = function(server) {
 			} catch (e) {
 				console.log("error", e);
 			}
-			// ...
-
 		});
-
+		
+		
 		socket.on("disconnect", async reason => {
 			if (reason === "ping timeout") return;
 			// if (socket.io.connecting.indexOf(socket) === -1){
@@ -138,9 +144,42 @@ export const initialize = function(server) {
 				// delete socket.id;
 			}
 			ids.delete(socket.id);
-			socket.nearbyOnlineDrivers = []
-			delete socket.id;
+			// socket.nearbyOnlineDrivers = []
+			// delete socket.id;
 			logger.debug(`!!!!!USER DISCONNECTED   ${role} ${username}`);
+		});
+		
+		socket.on("USER_LOGGED_OUT", async reason => {
+			// socket.nearbyOnlineDrivers = []
+			// delete socket.id;
+			logger.debug(`!!!!!USER LOGOUT   ${role} ${username}`);
+			if (role === "rider") {
+				const res = await Rider.findByIdAndUpdate(
+					id,
+					{
+						status: "offline",
+						connectedSocket: null
+					},
+					{
+						new: true
+					}
+				).exec();
+				riders.delete(username);
+			} else {
+				const res = await Driver.findByIdAndUpdate(
+					id,
+					{
+						status: "offline",
+						connectedSocket: null
+					},
+					{
+						new: true
+					}
+				).exec();
+				drivers.delete(username);
+			}
+			
+			ids.delete(socket.id);
 		});
 
 		// socket.emit('',result)
@@ -204,7 +243,9 @@ export const initialize = function(server) {
 				const nearbyOnlineRider = await Rider.find()
 					.lean()
 					.exec();
-				socket.broadcast.emit("DRIVER_GO_ONLINE", driver);
+				// socket.broadcast.emit("DRIVER_GO_ONLINE", driver);
+				
+				console.log("ids",ids)
 			} catch (e) {
 				console.log("error", e);
 			}
@@ -276,6 +317,7 @@ export const initialize = function(server) {
 					nearbyOnlineDrivers = await Driver.find({ status: "standby" })
 						.lean()
 						.exec();
+					console.log("nearbyOnlineDrivers",nearbyOnlineDrivers)
 					for (let driver of nearbyOnlineDrivers) {
 						console.log(
 							"DISPATCHING TRIP_REQUESTED_BY_RIDER TO DRIVER - ",
@@ -344,11 +386,16 @@ export const initialize = function(server) {
 					.populate("rider")
 					.populate("driver")
 					.exec();
-
+				
 				logger.debug(
 					`DISPATCHING TRIP_CONFIRMED to dirver -  ${data.driver.username}`
 				);
 				
+				const obj = await mapboxClient.getDistanceAndDuration(trip.rider.location, trip.driver.location)
+				
+				logger.debug(
+					`getDistanceAndDuration-  ${obj}`
+				);
 				// Drivers that has previously offered
 				for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
 					const driver = nearbyOnlineDrivers[i]
@@ -366,11 +413,13 @@ export const initialize = function(server) {
 						
 						await updateDriverStatus(driver._id, "offered");
 						
-						// updateTripInterval	= setInterval(async () => {
-						// 		socketIo
-						// 		.to(drivers.get(driver.username).socketId)
-						// 		.emit("TRIP_UPDATE", trip);
-						// }, 2000);
+						
+						
+						updateTripInterval	= setInterval(async () => {
+								socketIo
+								.to(drivers.get(driverUsername).socketId)
+								.emit("TRIP_UPDATE", trip);
+						}, 2000);
 						
 					} else {
 						console.log(
