@@ -23,16 +23,16 @@ let corsOptions = {}
 
 console.log('process.env.NODE_ENV',process.env.NODE_ENV)
 
-// if (process.env.NODE_ENV ==='PRODUCTION') {
-// 	corsOptions = {
-// 		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
-// 	}
-//
-// }else{
-// 	corsOptions = {
-// 		origin: 'http://localhost:3000'
-// 	}
-// }
+if (process.env.NODE_ENV ==='PRODUCTION') {
+	corsOptions = {
+		origin: 'https://reverent-wozniak-c1db03.netlify.com/'
+	}
+
+}else{
+	corsOptions = {
+		origin: 'http://localhost:3000'
+	}
+}
 
 app.disable('x-powered-by')
 app.use(cors())
@@ -44,7 +44,8 @@ app.use(morgan('dev'))
 
 globalSocket.use((socket,  next) => {
 	let token = socket.handshake.query.token;
-	if (isTokenValidAndNotConnected(token, socket)){
+	if (isTokenValidAndNotConnected(token)){
+		// socket.emit('unauthorized', "INVALID_TOKEN")
 		return next()
 	}
 	next(new Error('authentication error'))

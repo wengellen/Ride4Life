@@ -19,13 +19,15 @@ import * as helper from "../../utils/helpers";
 
 class DriverProfilePage extends Component {
 	state = {
-		showPopup:true
+		showPopup:true,
+		currentDriver:null
 	}
 	
 	componentWillMount() {
-		// this.props.getDriversById(this.props.match.params.id).then((res) => {
-		// 	console.log('res',res)
-		// })
+		this.props.getDriversById(this.props.match.params.id).then((res) => {
+			console.log('res',res)
+			this.setState('currentDriver', res)
+		})
 	}
 	
 	changeHandler = (e) => {

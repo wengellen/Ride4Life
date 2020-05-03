@@ -87,8 +87,7 @@ export const loginUser = ({ user, role }) => dispatch => {
 		.then(res => {
 			const { token } = res.data
 			helper.setToken(token)
-			const user = jwtDecoder(getToken())
-			console.log('user',user)
+			const user = helper.getUser()
 			dispatch({ type: USER_LOGIN_SUCCESS, payload: user })
 			return res.data
 		})

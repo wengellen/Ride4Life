@@ -155,13 +155,11 @@ class Header extends React.Component {
 	handleDrawerLogIn() {
 		this.handleDrawerToggle()
 		this.setState({showSlidingPanel:true, slidingPanelComponent:'login'})
-		// this.props.handleOpenPanel('login')
 	}
 
 	handleDrawerSignup() {
 		this.handleDrawerToggle()
 		this.setState({showSlidingPanel:true, slidingPanelComponent:'signup'})
-		// this.props.handleOpenPanel('signup')
 	}
 	
 	handleOpenSelectPanel = type => {
@@ -181,8 +179,6 @@ class Header extends React.Component {
 		const { handleOpenProfile } = this.props
 		const { showSlidingPanel, slidingPanelComponent } = this.state
 		const loggedInUser = getUser()
-		// this.props.history.push('/')
-		console.log('loggedInUser', loggedInUser)
 		const drawer = (
 			<div>
 				{!loggedInUser ? (

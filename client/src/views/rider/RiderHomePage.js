@@ -62,7 +62,7 @@ class RiderHomePage extends Component {
 			currentDriver: null,
 			headerMessage: '',
 		}
-	
+
 		this.map = null
 		this.directions = null
 		this.geolocate = null
@@ -164,7 +164,6 @@ class RiderHomePage extends Component {
 			showEstimate: false,
 			currentDriver: driver,
 		})
-
 		this.props.history.push('/rider/confirmed')
 	}
 
@@ -190,7 +189,10 @@ class RiderHomePage extends Component {
 	 */
 	onTripEndedByDriver = data => {
 		this.setState({ tripId: data })
-		const requestDetails = localStorage.setItem('requestDetails', data)
+		const requestDetails = localStorage.setItem(
+			'requestDetails',
+			JSON.stringify(data)
+		)
 		console.log('requestDetails', requestDetails.rider)
 
 		const tripData = {
@@ -241,7 +243,6 @@ class RiderHomePage extends Component {
 	handleCancelTrip = () => {
 		this.resetTrip()
 		this.props.riderCancelTrip(socket, {
-			// rider: this.props.loggedInUser,
 			requestDetails: this.state.requestDetails,
 			tripId: this.state.tripId,
 		})
@@ -318,21 +319,27 @@ class RiderHomePage extends Component {
 			})
 		}, 5000)
 	}
-	
-	onSocketDisconnect = (reason)=>{
+
+	onSocketDisconnect = reason => {
 		// If it was disconnected due to multiple logins, don't reconnect
-		console.log( 'disconnected from server' );
-		if ( reason !== "MULTIPLE_LOGIN"){
-			window.setTimeout( ()=>{
+		console.log('disconnected from server')
+		if (reason !== 'MULTIPLE_LOGIN') {
+			window.setTimeout(() => {
 				socket = socketInit()
-			}, 5000 );
+			}, 5000)
+		} else {
+			this.props.logoutUser()
+			this.props.history.push('/')
 		}
 	}
 
-	onTripUpdate = trip => {
-		console.log('onTripUpdate - trip', trip)
+	onTripUpdate = requestDetails => {
+		console.log('onTripUpdate - trip', requestDetails)
+		localStorage.setItem('requestDetails', JSON.stringify(requestDetails))
+		this.setState({
+			requestDetails,
+		})
 	}
-
 	bindListeners() {
 		socket.on('connect', this.onSocketConnect)
 		socket.on('disconnect', this.onSocketDisconnect)
@@ -363,11 +370,7 @@ class RiderHomePage extends Component {
 	}
 
 	componentWillMount() {
-		// if (!this.props.loggedInUser) {
-		// 	this.props.logoutUser()
-		// 	this.props.userLoggedOut(socket)
-		// 	this.props.history.push('/')
-		// }
+		this.bindListeners()
 	}
 
 	componentDidMount() {
@@ -443,7 +446,7 @@ class RiderHomePage extends Component {
 				)[0]
 				this.setState({
 					startLocation: e.feature.geometry.coordinates,
-					startLocationAddress: startInput.value,
+					startLocationAddress: startInput ? startInput.value : null,
 				})
 			})
 
@@ -487,7 +490,7 @@ class RiderHomePage extends Component {
 	}
 
 	componentWillUnmount = () => {
-        this.unbindListeners()
+		this.unbindListeners()
 	}
 
 	addMarker = (markerStyle, markerId, marker) => {
@@ -795,11 +798,18 @@ class RiderHomePage extends Component {
 									<img
 										className={'icon-box-image'}
 										src={
-											currentDriver.avatar || placeholder
+											(currentDriver &&
+												currentDriver.avatar) ||
+											placeholder
 										}
 										alt={'rider'}
 									/>
-									<h3> {`${currentDriver.rating} `}stars</h3>
+									<h3>
+										{' '}
+										{`${currentDriver &&
+											currentDriver.rating} `}
+										stars
+									</h3>
 								</div>
 								<div className={'icon-box'}>
 									{/*<img src={CarIcon} alt={'rider icon'} />*/}

@@ -6,6 +6,7 @@ import styled from '@emotion/styled'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
 import Button from '@material-ui/core/Button'
+import { getUser } from '../utils/helpers'
 
 const container = css`
 	max-width: 73.75rem;
@@ -87,7 +88,16 @@ class HomePage extends Component {
 		showSlidingPanel: false,
 		slidingPanelComponent: null,
 	}
-
+	
+	componentDidMount() {
+		// const loggedInUser = getUser()
+		// if (loggedInUser) {
+		// 	loggedInUser.role === 'driver'
+		// 	? this.props.history.push('/driver/offline')
+		// 	: this.props.history.push('/rider/standby')
+		// }
+	}
+	
 	onRequestRide = () => {
 		this.props.history.push('/rider-login')
 	}

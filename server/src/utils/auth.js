@@ -146,7 +146,7 @@ export const signin = async (req, res) => {
 	}
 };
 
-export const isTokenValidAndNotConnected = async (token, socket) => {
+export const isTokenValidAndNotConnected = async (token) => {
 	let payload; // id: user.id, role: user.role
 	let doc;
 	try {
@@ -180,19 +180,6 @@ export const isTokenValidAndNotConnected = async (token, socket) => {
 		return false;
 	}
 	return user
-	
-	// console.log("socket.rooms",socket.rooms)
-	// console.log("connectedSocket",user.connectedSocket)
-	// console.log("socket",Object.keys(socket.rooms))
-	
-	// if (user.connectedSocket !== null) {
-	// 	socket.disconnect()
-	// 	return false;
-	// }
-	
-	// const res = await doc.findByIdAndUpdate(payload.id, {
-	// 	connectedSocket: socket.id
-	// }).exec();
 };
 
 export const protect = async (req, res, next) => {

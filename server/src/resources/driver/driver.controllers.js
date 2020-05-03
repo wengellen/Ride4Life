@@ -4,13 +4,6 @@ import { Trip } from '../trip/trip.model'
 import {crud} from './driver.crud'
 require('dotenv').config()
 
-import cloudinary from 'cloudinary'
-
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
-})
 
 
 export const getMe = (req, res) => {
@@ -42,11 +35,11 @@ export const reviewTrip = async (req, res)=>{
         let ratingTripTotal = parseFloat((currentNumRatedTrip * currentRating) + rating)
         let newNumRatedTrip = parseInt(currentNumRatedTrip + 1);
         let averageTripRating = parseFloat(ratingTripTotal/newNumRatedTrip).toFixed(2)
-        console.log('rider', rider)
-        console.log('currentNumRatedTrip', currentNumRatedTrip)
-        console.log('currentRating', currentRating)
-        console.log('ratingTripTotal',ratingTripTotal)
-        console.log('averageTripRating',averageTripRating)
+        console.log("rider", rider);
+		console.log("currentNumRatedTrip", currentNumRatedTrip);
+		console.log("currentRating", currentRating);
+		console.log("ratingTripTotal", ratingTripTotal);
+		console.log("averageTripRating", averageTripRating);
         const updateRider = await Rider.findByIdAndUpdate(
             rider_id,
             {  $inc: { tripCompleted: 1, numRideRated: 1}, rating:averageTripRating},
@@ -71,8 +64,6 @@ export const getDriverById = async (req, res) => {
         res.status(500).json({ error: e })
     }
 }
-
-// export const updateDriverProfile = (req, res) => {}
 
 export const getDriverTrips = async (req, res) => {
     try {
@@ -163,11 +154,9 @@ export const uploadProfilePhoto = async (req, res) => {
         } catch (e) {
             res.status(500).json({ error: e })
         }
-
     })
     .catch((err) => res.status(400).json(err))
 }
-
 
 export const getNearbyOnlineDrivers = async (req, res) => {
     console.log("getNearbyOnlineDrivers")

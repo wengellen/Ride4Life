@@ -24,7 +24,6 @@ let ModalContainer = ({history, classes, Component, shouldOpen, closeModal, data
 }
 
 function mapStateToProps({modalReducer}){
-	console.log('data:modalReducer.data',modalReducer.data)
 	return {
 		shouldOpen: modalReducer.shouldOpen,
 		Component: modalReducer.component,

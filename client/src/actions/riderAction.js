@@ -41,7 +41,6 @@ export const submitDriverReview = (review, data) => dispatch => {
 
 // Find drivers nearby
 export const findDriversNearby = location => dispatch => {
-	// console.log('findDriversNearby location', location)
 	dispatch({ type: FIND_DRIVERS_NEARBY_STARTED })
 	return API()
 		.get('/api/rider/drivers')

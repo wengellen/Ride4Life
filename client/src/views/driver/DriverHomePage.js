@@ -316,6 +316,10 @@ class DriverHomePage extends Component {
 		this.resetTrip()
 		this.hideDirecitonsUI()
 	}
+	
+	handleRestartTrip = () => {
+		this.props.history.push('/driver/standby')
+	}
 
 	//============================================
 	//  EDGE CASES  -  CANCELLATIONS & OFFLINE
@@ -421,7 +425,7 @@ class DriverHomePage extends Component {
 				container: this.mapContainer.current, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
 				style: 'mapbox://styles/mapbox/streets-v9',
 				center: [position.coords.longitude, position.coords.latitude],
-				zoom: 16,
+				zoom: 13,
 			})
 
 			// Add Markers
@@ -528,11 +532,18 @@ class DriverHomePage extends Component {
 			window.setTimeout( ()=>{
 				socket = socketInit()
 			}, 5000 );
+		}else{
+			this.props.logoutUser()
+			this.props.history.push('/')
 		}
 	}
 	
-	onTripUpdate = trip => {
-		console.log('onTripUpdate - trip', trip)
+	onTripUpdate = requestDetails => {
+		console.log('onTripUpdate - trip', requestDetails)
+		localStorage.setItem('requestDetails', JSON.stringify(requestDetails))
+		this.setState({
+			requestDetails
+		})
 	}
 	
 	bindListeners() {
@@ -577,10 +588,12 @@ class DriverHomePage extends Component {
 
 	cancelTrip = e => {
 		this.props.driverCancelTrip(socket, {
+			requestDetails: this.state.requestDetails,
 			tripId: this.state.tripId,
 		})
 		this.startInput.value = ''
 		this.destInput.value = ''
+		this.props.history.push('/driver/standby')
 	}
 
 	hideDirecitonsUI = () => {
@@ -824,16 +837,12 @@ class DriverHomePage extends Component {
 									<h3>{`${requestDetails.distance}`} miles</h3>
 								</div>
 								<div className={'trip-destination-left'}>
-									<h1>Destination</h1>
-									<h2>{requestDetails.endLocationAddress}</h2>
+									<h1>Rider Location</h1>
 									<span className={'tag white'}>
-										{requestDetails.duration} mins
+										{helper.getMinutes(requestDetails.durationToRider)} mins
 									</span>
 									<span className={'tag blue'}>
-										{requestDetails.distance} mi
-									</span>
-									<span className={'tag pink'}>
-										${requestDetails.tripFare}
+										{helper.getMiles(requestDetails.distanceToRider)} mi
 									</span>
 								</div>
 								<button
@@ -882,6 +891,14 @@ class DriverHomePage extends Component {
 								<div className={'trip-destination-left'}>
 									<h1>Destination</h1>
 									<h2>{requestDetails.endLocationAddress}</h2>
+									
+									<span className={'tag white'}>
+										{helper.getMinutes(requestDetails.durationToDestination)} mins
+									</span>
+									<span className={'tag blue'}>
+										{helper.getMiles(requestDetails.distanceToDestination)} mi
+									</span>
+									
 									<span className={'tag white'}>
 										{requestDetails.duration} mins
 									</span>
@@ -914,8 +931,19 @@ class DriverHomePage extends Component {
 							<h1 className={`status-panel__header`}>
 								Trip Ended
 							</h1>
-							<div className="drivers-nearby-container-list">
-								Trip Ended
+							<div className={'trip-destination-container'}>
+									<button className={'request-ride-button'}
+											onClick={this.handleRestartTrip}
+									>
+											Start Another Ride?
+									</button>
+								<div> | </div>
+									<button
+										className={'request-ride-button'}
+										onClick={this.handleDriverGoOffline}
+									>
+										GO OFFLINE
+									</button>
 							</div>
 						</div>
 					)

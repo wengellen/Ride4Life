@@ -73,8 +73,10 @@ class DriverTripReviewPage extends Component {
 	}
 	
 	render() {
-		const {currentDriver} = this.props
-	   if(this.props.submitDriverReviewStarted){
+		// const {currentDriver} = this.props
+		const requestDetails = JSON.parse(localStorage.getItem('requestDetails'))
+		const {currentDriver} = requestDetails
+		if(this.props.submitDriverReviewStarted){
 		   return (<Loader/>)
 	   }else{
 		   return (
@@ -117,7 +119,7 @@ const mapStateToProps = ({userReducer}) => {
 	console.log("currentDriver",userReducer.currentDriver)
 	return {
 		submitDriverReviewStarted: userReducer.submitDriverReviewStarted,
-		currentDriver:userReducer.currentDriver,
+		// currentDriver:userReducer.currentDriver,
 		submitDriverReviewSuccessMessage:userReducer.submitDriverReviewSuccessMessage
 	}
 }

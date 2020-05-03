@@ -14,9 +14,9 @@ import {
 	updateRiderStatus,
 	updateRiderLocationAndStatus
 } from "./resources/rider/rider.crud";
-import MapBoxAPIClient from '../../utils/MapboxAPIClient'
+import MapBoxAPIClient from "./utils/MapboxAPIClient";
 import { Trip } from "./resources/trip/trip.model";
-const mapboxClient = new MapBoxAPIClient()
+const mapboxClient = new MapBoxAPIClient();
 // TODO: Need to add socketio-auth
 
 let socketIo;
@@ -34,16 +34,8 @@ export const io = function() {
 	return socketIo;
 };
 
-
 export const initialize = function(server) {
-	socketIo = sio(server, {
-		// path: '/',
-		// serveClient: false,
-		// below are engine.IO options
-		// pingInterval: 10000,
-		// pingTimeout: 5000,
-		// cookie: false
-	});
+	socketIo = sio(server, {});
 
 	socketIo.on("connection", async socket => {
 		const { username, role, id } = socket.handshake.query;
@@ -54,6 +46,18 @@ export const initialize = function(server) {
 			`USER CONNECTED  ${role} ${username} connected with ${socket.id}`
 		);
 
+		const entries = [...ids.entries()];
+		// If this user name is already in ids, remove it and replace with the new one
+		for (let [socketId, v] of entries) {
+			if (v === username) {
+				// Tell old client to disconnect
+				socketIo.sockets
+					.to(socketId)
+					.emit("disconnect", "MULTIPLE_LOGIN");
+				ids.delete(socketId); // remove from map
+			}
+		}
+		ids.set(socket.id, username);
 
 		if (role === "rider") {
 			riders.set(username, {
@@ -81,29 +85,25 @@ export const initialize = function(server) {
 				role,
 				id
 			});
-			
+
 			// If it's not in ids,
-			if (![...ids.values()].includes(username)){
-				ids.set(socket.id, username);
-			}
 		}
 		console.log("Connected Sockets:", ids);
 		console.log("Connected Drivers:", drivers);
 		console.log("Connected Riders:", riders);
-		
 
 		socket.on("connect_timeout", timeout => {
 			// ...
 		});
 
 		socket.on("disconnecting", async reason => {
-			// let rooms = Object.keys(socket.rooms).map(room => ids.get(room));
 			try {
+				const values = [...ids.values()].includes();
 				if (role === "rider") {
 					const res = await Rider.findByIdAndUpdate(
 						id,
 						{
-							status: "offline",
+							status: "offline"
 						},
 						{
 							new: true
@@ -113,73 +113,32 @@ export const initialize = function(server) {
 					const res = await Driver.findByIdAndUpdate(
 						id,
 						{
-							status: "offline",
+							status: "offline"
 						},
 						{
 							new: true
 						}
-					).exec();
-					// drivers.delete(username);
-					// ids.delete(socket.id);
-					// delete socket.id;
+					);
 				}
 			} catch (e) {
 				console.log("error", e);
 			}
 		});
-		
-		
+
 		socket.on("disconnect", async reason => {
 			if (reason === "ping timeout") return;
-			// if (socket.io.connecting.indexOf(socket) === -1){
-			// 	return socket.connect()
-			// }
+
+			console.log("reason");
 
 			if (role === "rider") {
 				riders.delete(username);
-				// console.log("connected count", ids);
 			} else {
 				drivers.delete(username);
-				// ids.delete(socket.id);
-				// delete socket.id;
 			}
 			ids.delete(socket.id);
-			// socket.nearbyOnlineDrivers = []
-			// delete socket.id;
-			logger.debug(`!!!!!USER DISCONNECTED   ${role} ${username}`);
-		});
-		
-		socket.on("USER_LOGGED_OUT", async reason => {
-			// socket.nearbyOnlineDrivers = []
-			// delete socket.id;
-			logger.debug(`!!!!!USER LOGOUT   ${role} ${username}`);
-			if (role === "rider") {
-				const res = await Rider.findByIdAndUpdate(
-					id,
-					{
-						status: "offline",
-						connectedSocket: null
-					},
-					{
-						new: true
-					}
-				).exec();
-				riders.delete(username);
-			} else {
-				const res = await Driver.findByIdAndUpdate(
-					id,
-					{
-						status: "offline",
-						connectedSocket: null
-					},
-					{
-						new: true
-					}
-				).exec();
-				drivers.delete(username);
-			}
-			
-			ids.delete(socket.id);
+			logger.debug(
+				`!!!!!USER DISCONNECTED   ${role} ${username} - ${socket.id}`
+			);
 		});
 
 		// socket.emit('',result)
@@ -199,9 +158,8 @@ export const initialize = function(server) {
 
 		socket.on("UPDATE_RIDER_LOCATION", async (data, callback) => {
 			const { username, id } = socket.handshake.query;
-			// logger.debug(`UPDATE_RIDER_LOCATION - ${username}`);
 			const { location } = data;
-			
+
 			try {
 				await updateRiderLocationAndStatus(id, location);
 			} catch (e) {
@@ -212,10 +170,6 @@ export const initialize = function(server) {
 		socket.on("UPDATE_DRIVER_LOCATION", async data => {
 			const { location } = data;
 			const { username, id } = socket.handshake.query;
-			// logger.debug(
-			// 	`UPDATE_DRIVER_LOCATION -+ ${username} data add to drivers map`,
-			// 	drivers.get(username)
-			// );
 			try {
 				await updateDriverLocation(id, location);
 			} catch (e) {
@@ -244,8 +198,8 @@ export const initialize = function(server) {
 					.lean()
 					.exec();
 				// socket.broadcast.emit("DRIVER_GO_ONLINE", driver);
-				
-				console.log("ids",ids)
+
+				console.log("ids", ids);
 			} catch (e) {
 				console.log("error", e);
 			}
@@ -265,7 +219,6 @@ export const initialize = function(server) {
 				// If driver is in the trip room,
 				const trip = await Trip.findOne({ driver: id }).exec();
 
-				// console.log("trip",trip)
 				// broadcast to every one in the room
 				if (trip) {
 					socketIo.to(trip._id).emit("DRIVER_GO_OFFLINE", username);
@@ -290,7 +243,9 @@ export const initialize = function(server) {
 			logger.debug(`REQUEST_TRIP triggered for ${username}`);
 
 			try {
-				socket.nearbyOnlineDrivers = await Driver.find({ status: "standby" })
+				socket.nearbyOnlineDrivers = await Driver.find({
+					status: "standby"
+				})
 					.lean()
 					.exec();
 				newTrip = await Trip.create({
@@ -302,29 +257,28 @@ export const initialize = function(server) {
 					.populate("rider")
 					.exec();
 
-				console.log("newTrip", newTrip);
-				console.log("nearbyOnlineDrivers", socket.nearbyOnlineDrivers);
-				
+				// console.log("newTrip", newTrip);
+				// console.log("nearbyOnlineDrivers", socket.nearbyOnlineDrivers);
+
 				// Rider join trip id chat room
 				socket.join(trip._id);
 				// Return trip id to rider
 				socketIo
 					.to(socket.id)
 					.emit("TRIP_REQUESTED_BY_RIDER", trip._id);
-				
-				
+
 				requestInterval = setInterval(async () => {
-					nearbyOnlineDrivers = await Driver.find({ status: "standby" })
+					nearbyOnlineDrivers = await Driver.find({
+						status: "standby"
+					})
 						.lean()
 						.exec();
-					console.log("nearbyOnlineDrivers",nearbyOnlineDrivers)
+					logger.debug("nearbyOnlineDrivers", nearbyOnlineDrivers);
 					for (let driver of nearbyOnlineDrivers) {
 						console.log(
 							"DISPATCHING TRIP_REQUESTED_BY_RIDER TO DRIVER - ",
 							driver.username
 						);
-						console.log("drivers",drivers)
-						console.log("driver.username",driver.username)
 						socketIo
 							.to(drivers.get(driver.username).socketId)
 							.emit("TRIP_REQUESTED_BY_RIDER", trip);
@@ -332,7 +286,6 @@ export const initialize = function(server) {
 					}
 				}, 2000);
 
-				// Driver has 1 minu
 				requestTimeout = setTimeout(() => {
 					clearInterval(requestInterval);
 					console.log("clearInterval - ");
@@ -359,7 +312,7 @@ export const initialize = function(server) {
 					{ status: "offered" },
 					{ new: true }
 				).exec();
-				
+
 				socketIo
 					.to(riders.get(rider.username).socketId)
 					.emit("TRIP_ACCEPTED_BY_DRIVER", {
@@ -371,72 +324,106 @@ export const initialize = function(server) {
 			}
 		});
 
+		const getUpdatedTripInfo = async ({ tripId, driverId }) => {
+			// const trip = await Trip.findOne({ _id: tripId })
+			// .populate("rider")
+			// .populate("driver")
+			// .exec();
+			// .exec();
+			const newTrip = await Trip.findOneAndUpdate(
+				{ _id: tripId },
+				{ driver: driverId, status: "pickingUp" },
+				{ new: true }
+			)
+				.populate("rider")
+				.populate("driver")
+				.exec();
+
+			const trip = newTrip.toJSON();
+			console.log("trip", trip);
+
+			// Get distance and duration between driver and destination
+			const {
+				distance: distanceToDestination,
+				duration: durationToDestination
+			} = await mapboxClient.getDistanceAndDuration(
+				trip.endLocation.coordinates,
+				trip.driver.location
+			);
+
+			//Get distance and duration between driver and rider
+			const {
+				distance: distanceToRider,
+				duration: durationToRider
+			} = await mapboxClient.getDistanceAndDuration(
+				trip.rider.location,
+				trip.driver.location
+			);
+
+			const updatedTrip = {
+				...trip,
+				distanceToRider,
+				durationToRider,
+				distanceToDestination,
+				durationToDestination,
+			};
+			logger.debug(
+				`getDistanceAndDuration- distanceToDestination: ${distanceToDestination}, durationToDestination:${durationToDestination}`
+			);
+			logger.debug(
+				`getDistanceAndDuration- distanceToRider: ${distanceToRider}, Duration:${durationToRider}`
+			);
+
+			return updatedTrip;
+		};
+
 		// Rider can confirm trip
 		socket.on("CONFIRM_TRIP", async data => {
 			const { id } = socket.handshake.query; // Rider
-			const { driverUsername, driverId, acceptedDrivers } = data; // Accepted Driver
+			const { driverUsername, driverId, acceptedDrivers, _id } = data; // Accepted Driver
 			let trip;
-
+		
 			try {
-				trip = await Trip.findOneAndUpdate(
-					{ _id: data._id },
-					{ driver: driverId, status: "pickingUp" },
-					{ new: true }
-				)
-					.populate("rider")
-					.populate("driver")
-					.exec();
-				
-				logger.debug(
-					`DISPATCHING TRIP_CONFIRMED to dirver -  ${data.driver.username}`
-				);
-				
-				const obj = await mapboxClient.getDistanceAndDuration(trip.rider.location, trip.driver.location)
-				
-				logger.debug(
-					`getDistanceAndDuration-  ${obj}`
-				);
+				const updatedTrip = await getUpdatedTripInfo({
+					tripId: _id,
+					driverId
+				});
 				// Drivers that has previously offered
 				for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
-					const driver = nearbyOnlineDrivers[i]
+					const driver = nearbyOnlineDrivers[i];
 					if (driver.username === driverUsername) {
 						console.log(
 							"DISPATCHING TRIP_CONFIRMED to dirver - ",
 							driver.username
 						);
-						// logger.debug(
-						// 	`DISPATCHING TRIP_CONFIRMED to dirver -  ${data.driver.username}`
-						// );
 						socketIo
-						.to(drivers.get(driverUsername).socketId) // tripID
-						.emit("TRIP_CONFIRMED_BY_RIDER", data);
-						
+							.to(drivers.get(driverUsername).socketId) // tripID
+							.emit("TRIP_CONFIRMED_BY_RIDER", updatedTrip);
+
 						await updateDriverStatus(driver._id, "offered");
-						
-						
-						
-						updateTripInterval	= setInterval(async () => {
-								socketIo
+
+						updateTripInterval = setInterval(async () => {
+							const updatedTrip = await getUpdatedTripInfo({
+								tripId: _id,
+								driverId
+							});
+							socketIo
 								.to(drivers.get(driverUsername).socketId)
-								.emit("TRIP_UPDATE", trip);
-						}, 2000);
-						
+								.emit("TRIP_UPDATE", updatedTrip);
+						}, 4000);
 					} else {
+						// Cancel trip request for denied drivers
 						console.log(
 							"TRIP_REQUEST_CANCELED_BY_RIDER to dirver - ",
 							driver.username
 						);
-						// logger.debug(
-						// 	`TRIP_REQUEST_CANCELED_BY_RIDER to dirver -  ${data.driver.username}`
-						// );
 						socketIo
-						.to(drivers.get(driver.username).socketId)
-						.emit("TRIP_REQUEST_CANCELED_BY_RIDER", data);
-						
+							.to(drivers.get(driver.username).socketId)
+							.emit("TRIP_REQUEST_CANCELED_BY_RIDER", data);
+
 						await updateDriverStatus(driver._id, "standby");
 					}
 				}
-			
 			} catch (e) {
 				console.log("there has been an error", e);
 			}
@@ -448,8 +435,6 @@ export const initialize = function(server) {
 			const { driver, rider } = data; // Trip ID?
 			let trip;
 			console.log("DRIVER_START_TRIP ------>");
-			console.log("data", data);
-			console.log("rider", rider);
 			try {
 				const driver = await Driver.findOneAndUpdate(
 					{ _id: id },
@@ -469,7 +454,7 @@ export const initialize = function(server) {
 					.populate("rider")
 					.populate("driver")
 					.exec();
-					
+
 				socketIo.sockets
 					.to(riders.get(rider.username).socketId)
 					.emit("TRIP_STARTED_BY_DRIVER", { ...data });
@@ -484,9 +469,8 @@ export const initialize = function(server) {
 			const { driver, rider } = data;
 			let trip;
 			console.log("DRIVER_END_TRIP ------>");
-			console.log("data", data);
-			console.log("driver", driver);
-			console.log("rider", rider);
+
+			clearInterval(updateTripInterval);
 			// send heartbeat and update driver location
 			try {
 				const driver = await Driver.findOneAndUpdate(
@@ -520,7 +504,7 @@ export const initialize = function(server) {
 		socket.on("DENY_TRIP_REQUEST", async data => {});
 
 		socket.on("RIDER_CANCEL_REQUEST", async data => {
-			// clearInterval(requestInterval)
+			clearInterval(requestInterval);
 			const { username, id } = socket.handshake.query; // Rider
 			logger.debug(
 				`RIDER_CANCEL_REQUEST triggered for tripId ${username}`
@@ -530,21 +514,9 @@ export const initialize = function(server) {
 					_id: data.tripId
 				}).exec();
 
-				socketIo
-					.to(data.tripId)
-					.emit("TRIP_REQUEST_CANCELED_BY_RIDER");
-					
+				socketIo.to(data.tripId).emit("TRIP_REQUEST_CANCELED_BY_RIDER");
+
 				socket.leave(data.tripId);
-				//
-				// for (let i = 0; i < nearbyOnlineDrivers.length; i++) {
-				// 	console.log(
-				// 		"DISPATCHING RIDER_REQUEST_CANCELED TO DRIVER - ",
-				// 		nearbyOnlineDrivers[i].username
-				// 	);
-				// 	socketIo.sockets
-				// 		.in(nearbyOnlineDrivers[i].username)
-				// 		.emit("TRIP_REQUEST_CANCELED_BY_RIDER", data);
-				// }
 			} catch (e) {
 				console.log("error", e);
 			}
@@ -552,35 +524,37 @@ export const initialize = function(server) {
 
 		socket.on("RIDER_CANCEL_TRIP", async data => {
 			const { username, id } = socket.handshake.query; // Rider
+			const { requestDetails, tripId } = data; // Rider
+			consolelog("data")
 			logger.debug(
 				`RIDER_CANCEL_REQUEST triggered for tripId ${username}`
 			);
 			try {
 				const trip = await Trip.findOneAndUpdate(
-					{ _id: data.tripId },
+					{ _id: tripId},
 					{ status: "cancelled" }
 				).exec();
 
 				const driver = await Driver.findOneAndUpdate(
-					{ _id: data.driver._id },
+					{ _id: requestDetails.driver._id },
 					{ status: "standby" }
 				).exec();
 
-				socketIo.sockets.to(username).emit("TRIP_CANCELED_BY_RIDER");
+				socketIo.sockets.to(drivers.get(requestDetails.driver.username).socketId).emit("TRIP_CANCELED_BY_RIDER");
 
 				socket.leave(data.tripId);
 			} catch (e) {
 				console.log("error", e);
 			}
-			socketIo.to(data.tripId).emit("TRIP_CANCELED_BY_RIDER", data);
 		});
 
 		socket.on("DRIVER_CANCEL_TRIP", async data => {
 			const { username, id } = socket.handshake.query; // Driver
+			const { requestDetails, tripId } = data; // Rider
 			logger.debug(`DRIVER_CANCEL_TRIP triggered for tripId ${username}`);
 			try {
 				const trip = await Trip.findOneAndUpdate(
-					{ _id: data.tripId },
+					{ _id:tripId },
 					{ status: "cancelled" }
 				).exec();
 
@@ -588,8 +562,8 @@ export const initialize = function(server) {
 					{ _id: id },
 					{ status: "standby" }
 				).exec();
-
-				socketIo.sockets.to(username).emit("TRIP_CANCELED_BY_DRIVER");
+				socketIo.sockets.to(riders.get(requestDetails.rider.username).socketId).emit("TRIP_CANCELED_BY_RIDER");
+				// socketIo.sockets.to(username).emit("TRIP_CANCELED_BY_DRIVER");
 
 				socket.leave(data.tripId);
 			} catch (e) {

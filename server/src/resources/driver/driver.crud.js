@@ -33,58 +33,15 @@ export const updateDriverStatus = (id, status) => {
 	return updateDriverById(id, { status: status });
 };
 
+// TODO. Need to really find a way to handle nearby drivers
 export const getNearbyOnlineDrivers = async (
 	coordinates = ["-122.03836736354654", "37.96039811452054"]
 ) => {
-	// await Driver.createIndex().catch(e => console.error(e))
 	console.log("coordinates", coordinates);
 	try {
 		const drivers = await Driver.find({status:"standby"}).lean().exec()
-		// const drivers = await Driver.find({
-		//     location: {
-		//         $near: {
-		//             $geometry: {
-		//                 type: "Point",
-		//                 coordinates: coordinates
-		//             },
-		//             $maxDistance: 2000
-		//         }
-		//     }}).lean().exec()
-		// await Driver.createIndex().catch(e => console.error(e))
-		// 	.lean()
-		// 	.exec();
 		console.log('drivers',drivers)
 		return drivers;
-	} catch (e) {
-		console.log(e);
-	}
-};
-
-export const getDistanceAndDuration = async (
-	coord1 = [],
-	coord2 = [],
-) => {
-	// await Driver.createIndex().catch(e => console.error(e))
-	// console.log("coord1", coord1);
-	// console.log("coord2", coord2);
-	try {
-		const obj =  mapboxClient.getDistanceAndDuration(coord1, coord2)
-		// const drivers = await Driver.find({status:"standby"}).lean().exec()
-		// const drivers = await Driver.find({
-		//     location: {
-		//         $near: {
-		//             $geometry: {
-		//                 type: "Point",
-		//                 coordinates: coordinates
-		//             },
-		//             $maxDistance: 2000
-		//         }
-		//     }}).lean().exec()
-		// await Driver.createIndex().catch(e => console.error(e))
-		// 	.lean()
-		// 	.exec();
-		// console.log('obj',obj)
-		return obj;
 	} catch (e) {
 		console.log(e);
 	}
@@ -99,5 +56,4 @@ export const crud = {
 	updateDriverLocation,
 	updateDriverStatus,
 	getNearbyOnlineDrivers,
-	getDistanceAndDuration
 };

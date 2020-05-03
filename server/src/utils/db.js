@@ -10,12 +10,3 @@ export const connect = (url = options.dbUrl, opts = {}) => {
 	    useCreateIndex: true  }
 	)
 }
-
-export const fetchNearestCar = async (coordinates) => {
-	try {
-		const drivers = await Driver.find({status:"standby"}).lean().exec()
-		return  drivers
-	}catch(e){
-		console.log(e)
-	}
-}
