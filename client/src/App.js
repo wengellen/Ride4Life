@@ -22,9 +22,6 @@ import ModalContainer from './components/ModalContainer'
 import { jsx } from '@emotion/core'
 
 class App extends React.Component {
-	// logout = () => {
-	// 	this.props.logoutUser()
-	// }
 	render() {
 		return (
 			<ThemeProvider

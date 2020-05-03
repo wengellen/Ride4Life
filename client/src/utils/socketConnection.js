@@ -12,16 +12,20 @@ export const socketInit = ()=>{
     const token = helper.getToken()
     const {username, role, id} = helper.getUser()
     
-    socketIo = io.connect(`${endpoint}?token=${token}&username=${username}&role=${role}&id=${id}`);
+    socketIo = io.connect(`${endpoint}?token=${token}&username=${username}&role=${role}&id=${id}`,{
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax : 5000,
+        reconnectionAttempts: Infinity
+    });
     
     console.log('socketIo', socketIo.connected)
-    
     
     socketIo.on('connect', () => {
         socketIo.emit('authentication', {
             token: token,
         })
-        console.log('Connected')
+        console.log( '!!!connected to server' );
     })
     
     
@@ -36,6 +40,8 @@ export const socketInit = ()=>{
     socketIo.on('disconnect', reason => {
         console.log(`Disconnected: ${ reason}`)
         // TODO: Log people out
+    
+        console.log( 'disconnected from server' );
         // error = null
     })
     

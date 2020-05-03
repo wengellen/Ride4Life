@@ -39,6 +39,7 @@ export {
 	updateThisRiderLocation,
 	riderCancelRequest,
 	submitDriverReview,
+	userLoggedOut
 } from './riderAction'
 
 export const toggleResetTrip = isTrue => dispatch => {

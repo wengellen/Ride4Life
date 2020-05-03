@@ -19,7 +19,7 @@ import LogoutIcon from '../../assets/img/icons/Logout.svg'
 import DriverEditProfilePage from '../../views/driver/DriverEditProfilePage'
 import RiderEditProfilePage from '../../views/rider/RiderEditProfilePage'
 import { openModal, logoutUser } from '../../actions'
-import helper from '../../utils/helpers'
+import {getUser} from '../../utils/helpers'
 import SelectRolePanel from '../SelectRolePanel'
 import Wrapper from '../../views/Wrapper'
 
@@ -178,8 +178,9 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const { handleOpenProfile, loggedInUser } = this.props
+		const { handleOpenProfile } = this.props
 		const { showSlidingPanel, slidingPanelComponent } = this.state
+		const loggedInUser = getUser()
 		// this.props.history.push('/')
 		console.log('loggedInUser', loggedInUser)
 		const drawer = (
@@ -316,7 +317,6 @@ const mapDispatchToProps = dispatch => ({
 	},
 })
 const mapStateToProps = ({ userReducer }) => {
-	console.log('loggedInuser', userReducer.loggedInUser)
 	return {
 		loggedInUser: userReducer.loggedInUser,
 	}

@@ -15,7 +15,8 @@ import {
 	driverStartTrip,
 	driverEndTrip,
 	openModal,
-	logoutUser
+	logoutUser,
+	userLoggedOut
 } from '../../actions'
 import IconButton from '@material-ui/core/IconButton'
 import CarIcon from '../../assets/img/icons/icons-car-front.svg'
@@ -29,6 +30,7 @@ let socket
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 class DriverHomePage extends Component {
+	mapContainer = React.createRef()
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -52,15 +54,11 @@ class DriverHomePage extends Component {
 		this.destInput = null
 		this.instruction = null
 		this.locationUpdateInterval = null
-		this.mapContainer = React.createRef()
 		this.driverMarker = null;
-		// const driver = getLocalStore('user');//SON.parse(localStorage.getItem('user'))
-		// const driver = JSON.parse(localStorage.getItem('user'))
-
-		//const token =  localStorage.getItem('token')  //localStorage.getItem('token')
-		// const token =  localStorage.getItem('token')  //localStorage.getItem('token')
-		// console.log("socketInit   driver",driver)
-		socket = socketInit(helper.getToken())
+		
+		if (!socket) {
+			socket = socketInit()
+		}
 	}
 
 	//========================================
@@ -391,12 +389,6 @@ class DriverHomePage extends Component {
 	}
 	
 	componentDidMount() {
-		if (!this.props.loggedInUser){
-			this.props.logoutUser()
-			alert('You have been disconnected')
-			this.props.history.push('/')
-			return false
-		}
 		this.bindListeners()
 		navigator.geolocation.getCurrentPosition(position => {
 			var driverGeojson = {
@@ -475,7 +467,6 @@ class DriverHomePage extends Component {
 						'.mapbox-directions-instructions'
 					)[0]
 				)
-				// const instruction = document.querySelectorAll(".mapbox-directions-instructions")[0]
 			})
 
 			this.map.on('load', () => {
@@ -498,6 +489,7 @@ class DriverHomePage extends Component {
 	}
 
 	componentWillUnmount = () => {
+		// this.unbindListeners()
 		console.log("componentWillUnmount")
 		if (this.map) {
 			this.unbindListeners()
@@ -506,6 +498,7 @@ class DriverHomePage extends Component {
 	}
 	
 	onSocketConnect = ()=>{
+		
 		this.locationUpdateInterval =  setInterval(async ()=>{
 			const {requestDetails} = this.state
 			navigator.geolocation.getCurrentPosition(position => {
@@ -517,9 +510,7 @@ class DriverHomePage extends Component {
 				this.updateDriverLocation(coords)
 				this.driverMarker.setLngLat(coords)
 				this.map.setCenter(coords)
-				// console.log("coords",coords)
 				if (requestDetails && requestDetails.status === "enRoute" && requestDetails.endLocation){
-					// console.log("this.state.endLocation",requestDetails.endLocation.coordinates)
 					const endLocation = requestDetails.endLocation.coordinates
 					if (coords[0] === endLocation[0] && coords[1] === endLocation[1] ){
 						console.log("You Have arrived")
@@ -530,20 +521,24 @@ class DriverHomePage extends Component {
 		}, 5000)
 	}
 	
-	updateMarker = (el, geoJson)=>{
-	
+	onSocketDisconnect = (reason)=>{
+		// If it was disconnected due to multiple logins, don't reconnect
+		console.log( 'disconnected from server' );
+		if ( reason !== "MULTIPLE_LOGIN"){
+			window.setTimeout( ()=>{
+				socket = socketInit()
+			}, 5000 );
+		}
 	}
 	
-	onSocketDisconnect = (reason)=>{
-		this.props.logoutUser()
-		clearInterval(this.locationUpdateInterval)
-		alert('You have been disconnected')
-		this.props.history.push('/')
+	onTripUpdate = trip => {
+		console.log('onTripUpdate - trip', trip)
 	}
 	
 	bindListeners() {
 		socket.on('connect', this.onSocketConnect)
 		socket.on('disconnect', this.onSocketDisconnect)
+		socket.on('TRIP_UPDATE', this.onTripUpdate)
 		socket.on('TRIP_CANCELED_BY_RIDER', this.onTripCanceledByRider)
 		socket.on('TRIP_CONFIRMED_BY_RIDER', this.onTripConfirmedByRider)
 		socket.on(
@@ -556,6 +551,7 @@ class DriverHomePage extends Component {
 	unbindListeners = () => {
 		socket.off('connect')
 		socket.off('disconnect')
+		socket.on('TRIP_UPDATE')
 		socket.off('TRIP_CANCELED_BY_DRIVER')
 		socket.off('TRIP_CANCELED_BY_RIDER')
 		socket.off('TRIP_CONFIRMED_BY_RIDER')
@@ -965,5 +961,6 @@ export default connect(mapStateToProps, {
 	driverStartTrip,
 	driverEndTrip,
 	openModal,
-	logoutUser
+	logoutUser,
+	userLoggedOut
 })(DriverHomePage)

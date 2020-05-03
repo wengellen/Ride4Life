@@ -17,6 +17,7 @@ import ImageInput from '../../components/ImageInput/ImageInput'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Button from '@material-ui/core/Button'
+import {getUser} from '../../utils/helpers'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
 
@@ -210,9 +211,10 @@ class RiderEditProfilePage extends React.Component {
 }
 const mapStateToProps = ({ userReducer }) => {
 	console.log('loggedInUser', userReducer.loggedInUser)
+	const user = getUser()
 	return {
 		serverMessage: userReducer.serverMessage,
-		loggedInUser: userReducer.loggedInUser,
+		loggedInUser: userReducer.loggedInUser || user,
 	}
 }
 

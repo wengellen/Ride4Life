@@ -107,3 +107,8 @@ export const updateThisRiderLocation = (socket, data) => dispatch => {
 	// console.log('updateRiderLocation...', data)
 	socket.emit('UPDATE_RIDER_LOCATION', data)
 }
+
+export const userLoggedOut = (socket) => dispatch => {
+	// console.log('updateRiderLocation...', data)
+	socket.emit('USER_LOGGED_OUT')
+}
