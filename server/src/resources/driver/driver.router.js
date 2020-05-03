@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import {getMe, getDriverById, getDriverTrips, updateDriverLocation,
-quoteTrip, uploadProfilePhoto, updateProfile, reviewTrip } from './driver.controllers'
+    quoteTrip, uploadProfilePhoto, updateProfile, reviewTrip, getNearbyOnlineDrivers } from './driver.controllers'
 
 const router = Router()
 
 router.get('/', getMe)
+router.get('/nearby-drivers', getNearbyOnlineDrivers)
 router.get('/:id', getDriverById)
 router.get('/trips', getDriverTrips)
 router.put('/location', updateDriverLocation)

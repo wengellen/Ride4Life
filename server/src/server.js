@@ -1,6 +1,6 @@
 import express from 'express'
 require('dotenv').config()
-import * as logger  from './logger'
+import * as logger  from './utils/logger'
 import http from "http"
 import {io, initialize} from "./io";
 import { json, urlencoded } from 'body-parser'

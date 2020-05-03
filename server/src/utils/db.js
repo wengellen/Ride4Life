@@ -11,11 +11,11 @@ export const connect = (url = options.dbUrl, opts = {}) => {
 	)
 }
 
-export const fetchNearestCops = async (coordinates) => {
+export const fetchNearestCar = async (coordinates) => {
 	try {
 		const drivers = await Driver.find({status:"standby"}).lean().exec()
 		return  drivers
-	 }catch(e){
-			console.log(e)
-	 }
- }
+	}catch(e){
+		console.log(e)
+	}
+}

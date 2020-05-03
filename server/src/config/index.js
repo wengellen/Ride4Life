@@ -16,7 +16,7 @@ const getDbURL = ()=>{
 const baseConfig = {
   env,
   dbUrl:getDbURL(),
-  port: process.env.PORT || 5000,
+  port: process.env.PORT || 7000,
   secrets: {
     jwt: process.env.JWT_SECRET,
     jwtExp: process.env.JWT_EXP || '1d'

@@ -10,13 +10,13 @@ const geoSchema = new mongoose.Schema({
 	address: { type: String },
 	coordinates: {
 		type: [Number]
-	}
+	},
 });
 const driverSchema = new mongoose.Schema(
 	{
 		vehicle: {
-			type: String,
-			default: "https://i.pravatar.cc/60"
+			image:{ type: String,default: "https://i.pravatar.cc/60"},
+			brand:{type:String, default:"BMW"}
 		},
 		connectedSocket:{
 			type:String,
@@ -26,6 +26,7 @@ const driverSchema = new mongoose.Schema(
 			address: { type: String },
 			coordinates: []
 		},
+		// location: geoSchema,
 		status: {
 			type: String,
 			required: true,
@@ -122,6 +123,8 @@ driverSchema.methods.checkPassword = function(password) {
 	});
 };
 
-driverSchema.index({ location: 1 });
+// geoSchema.index({coordinates:1})
+driverSchema.index({ 'location': "2dsphere" });
 
 export const Driver = mongoose.model("driver", driverSchema);
+

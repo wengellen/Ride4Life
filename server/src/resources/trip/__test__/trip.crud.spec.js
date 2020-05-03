@@ -4,7 +4,7 @@ import {Driver} from '../../driver/driver.model'
 import {Trip} from '../trip.model'
 import {TripCrud} from '../trip.crud'
 import { app } from '../../../server'
-import * as logger from '../../../logger'
+import * as logger from '../../../utils/logger'
 import sio from 'socket.io'
 import io from 'socket.io-client'
 

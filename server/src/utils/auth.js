@@ -179,19 +179,20 @@ export const isTokenValidAndNotConnected = async (token, socket) => {
 		console.log("Can not be authenticated");
 		return false;
 	}
+	return user
 	
-	console.log("socket.rooms",socket.rooms)
-	console.log("connectedSocket",user.connectedSocket)
-	console.log("socket",Object.keys(socket.rooms))
+	// console.log("socket.rooms",socket.rooms)
+	// console.log("connectedSocket",user.connectedSocket)
+	// console.log("socket",Object.keys(socket.rooms))
 	
-	if (user.connectedSocket !== null) {
-		socket.disconnect()
-		return false;
-	} // Or els
+	// if (user.connectedSocket !== null) {
+	// 	socket.disconnect()
+	// 	return false;
+	// }
 	
-	const res = await doc.findByIdAndUpdate(payload.id, {
-		connectedSocket: socket.id
-	}).exec();
+	// const res = await doc.findByIdAndUpdate(payload.id, {
+	// 	connectedSocket: socket.id
+	// }).exec();
 };
 
 export const protect = async (req, res, next) => {
@@ -205,7 +206,6 @@ export const protect = async (req, res, next) => {
 	const token = bearer.split("Bearer ")[1].trim();
 
 	let payload;
-	console.log(" req.headers.authorization", req.headers.authorization);
 	try {
 		payload = await verifyToken(token);
 		console.log("payload", payload);

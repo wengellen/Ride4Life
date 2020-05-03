@@ -22,6 +22,7 @@
   "homepage": "https://github.com/wengyilun/build_rideForLife_FE#readme",
   "dependencies": {
     "5": "0.0.1",
+    "axios": "^0.19.2",
     "babel-plugin-source-map-support": "^2.1.1",
     "bcrypt": "^4.0.0",
     "body-parser": "^1.18.3",

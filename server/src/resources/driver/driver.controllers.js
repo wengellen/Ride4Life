@@ -1,6 +1,7 @@
 import { Driver } from './driver.model'
 import { Rider } from '../rider/rider.model'
 import { Trip } from '../trip/trip.model'
+import {crud} from './driver.crud'
 require('dotenv').config()
 
 import cloudinary from 'cloudinary'
@@ -165,4 +166,11 @@ export const uploadProfilePhoto = async (req, res) => {
 
     })
     .catch((err) => res.status(400).json(err))
+}
+
+
+export const getNearbyOnlineDrivers = async (req, res) => {
+    console.log("getNearbyOnlineDrivers")
+    const drivers = await crud.getNearbyOnlineDrivers()
+    res.status(200).json({drivers:drivers})
 }

@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import http from 'http';
 import sio from 'socket.io';
-import * as logger from '../logger'
+import * as logger from '../utils/logger'
 import {app} from '../server'
 const ids = new Map()
 
