@@ -29,8 +29,6 @@ export const getAllDrivers = async (req, res) => {
 export const getAllTrips = async (req, res) => {
   try {
     const trips = await Trip.find()
-    // .populate("rider")
-    // .populate('driver')
     .exec();
     res.status(200).json({ data: trips });
   } catch (e) {

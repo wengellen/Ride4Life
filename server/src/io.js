@@ -197,7 +197,6 @@ export const initialize = function(server) {
 				const nearbyOnlineRider = await Rider.find()
 					.lean()
 					.exec();
-				// socket.broadcast.emit("DRIVER_GO_ONLINE", driver);
 
 				console.log("ids", ids);
 			} catch (e) {
@@ -237,7 +236,6 @@ export const initialize = function(server) {
 		// There are
 		socket.on("RIDER_REQUEST_TRIP", async tripRequest => {
 			const { username, id } = socket.handshake.query;
-			const { riderUsername, riderId } = tripRequest;
 			let newTrip, trip;
 
 			logger.debug(`REQUEST_TRIP triggered for ${username}`);
@@ -257,9 +255,6 @@ export const initialize = function(server) {
 					.populate("rider")
 					.exec();
 
-				// console.log("newTrip", newTrip);
-				// console.log("nearbyOnlineDrivers", socket.nearbyOnlineDrivers);
-
 				// Rider join trip id chat room
 				socket.join(trip._id);
 				// Return trip id to rider
@@ -273,7 +268,6 @@ export const initialize = function(server) {
 					})
 						.lean()
 						.exec();
-					logger.debug("nearbyOnlineDrivers", nearbyOnlineDrivers);
 					for (let driver of nearbyOnlineDrivers) {
 						console.log(
 							"DISPATCHING TRIP_REQUESTED_BY_RIDER TO DRIVER - ",
@@ -282,7 +276,6 @@ export const initialize = function(server) {
 						socketIo
 							.to(drivers.get(driver.username).socketId)
 							.emit("TRIP_REQUESTED_BY_RIDER", trip);
-						// }
 					}
 				}, 2000);
 
@@ -297,9 +290,9 @@ export const initialize = function(server) {
 
 		// Driver can accept trip
 		socket.on("DRIVER_ACCEPT_TRIP", async data => {
-			const { username, id } = socket.handshake.query;
+			const { id } = socket.handshake.query;
 			clearInterval(requestInterval);
-			const { driver, rider } = data;
+			const { rider } = data;
 			console.log("data", data);
 
 			// Driver JOIN TRIP_ID CHAT ROOM
@@ -325,11 +318,6 @@ export const initialize = function(server) {
 		});
 
 		const getUpdatedTripInfo = async ({ tripId, driverId }) => {
-			// const trip = await Trip.findOne({ _id: tripId })
-			// .populate("rider")
-			// .populate("driver")
-			// .exec();
-			// .exec();
 			const newTrip = await Trip.findOneAndUpdate(
 				{ _id: tripId },
 				{ driver: driverId, status: "pickingUp" },
@@ -365,14 +353,14 @@ export const initialize = function(server) {
 				distanceToRider,
 				durationToRider,
 				distanceToDestination,
-				durationToDestination,
+				durationToDestination
 			};
-			logger.debug(
-				`getDistanceAndDuration- distanceToDestination: ${distanceToDestination}, durationToDestination:${durationToDestination}`
-			);
-			logger.debug(
-				`getDistanceAndDuration- distanceToRider: ${distanceToRider}, Duration:${durationToRider}`
-			);
+			// logger.debug(
+			// 			// 	`getDistanceAndDuration- distanceToDestination: ${distanceToDestination}, durationToDestination:${durationToDestination}`
+			// 			// );
+			// 			// logger.debug(
+			// 			// 	`getDistanceAndDuration- distanceToRider: ${distanceToRider}, Duration:${durationToRider}`
+			// 			// );
 
 			return updatedTrip;
 		};
@@ -380,9 +368,7 @@ export const initialize = function(server) {
 		// Rider can confirm trip
 		socket.on("CONFIRM_TRIP", async data => {
 			const { id } = socket.handshake.query; // Rider
-			const { driverUsername, driverId, acceptedDrivers, _id } = data; // Accepted Driver
-			let trip;
-		
+			const { driverUsername, driverId, _id } = data; // Accepted Driver
 			try {
 				const updatedTrip = await getUpdatedTripInfo({
 					tripId: _id,
@@ -431,9 +417,8 @@ export const initialize = function(server) {
 
 		// Driver can start trip
 		socket.on("DRIVER_START_TRIP", async data => {
-			const { username, id } = socket.handshake.query; // Driver
-			const { driver, rider } = data; // Trip ID?
-			let trip;
+			const { id } = socket.handshake.query; // Driver
+			const { rider } = data; // Trip ID?
 			console.log("DRIVER_START_TRIP ------>");
 			try {
 				const driver = await Driver.findOneAndUpdate(
@@ -442,12 +427,12 @@ export const initialize = function(server) {
 				).exec();
 
 				const rider = await Rider.findOneAndUpdate(
-					{ _id: data.rider._id },
+					{ _id: rider._id },
 					{ status: "enRoute" }
 				).exec();
 
 				await Trip.findOneAndUpdate(
-					{ rider: data.rider._id },
+					{ rider: rider._id },
 					{ status: "enRoute" },
 					{ new: true }
 				)
@@ -465,8 +450,8 @@ export const initialize = function(server) {
 
 		// Driver can end trip
 		socket.on("DRIVER_END_TRIP", async data => {
-			const { username, id } = socket.handshake.query; // Driver
-			const { driver, rider } = data;
+			const { id } = socket.handshake.query; // Driver
+			const { rider } = data;
 			let trip;
 			console.log("DRIVER_END_TRIP ------>");
 
@@ -479,12 +464,12 @@ export const initialize = function(server) {
 				).exec();
 
 				const rider = await Rider.findOneAndUpdate(
-					{ _id: data.rider._id },
+					{ _id: rider._id },
 					{ status: "standby" }
 				).exec();
 
 				await Trip.findOneAndUpdate(
-					{ rider: data.rider._id },
+					{ rider: rider._id },
 					{ status: "ended" },
 					{ new: true }
 				)
@@ -505,33 +490,33 @@ export const initialize = function(server) {
 
 		socket.on("RIDER_CANCEL_REQUEST", async data => {
 			clearInterval(requestInterval);
-			const { username, id } = socket.handshake.query; // Rider
+			const { username } = socket.handshake.query;
+			const { tripId } = data; // Rider
 			logger.debug(
 				`RIDER_CANCEL_REQUEST triggered for tripId ${username}`
 			);
 			try {
 				const trip = await Trip.findOneAndRemove({
-					_id: data.tripId
+					_id: tripId
 				}).exec();
 
-				socketIo.to(data.tripId).emit("TRIP_REQUEST_CANCELED_BY_RIDER");
+				socketIo.to(tripId).emit("TRIP_REQUEST_CANCELED_BY_RIDER");
 
-				socket.leave(data.tripId);
+				socket.leave(tripId);
 			} catch (e) {
 				console.log("error", e);
 			}
 		});
 
 		socket.on("RIDER_CANCEL_TRIP", async data => {
-			const { username, id } = socket.handshake.query; // Rider
+			const { username } = socket.handshake.query; // Rider
 			const { requestDetails, tripId } = data; // Rider
-			consolelog("data")
 			logger.debug(
 				`RIDER_CANCEL_REQUEST triggered for tripId ${username}`
 			);
 			try {
 				const trip = await Trip.findOneAndUpdate(
-					{ _id: tripId},
+					{ _id: tripId },
 					{ status: "cancelled" }
 				).exec();
 
@@ -540,7 +525,9 @@ export const initialize = function(server) {
 					{ status: "standby" }
 				).exec();
 
-				socketIo.sockets.to(drivers.get(requestDetails.driver.username).socketId).emit("TRIP_CANCELED_BY_RIDER");
+				socketIo.sockets
+					.to(drivers.get(requestDetails.driver.username).socketId)
+					.emit("TRIP_CANCELED_BY_RIDER");
 
 				socket.leave(data.tripId);
 			} catch (e) {
@@ -554,7 +541,7 @@ export const initialize = function(server) {
 			logger.debug(`DRIVER_CANCEL_TRIP triggered for tripId ${username}`);
 			try {
 				const trip = await Trip.findOneAndUpdate(
-					{ _id:tripId },
+					{ _id: tripId },
 					{ status: "cancelled" }
 				).exec();
 
@@ -562,8 +549,9 @@ export const initialize = function(server) {
 					{ _id: id },
 					{ status: "standby" }
 				).exec();
-				socketIo.sockets.to(riders.get(requestDetails.rider.username).socketId).emit("TRIP_CANCELED_BY_RIDER");
-				// socketIo.sockets.to(username).emit("TRIP_CANCELED_BY_DRIVER");
+				socketIo.sockets
+					.to(riders.get(requestDetails.rider.username).socketId)
+					.emit("TRIP_CANCELED_BY_RIDER");
 
 				socket.leave(data.tripId);
 			} catch (e) {
