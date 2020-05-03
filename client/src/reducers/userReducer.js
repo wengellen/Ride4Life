@@ -1,5 +1,3 @@
-import { getLocalStore } from '../utils/helpers'
-
 import {
 	FIND_DRIVERS_NEARBY_STARTED,
 	FIND_DRIVERS_NEARBY_SUCCESS,
@@ -30,7 +28,7 @@ import {
 } from '../actions/actionTypes'
 
 const initialState = {
-	loggedInUser: {},
+	loggedInUser: null,
 	userSignupStarted: false,
 	userLoginStarted: false,
 	findNearbyDriverStarted: false,
@@ -40,8 +38,8 @@ const initialState = {
 	sendTripRequestStarted: false,
 	submitDriverReviewStarted: false,
 	submitDriverReviewSuccessMessage: '',
-	currentDriver: {},
-	activeTrip: {},
+	currentDriver: null,
+	activeTrip: null,
 	driversNearby: [],
 	serverMessage: '',
 	driverDetails: [

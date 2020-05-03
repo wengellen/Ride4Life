@@ -1,6 +1,5 @@
 import React from 'react'
 import {Route, Redirect} from 'react-router-dom'
-import {getLocalStore} from "../utils/helpers";
 
 const PrivateRoute = ({ component: Component, permissions, ...rest }) => (
 	<Route

@@ -10,10 +10,35 @@ export const getSocket = ()=>{
 
 export const socketInit = ()=>{
     const token = helper.getToken()
-    const {username, role, id} = helper.parseToken()
+    const {username, role, id} = helper.getUser()
     
     socketIo = io.connect(`${endpoint}?token=${token}&username=${username}&role=${role}&id=${id}`);
     
     console.log('socketIo', socketIo.connected)
+    
+    
+    socketIo.on('connect', () => {
+        socketIo.emit('authentication', {
+            token: token,
+        })
+        console.log('Connected')
+    })
+    
+    
+    socketIo.on('unauthorized', reason => {
+        console.log('Unauthorized. Disconnecting:', reason)
+        // error = reason.message
+        alert(`${reason.message} - Disconnecting  `)
+        socketIo.disconnect()
+        // socketIo.
+    })
+    
+    socketIo.on('disconnect', reason => {
+        console.log(`Disconnected: ${ reason}`)
+        // TODO: Log people out
+        // error = null
+    })
+    
+    socketIo.open()
     return socketIo
 }

@@ -9,8 +9,8 @@ const bp = {
 export const getToken = () => {
 	return localStorage.getItem('token')
 }
-
-export const parseToken = () => {
+//
+export const getUser = () => {
 	return  jwtDecoder(getToken())
 }
 
@@ -25,34 +25,34 @@ export const removeToken = ()=>{
 export const removeTrip = ()=>{
 	localStorage.removeItem('requestDetails')
 }
-
-export const hasToken = () => {
-	const token = localStorage.getItem('token')
-	return !!token
-}
-
-export const getRole = () => {
-	const decoded = jwtDecoder(getToken())
-	return decoded.role
-}
-
-export const getUser = () => {
-	return jwtDecoder(getToken())
-}
-
-export const getUsername = () => {
-	const decoded = jwtDecoder(getToken())
-	return decoded.username
-}
-export const getUserId = () => {
-	const decoded = jwtDecoder(getToken())
-	return decoded.id
-}
-
-export const getCurrentUserId = () =>{
-	const decoded = jwtDecoder(getToken())
-	return decoded.id
-}
+//
+// export const hasToken = () => {
+// 	const token = localStorage.getItem('token')
+// 	return !!token
+// }
+//
+// export const getRole = () => {
+// 	const decoded = jwtDecoder(getToken())
+// 	return decoded.role
+// }
+//
+// export const getUser = () => {
+// 	return jwtDecoder(getToken())
+// }
+//
+// export const getUsername = () => {
+// 	const decoded = jwtDecoder(getToken())
+// 	return decoded.username
+// }
+// export const getUserId = () => {
+// 	const decoded = jwtDecoder(getToken())
+// 	return decoded.id
+// }
+//
+// export const getCurrentUserId = () =>{
+// 	const decoded = jwtDecoder(getToken())
+// 	return decoded.id
+// }
 
 export const getShortDate = (date)=>{
 	return date.substring(0, 10) //?
@@ -69,21 +69,33 @@ export const minW = n => {
 	return result
 }
 
-export const setLocalStore = (key, value) =>{
-	if (typeof value === 'string'){
-		localStorage.setItem(key, value)
-	}else{
-		localStorage.setItem(key, JSON.stringify(value))
-	}
+export const getDistanceAndDuration = (coord1, coord2) =>{
+	// const coord1
+	//-84.518641,39.134270};${-84.512023,39.102779
+	const key = process.env.REACT_APP_MAPBOX_TOKEN
+	const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coord1[0]},${coord1[1]};${coord2[0]},${coord2[1]}?geometries=geojson&access_token=${key}`
 }
 
-export const getLocalStore = (key) => {
-	const res = localStorage.getItem(key)
-	console.log("typeof", typeof res)
+export const getDuration = (duration) =>{
+	const inMinutes = Math.round(duration/60)
+	const inHours = Math.round(duration/60/60)
 }
-
-export const removeLocalStore = (key) =>{
-	localStorage.removeItem(key)
-}
-
-
+//
+// export const setLocalStore = (key, value) =>{
+// 	if (typeof value === 'string'){
+// 		localStorage.setItem(key, value)
+// 	}else{
+// 		localStorage.setItem(key, JSON.stringify(value))
+// 	}
+// }
+//
+// export const getLocalStore = (key) => {
+// 	const res = localStorage.getItem(key)
+// 	console.log("typeof", typeof res)
+// }
+//
+// export const removeLocalStore = (key) =>{
+// 	localStorage.removeItem(key)
+// }
+//
+//

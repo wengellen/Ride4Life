@@ -1,4 +1,4 @@
-import { Component, default as React } from 'react'
+import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import '../App.css'
 import Wrapper from './Wrapper'
@@ -6,8 +6,6 @@ import styled from '@emotion/styled'
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
 import Button from '@material-ui/core/Button'
-import SelectRolePanel from '../components/SelectRolePanel'
-// import { logoutUser } from '../actions'
 
 const container = css`
 	max-width: 73.75rem;
@@ -121,10 +119,5 @@ class HomePage extends Component {
 		)
 	}
 }
-//
-// const mapStateToProps = ({ userReducer }) => ({
-// 	serverMessage: userReducer.serverMessage,
-// 	user: userReducer.loggedInUser,
-// })
 
 export default withRouter(HomePage)

@@ -73,6 +73,7 @@ class DriverTripReviewPage extends Component {
 	}
 	
 	render() {
+		const {currentDriver} = this.props
 	   if(this.props.submitDriverReviewStarted){
 		   return (<Loader/>)
 	   }else{
@@ -82,7 +83,7 @@ class DriverTripReviewPage extends Component {
 						   <div className="driver-profile-img-container ">
 							   <img src="http://lorempixel.com/500/500" className="round" alt={"driver avatar"}/>
 						   </div>
-						   <h1>{this.props.currentDriver.username}</h1>
+						   <h1>{currentDriver.username}</h1>
 						   <h2>Nawandala, Uganda</h2>
 						
 						  <form className="form-review">
@@ -113,6 +114,7 @@ class DriverTripReviewPage extends Component {
 }
 
 const mapStateToProps = ({userReducer}) => {
+	console.log("currentDriver",userReducer.currentDriver)
 	return {
 		submitDriverReviewStarted: userReducer.submitDriverReviewStarted,
 		currentDriver:userReducer.currentDriver,

@@ -41,7 +41,7 @@ export const submitDriverReview = (review, data) => dispatch => {
 
 // Find drivers nearby
 export const findDriversNearby = location => dispatch => {
-	console.log('findDriversNearby location', location)
+	// console.log('findDriversNearby location', location)
 	dispatch({ type: FIND_DRIVERS_NEARBY_STARTED })
 	return API()
 		.get('/api/rider/drivers')
@@ -60,7 +60,7 @@ export const findDriversNearby = location => dispatch => {
 // Find drivers nearby
 export const getDriversById = driverId => dispatch => {
 	dispatch({ type: FIND_DRIVER_BY_ID_STARTED })
-	console.log('driverId,', driverId)
+	// console.log('driverId,', driverId)
 	return API()
 		.get(`/api/driver/${driverId}`)
 		.then(res => {
@@ -72,26 +72,25 @@ export const getDriversById = driverId => dispatch => {
 }
 
 export const cancelTripRequest = () => dispatch => {
-	console.log('cancelTripRequest')
+	// console.log('cancelTripRequest')
 	dispatch({ type: CANCEL_TRIP_REQUEST })
 }
 
 export const confirmTrip = (socket, data) => dispatch => {
-	console.log('confirmTrip')
+	// console.log('confirmTrip')
 	socket.emit('CONFIRM_TRIP', data)
-
 	socket.on('TRIP_CONFIRMED_BY_RIDER', () => {
 		console.log('!!!!!TRIP_CONFIRMED_BY_RIDER')
 	})
 }
 
 export const riderCancelTrip = (socket, data) => dispatch => {
-	console.log('riderCancelTrip')
+	// console.log('riderCancelTrip')
 	socket.emit('RIDER_CANCEL_TRIP', data)
 }
 
 export const riderCancelRequest = (socket, data) => dispatch => {
-	console.log('riderCancelRequest')
+	// console.log('riderCancelRequest')
 	socket.emit('RIDER_CANCEL_REQUEST', data)
 
 	socket.on('RIDER_REQUEST_CANCELED', () => {
@@ -100,10 +99,11 @@ export const riderCancelRequest = (socket, data) => dispatch => {
 }
 
 export const riderRequestTrip = (socket, data) => dispatch => {
+	console.log("data",data)
 	socket.emit('RIDER_REQUEST_TRIP', data)
 }
 
 export const updateThisRiderLocation = (socket, data) => dispatch => {
-	console.log('updateRiderLocation...', data)
+	// console.log('updateRiderLocation...', data)
 	socket.emit('UPDATE_RIDER_LOCATION', data)
 }

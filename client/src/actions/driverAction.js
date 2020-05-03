@@ -5,7 +5,6 @@ import {
 	SUBMIT_RIDER_REVIEW_SUCCESS,
 	SUBMIT_RIDER_REVIEW_FAILURE,
 } from './actionTypes'
-import { setLocalStore } from '../utils/helpers'
 
 export const driverCancelTrip = (socket, data) => dispatch => {
 	console.log('driverCancelTrip')

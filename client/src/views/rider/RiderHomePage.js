@@ -4,7 +4,7 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
 import './DirectionMap.css'
 import './RiderHomePage.css'
-import { openModal } from '../../actions'
+import { logoutUser, openModal } from '../../actions'
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import placeholder from 'assets/img/placeholder.jpg'
@@ -64,7 +64,8 @@ class RiderHomePage extends Component {
 		this.directions = null
 		this.geolocate = null
 		this.acceptedDriversMarkerMap = new Map()
-
+		this.riderMarker = null;
+		
 		if (!socket) {
 			socketInit()
 			socket = getSocket()
@@ -78,11 +79,12 @@ class RiderHomePage extends Component {
 	/*  Step 0. - Update Rider Location on Geolocation Results
     /*  Called when geolocation result is returned
      */
-	updateRiderLocation = () => {
-		const { location } = this.state
-
+	updateRiderLocation = (location) => {
+		// const { location, duration, distance } = this.state
 		this.props.updateThisRiderLocation(socket, {
 			location,
+			// duration,
+			// distance
 		})
 	}
 
@@ -91,6 +93,7 @@ class RiderHomePage extends Component {
 	 *   Handler for requesting ride in the standby stage
 	 */
 	handleRequestRide = () => {
+		console.log("handleRequestRide")
 		// const rider = this.props.loggedInUser;
 		const tripRequest = {
 			startLocation: {
@@ -129,7 +132,8 @@ class RiderHomePage extends Component {
 		this.setState({
 			showEstimate: true,
 			requestDetails: data,
-			acceptedDrivers: [data.driver],
+			// acceptedDrivers: [data.driver],
+			acceptedDrivers:  [...this.state.acceptedDrivers, data.driver],
 		})
 		console.log('acceptedDrivers', this.state.acceptedDrivers)
 		console.log(
@@ -145,10 +149,12 @@ class RiderHomePage extends Component {
 	 */
 	handleConfirmRequest = idx => {
 		const driver = this.state.acceptedDrivers[idx]
-
+		
+		console.log("accepted Driver",driver )
 		this.props.confirmTrip(socket, {
 			driverId: driver._id,
 			driverUsername: driver.username,
+			acceptedDrivers:this.state.acceptedDrivers,
 			...this.state.requestDetails,
 		})
 
@@ -291,8 +297,31 @@ class RiderHomePage extends Component {
 	onReceiveError = err => {
 		console.log('Receive Error', err)
 	}
+	onSocketConnect = ()=>{
+		this.locationUpdateInterval =  setInterval(async ()=>{
+			navigator.geolocation.getCurrentPosition(position => {
+				const coords =  [position.coords.longitude, position.coords.latitude]
+				this.setState({
+					location: coords,
+				})
+				
+				this.updateRiderLocation(coords)
+				this.riderMarker.setLngLat(coords)
+				this.map.setCenter(coords)
+				// console.log("coords",coords)
+			})
+		}, 5000)
+	}
+	
+	onSocketDisconnect = ()=>{
+		this.props.logoutUser()
+		this.props.history.push('/')
+	}
+	
 
 	bindListeners() {
+		socket.on('connect', this.onSocketConnect)
+		socket.on('disconnect', this.onSocketDisconnect)
 		socket.on('TRIP_ACCEPTED_BY_DRIVER', this.onTripAcceptedByDriver)
 		socket.on('TRIP_STARTED_BY_DRIVER', this.onTripStartedByDriver)
 		socket.on('TRIP_CANCELED_BY_RIDER', this.onTripCanceledByRider)
@@ -305,6 +334,8 @@ class RiderHomePage extends Component {
 	}
 
 	unbindListeners = () => {
+		socket.off('connect')
+		socket.off('disconnect')
 		socket.off('TRIP_ACCEPTED_BY_DRIVER')
 		socket.off('TRIP_STARTED_BY_DRIVER')
 		socket.off('TRIP_CANCELED_BY_RIDER')
@@ -319,9 +350,15 @@ class RiderHomePage extends Component {
 	// 		this.addMarker()
 	// 	}
 	// }
-
 	componentDidMount() {
-		// if (!rider) this.props.history.push('/')
+		if (!this.props.loggedInUser){
+			this.props.logoutUser()
+			alert('You have been disconnected')
+			this.props.history.push('/')
+			
+			return false
+		}
+		
 		this.bindListeners()
 		navigator.geolocation.getCurrentPosition(position => {
 			this.setState({
@@ -333,28 +370,28 @@ class RiderHomePage extends Component {
 				loadingMap: false,
 			})
 
-			this.updateRiderLocation()
+			this.updateRiderLocation( [position.coords.longitude, position.coords.latitude])
 
 			this.map = new mapboxgl.Map({
 				container: this.mapContainer, // See https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a
 				style: 'mapbox://styles/mapbox/streets-v9',
 				center: this.state.startLocation,
-				zoom: 13,
+				zoom: 16,
 			})
 
-			this.map.on('click', 'places', e => {
-				console.log()
-				var coordinates = e.features[0].geometry.coordinates.slice()
-				var description = e.features[0].properties.description
-				while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-					coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
-				}
-
-				new mapboxgl.Popup()
-					.setLngLat(coordinates)
-					.setHTML(description)
-					.addTo(this.map)
-			})
+			// this.map.on('click', 'places', e => {
+			// 	console.log()
+			// 	var coordinates = e.features[0].geometry.coordinates.slice()
+			// 	var description = e.features[0].properties.description
+			// 	while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+			// 		coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
+			// 	}
+			//
+			// 	new mapboxgl.Popup()
+			// 		.setLngLat(coordinates)
+			// 		.setHTML(description)
+			// 		.addTo(this.map)
+			// })
 
 			this.map.on('mouseenter', 'places', () => {
 				this.map.getCanvas().style.cursor = 'pointer'
@@ -383,12 +420,13 @@ class RiderHomePage extends Component {
 							'<h3><strong>Make it Mount Pleasant</strong></h3><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a',
 					},
 				}
-
-				const riderMarker = this.addMarker(
-					'marker',
-					helper.getUserId,
-					riderGeojson
-				)
+				if (this.props.loggedInUser){
+				    this.addMarker(
+						'riderMarker',
+						this.props.loggedInUser.id,
+						riderGeojson
+					)
+				}
 			})
 
 			this.directions = new MapboxDirections({
@@ -428,6 +466,8 @@ class RiderHomePage extends Component {
 				if (e.route && e.route.length) {
 					const { distance, legs, duration } = e.route[0]
 					this.setState({
+						distance:Math.round(distance * 0.000621371192),
+						duration: Math.round(duration/60),
 						endLocationAddress: legs[0].summary,
 					})
 				}
@@ -454,7 +494,6 @@ class RiderHomePage extends Component {
 	}
 
 	addMarker = (markerStyle, markerId, marker) => {
-		// marker.features.forEach((marker)=> {
 		var el = document.createElement('div')
 		el.className = markerStyle
 		el.id = markerId
@@ -462,11 +501,13 @@ class RiderHomePage extends Component {
 		const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
 			marker.properties.description
 		)
-
-		return new mapboxgl.Marker(el)
+		
+		this.riderMarker =  new mapboxgl.Marker(el)
 			.setLngLat(marker.geometry.coordinates)
 			.setPopup(popup)
 			.addTo(this.map)
+			
+		return this.riderMarker
 	}
 
 	resetTrip = () => {
@@ -486,7 +527,7 @@ class RiderHomePage extends Component {
 		this.state.acceptedDrivers = []
 
 		if (this.map) {
-			this.map.zoom = 15
+			this.map.zoom = 16
 		}
 	}
 
@@ -516,8 +557,13 @@ class RiderHomePage extends Component {
 	getStatePath = path => {
 		return path.split('/rider/')[1]
 	}
+	
+	getDriverDistance = () => {
+	
+	}
 
 	render() {
+	
 		const path = this.getStatePath(this.props.location.pathname)
 		const { acceptedDrivers, currentDriver, headerMessage } = this.state
 
@@ -606,14 +652,11 @@ class RiderHomePage extends Component {
 													}
 													alt={'driver'}
 												/>
-												<h3>2 miles away</h3>
+												<h3>{this.getDriverDistance()}</h3>
 											</div>
 											<div className={'icon-box'}>
-												<img
-													src={CarIcon}
-													alt={'rider icon'}
-												/>
-												<h3>BMW</h3>
+												<img src={ driver.vehicle.image} alt={'rider icon'} />
+												<h3>{driver.vehicle.brand}</h3>
 											</div>
 											<div
 												className={
@@ -680,11 +723,11 @@ class RiderHomePage extends Component {
 											}
 											alt={'driver'}
 										/>
-										<h3>2 miles away</h3>
+										<h3>{this.getDriverDistance()}</h3>
 									</div>
 									<div className={'icon-box bordered'}>
-										<img src={CarIcon} alt={'rider icon'} />
-										<h3>BMW</h3>
+										<img src={currentDriver && currentDriver.vehicle.image} alt={'rider icon'} />
+										<h3>{currentDriver && currentDriver.vehicle.brand}</h3>
 									</div>
 									<div className={'driver-item-buttons-list'}>
 										<div
@@ -752,8 +795,10 @@ class RiderHomePage extends Component {
 									<h3> {`${currentDriver.rating} `}stars</h3>
 								</div>
 								<div className={'icon-box'}>
-									<img src={CarIcon} alt={'rider icon'} />
-									<h3>24 miles</h3>
+									{/*<img src={CarIcon} alt={'rider icon'} />*/}
+									{/*<h3>{requestDetails.distance}</h3>*/}
+									<img src={currentDriver && currentDriver.vehicle.image} alt={'rider icon'} />
+									<h3>{currentDriver && currentDriver.vehicle.brand}</h3>
 								</div>
 								<div className={'trip-destination-left'}>
 									<h1>Destination</h1>
@@ -857,5 +902,6 @@ export default withRouter(
 		riderCancelTrip,
 		cancelTripRequest,
 		openModal,
+		logoutUser
 	})(RiderHomePage)
 )

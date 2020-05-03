@@ -45,7 +45,7 @@ class DriverProfilePage extends Component {
 	
 	
 	render() {
-		const {currentDriver, findDriverByIdStarted} = this.props
+		const {currentDriver, findDriverByIdStarted, loggedInUser} = this.props
 		const {showPopup} = this.state
 		console.log('currentDriver', currentDriver)
 		
@@ -110,7 +110,7 @@ class DriverProfilePage extends Component {
 						}
 						{ this.props.currentDriver.review && this.props.currentDriver.review.map((item, idx) => (
 							<div className="review-container" key={idx}>
-								{ item.username === JSON.parse(localStorage.getItem('user')).username //JSON.parse(localStorage.getItem('user')).username
+								{ item.username === loggedInUser.username //JSON.parse(localStorage.getItem('user')).username
 									? <Clear/>
 									: null
 								}
@@ -153,6 +153,7 @@ const mapStateToProps = ({userReducer}) => {
 	return {
 		findDriverByIdStarted: userReducer.findDriverByIdStarted,
 		currentDriver:userReducer.currentDriver,
+		loggedInUser:userReducer.loggedInUser
 	}
 }
 
