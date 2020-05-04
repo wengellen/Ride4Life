@@ -307,8 +307,6 @@ class RiderHomePage extends Component {
 
 				this.updateRiderLocation(coords)
 				this.riderMarker && this.riderMarker.setLngLat(coords)
-				this.map && this.map.setCenter(coords)
-				// console.log("coords",coords)
 			})
 		}, 5000)
 	}

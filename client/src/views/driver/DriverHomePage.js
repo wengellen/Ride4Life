@@ -502,7 +502,6 @@ class DriverHomePage extends Component {
 	}
 	
 	onSocketConnect = ()=>{
-		
 		this.locationUpdateInterval =  setInterval(async ()=>{
 			const {requestDetails} = this.state
 			navigator.geolocation.getCurrentPosition(position => {
@@ -513,7 +512,6 @@ class DriverHomePage extends Component {
 				
 				this.updateDriverLocation(coords)
 				this.driverMarker.setLngLat(coords)
-				this.map.setCenter(coords)
 				if (requestDetails && requestDetails.status === "enRoute" && requestDetails.endLocation){
 					const endLocation = requestDetails.endLocation.coordinates
 					if (coords[0] === endLocation[0] && coords[1] === endLocation[1] ){
@@ -583,7 +581,6 @@ class DriverHomePage extends Component {
 		if (destinationInput) {
 			destinationInput.value = ''
 		}
-		this.map.zoom = 16
 	}
 
 	cancelTrip = e => {
