@@ -82,11 +82,8 @@ class RiderHomePage extends Component {
     /*  Called when geolocation result is returned
      */
 	updateRiderLocation = location => {
-		// const { location, duration, distance } = this.state
 		this.props.updateThisRiderLocation(socket, {
 			location,
-			// duration,
-			// distance
 		})
 	}
 
@@ -96,7 +93,6 @@ class RiderHomePage extends Component {
 	 */
 	handleRequestRide = () => {
 		console.log('handleRequestRide')
-		// const rider = this.props.loggedInUser;
 		const tripRequest = {
 			startLocation: {
 				coordinates: this.state.startLocation,
@@ -114,8 +110,6 @@ class RiderHomePage extends Component {
 			distance: this.state.distance,
 			duration: this.state.duration,
 			tripFare: this.state.tripFare,
-			// riderId:rider._id,
-			// riderUsername:rider.username
 		}
 
 		this.props.riderRequestTrip(socket, {
@@ -134,7 +128,6 @@ class RiderHomePage extends Component {
 		this.setState({
 			showEstimate: true,
 			requestDetails: data,
-			// acceptedDrivers: [data.driver],
 			acceptedDrivers: [...this.state.acceptedDrivers, data.driver],
 		})
 		console.log('acceptedDrivers', this.state.acceptedDrivers)
@@ -524,10 +517,6 @@ class RiderHomePage extends Component {
 		}
 
 		this.state.acceptedDrivers = []
-
-		if (this.map) {
-			this.map.zoom = 16
-		}
 	}
 
 	handleChange = e => {
